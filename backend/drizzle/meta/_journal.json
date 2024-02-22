@@ -1,0 +1,41 @@
+{
+  "version": "5",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1708093474571,
+      "tag": "0000_flashy_human_robot",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1708127687978,
+      "tag": "0001_jittery_baron_zemo",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1708128374833,
+      "tag": "0002_deep_selene",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1708129098890,
+      "tag": "0003_grey_marvel_apes",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1708130427687,
+      "tag": "0004_fine_baron_zemo",
+      "breakpoints": true
+    }
+  ]
+}

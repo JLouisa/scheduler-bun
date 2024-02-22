@@ -1,0 +1,28 @@
+{
+  "name": "app",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts"
+  },
+  "dependencies": {
+    "@elysiajs/cors": "^0.8.0",
+    "@elysiajs/jwt": "^0.8.0",
+    "@elysiajs/swagger": "^0.8.5",
+    "@grotto/logysia": "^0.1.1",
+    "@libsql/client": "^0.4.3",
+    "@types/luxon": "^3.4.2",
+    "@types/uuid": "^9.0.8",
+    "better-sqlite3": "^9.4.1",
+    "dotenv": "^16.4.4",
+    "drizzle-orm": "^0.29.3",
+    "elysia": "latest",
+    "luxon": "^3.4.4",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "bun-types": "latest",
+    "drizzle-kit": "^0.20.14"
+  },
+  "module": "src/index.js"
+}

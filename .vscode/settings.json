@@ -1,0 +1,32 @@
+{
+  "cSpell.ignoreWords": [
+    "Dinsdag",
+    "Donderdag",
+    "Maandag",
+    "Mondag",
+    "ScheduleBoard",
+    "Vrijdag",
+    "Woensdag",
+    "Zaterdag",
+    "Zondag",
+    "adminboard",
+    "bunx",
+    "elysiajs",
+    "logysia",
+    "luxon",
+    "prio",
+    "tanstack",
+    "toastify",
+    "uuidv",
+    "weekplan"
+  ],
+  "cSpell.customDictionaries": {
+    "custom-dictionary-workspace": {
+      "name": "custom-dictionary-workspace",
+      "path": "${workspaceFolder:scheduler-bun}/.cspell/custom-dictionary-workspace.txt",
+      "addWords": true,
+      "scope": "workspace"
+    }
+  },
+  "cSpell.words": ["libsql"]
+}
