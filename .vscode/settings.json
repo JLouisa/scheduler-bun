@@ -18,7 +18,8 @@
     "tanstack",
     "toastify",
     "uuidv",
-    "weekplan"
+    "weekplan",
+    "weekschedule"
   ],
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {

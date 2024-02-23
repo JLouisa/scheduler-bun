@@ -6,4 +6,9 @@ export class ErrorClass {
   toStr(): string {
     return this.message;
   }
+  toClient() {
+    return {
+      error: this.message,
+    };
+  }
 }

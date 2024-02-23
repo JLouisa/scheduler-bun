@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import { useState } from "react";
 
-const ScheduleBoard = () => {
-  const [theMode, setTheMode] = useState<string>("user");
+const WeekBoard = () => {
+  const [theMode, setTheMode] = useState<string>("admin");
   const [weeklyId, setWeeklyId] = useState<string>("2024-8");
 
   // Queries
@@ -26,8 +26,8 @@ const ScheduleBoard = () => {
     error: availabilityError,
     isError: isAvailabilityError,
   } = useQuery({
-    queryKey: ["availabilities"],
-    queryFn: () => DAL.getAllAvailabilities(weeklyId),
+    queryKey: ["weekPlans"],
+    queryFn: () => DAL.getAllWeeks(weeklyId),
   });
 
   if (!isLoadingUsers && !isLoadingAvailabilities) {
@@ -51,10 +51,13 @@ const ScheduleBoard = () => {
     );
   }
 
+  const dev = false;
+  if (dev) return <div>Test</div>;
+
   return (
     <>
       <div className="w-full">
-        <h1 className="text-xl text-center mt-4">Available Schedule</h1>
+        <h1 className="text-xl text-center mt-4">Week Schedule</h1>
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}
@@ -66,4 +69,4 @@ const ScheduleBoard = () => {
   );
 };
 
-export default ScheduleBoard;
+export default WeekBoard;

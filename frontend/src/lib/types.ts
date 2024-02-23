@@ -9,6 +9,14 @@ export interface AvailableProps {
   weeklyId: string;
 }
 
+export interface WeekProps {
+  id: string;
+  weeklyId: string;
+  userId: string;
+  day: string;
+  time: string;
+}
+
 export interface Week {
   Monday: AvailableProps[];
   Tuesday: AvailableProps[];
@@ -51,6 +59,7 @@ export interface TableSetupProps {
   users: UserProps[];
   available: Week | undefined;
   theMode: string;
+  weeklyId: string;
 }
 
 export type postAvailability = {
@@ -70,6 +79,7 @@ export interface SelectionOptionsProps {
   mode: string;
   user: UserProps;
   availabilityId: string | undefined;
+  weeklyId?: string;
 }
 
 export type LoginEmail = {

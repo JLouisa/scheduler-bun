@@ -3,7 +3,9 @@ import * as weekPlan from "../controller/weekPlan";
 
 export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   // Get all weekPlans
-  .get("/", () => weekPlan.getAllWeekPlan())
+  .get("/all/:weeklyId", ({ params: { weeklyId } }) =>
+    weekPlan.getAllWeekPlan(weeklyId)
+  )
   // Get one weekPlan
   .get("/:id", ({ params: { id } }) => {
     return weekPlan.getOneWeekPlan(id);

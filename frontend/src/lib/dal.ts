@@ -181,3 +181,98 @@ export async function loginUser(info: types.LoginEmail) {
     throw error; // Rethrow the error
   }
 }
+
+//! Get all processed weeks
+export async function getAllWeeks(weeklyId: string) {
+  let finalData;
+
+  try {
+    const result = await myFetch.get(
+      `http://localhost:3000/api/v1/weekplan/create/${weeklyId}`
+    );
+    finalData = await result.json();
+
+    if (result.status === 200 || result.ok) {
+      console.log(`finalData`);
+      console.log(finalData);
+    } else {
+      console.log("Get Request failed");
+      throw new Error(finalData.error);
+    }
+  } catch (error) {
+    console.error(error);
+    throw new Error(error as string);
+  }
+
+  return (finalData = {
+    Monday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "monday"
+    ),
+    Tuesday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "tuesday"
+    ),
+    Wednesday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "wednesday"
+    ),
+    Thursday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "thursday"
+    ),
+    Friday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "friday"
+    ),
+    Saturday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "saturday"
+    ),
+    Sunday: finalData.filter(
+      (item: types.WeekProps) => item.day.toLowerCase() === "sunday"
+    ),
+  });
+}
+
+export async function postOneWeek({
+  id,
+  weeklyId,
+  userId,
+  day,
+  time,
+}: types.WeekProps) {
+  try {
+    const result = await myFetch.post(`http://localhost:3000/api/v1/weekplan`, {
+      id,
+      weeklyId,
+      userId,
+      day,
+      time,
+    });
+    const data = await result.json();
+
+    if (result.status === 200 || result.ok) {
+      console.log("Update Request successful");
+      console.log(data[0]);
+      return data[0];
+    } else if (result.status === 404 || data.failed) {
+      console.log("Update Request failed");
+      return result;
+    }
+  } catch (error) {
+    console.error(error);
+    return error;
+  }
+}
+
+export async function deleteWeekAvailability(spotsId: string) {
+  try {
+    const result = await myFetch.delete(
+      `http://localhost:3000/api/v1/weekplan/one/${spotsId}`
+    );
+
+    if (result.status === 200 || result.ok) {
+      console.log("Delete Request successful");
+      const data = await result.json();
+      return data[0];
+    }
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}

@@ -8,6 +8,7 @@ import ScheduleBoard from "./pages/scheduleboard/ScheduleBoard";
 import Login from "./pages/login/Login";
 import AdminBoard from "./pages/adminboard/AdminBoard.js";
 import ForgotEmail from "./pages/forgot/ForgotEmail.js";
+import WeekBoard from "./pages/weekboard/WeekBoard.js";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -19,6 +20,7 @@ const Router = () => {
         { path: "/scheduleboard", element: <ScheduleBoard /> },
         { path: "/login", element: <Login /> },
         { path: "/admin", element: <AdminBoard /> },
+        { path: "/weekschedule", element: <WeekBoard /> },
         { path: "/forgot-password", element: <ForgotEmail /> },
       ],
     },

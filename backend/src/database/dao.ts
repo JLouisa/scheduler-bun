@@ -319,7 +319,7 @@ export async function deleteAllAvailability() {
 
 //! WeekPlan
 // Create WeekPlan in DB
-export async function createWeek(obj: WeekPlanClass) {
+export async function createOneWeek(obj: WeekPlanClass) {
   const theWeek = obj.db();
 
   try {
@@ -339,7 +339,7 @@ export async function createWeek(obj: WeekPlanClass) {
 
 // Save calculated week plan to DB
 export async function createListWeekPlans(weekPlans: WeekPlanClass[]) {
-  const promises = weekPlans.map((week) => createWeek(week));
+  const promises = weekPlans.map((week) => createOneWeek(week));
   return (await Promise.all(promises)).flat();
 }
 
@@ -370,24 +370,55 @@ export async function getAllWeekPlan(id: string) {
   }
 }
 
+// Get all week plans from DB
+export async function getOneWeekPlan(
+  id: string
+): Promise<WeekPlanClass | ErrorClass> {
+  try {
+    const result = await db
+      .select()
+      .from(WeekPlanSchema)
+      .where(eq(WeekPlanSchema.id, id));
+
+    if (result.length === 0) {
+      return ErrorClass.new("Something went wrong retrieving week plan");
+    }
+
+    return new WeekPlanClass(
+      result[0].id,
+      result[0].weeklyId,
+      result[0].userId,
+      result[0].day,
+      result[0].time
+    ).create();
+  } catch (error) {
+    console.error("Error getting one week plans from DB", error);
+    return ErrorClass.new("Error getting one week plans from DB");
+  }
+}
+
 // Update One week plan from DB
-export async function updateOneWeekPlan(obj: WeekPlanClass) {
-  const theWeek = obj.db();
+export async function updateWeekPlan(id: string, time: string) {
   return await db
     .update(WeekPlanSchema)
     .set({
-      time: theWeek.time,
+      time: time,
     })
-    .where(eq(WeekPlanSchema.id, theWeek.id))
+    .where(eq(WeekPlanSchema.id, id))
     .returning();
 }
 
 // Delete One week plan from DB
 export async function deleteOneWeekPlan(id: string) {
-  return await db
-    .delete(WeekPlanSchema)
-    .where(eq(WeekPlanSchema.id, id))
-    .returning();
+  try {
+    return await db
+      .delete(WeekPlanSchema)
+      .where(eq(WeekPlanSchema.id, id))
+      .returning();
+  } catch (error) {
+    console.error("Error deleting week plan from DB", error);
+    return ErrorClass.new("Error deleting week plan from DB").toStr();
+  }
 }
 
 // Delete All week plan from DB

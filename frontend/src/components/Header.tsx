@@ -9,6 +9,9 @@ const Header = () => {
           <Link to="/scheduleboard">
             <li className="cursor-pointer">Schedule</li>
           </Link>
+          <Link to="/weekschedule">
+            <li className="cursor-pointer">Week</li>
+          </Link>
           <Link to="/login">
             <li className="cursor-pointer">Log in</li>
           </Link>

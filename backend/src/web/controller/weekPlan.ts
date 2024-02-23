@@ -2,6 +2,8 @@ import { Days, ScheduleTime } from "../../domain/types";
 import { WeekPlanClass } from "../../domain/weekPlan";
 import * as dao from "../../database/dao";
 import { weekCreator } from "../../service/scheduler";
+import * as helper from "../../domain/types";
+import { ErrorClass } from "../../domain/error";
 
 type WeekPlan = {
   id: string;
@@ -19,8 +21,10 @@ type UpdateWeekPlan = {
   time: ScheduleTime | string;
 };
 
-export function getAllWeekPlan() {
-  return "Get all week plan";
+export async function getAllWeekPlan(weeklyId: string) {
+  const weekPlan = await dao.getAllWeekPlan(weeklyId);
+
+  return weekPlan.map((week) => week.db());
 }
 
 export function getOneWeekPlan(id: string) {
@@ -46,7 +50,19 @@ export async function createWeekPlan(body: WeekPlan) {
     body.day,
     body.time
   ).create();
-  return await dao.createWeek(week);
+
+  const select: WeekPlanClass | ErrorClass = await dao.getOneWeekPlan(week.id);
+
+  if (select instanceof ErrorClass) {
+    return await dao.createOneWeek(week);
+  }
+
+  if (select instanceof WeekPlanClass) {
+    return await dao.updateWeekPlan(
+      select.id,
+      helper.getScheduleTimeEnumToStr(week.time as ScheduleTime)
+    );
+  }
 }
 
 export async function updateWeekPlan(body: UpdateWeekPlan) {
@@ -57,12 +73,21 @@ export async function updateWeekPlan(body: UpdateWeekPlan) {
     body.day,
     body.time
   ).create();
-  return await dao.updateOneWeekPlan(week);
+
+  return await dao.updateWeekPlan(
+    week.id,
+    helper.getScheduleTimeEnumToStr(week.time as ScheduleTime)
+  );
 }
 
 //! Delete one week plan
 export async function deleteWeekPlan(id: string) {
-  return await dao.deleteOneWeekPlan(id);
+  try {
+    return await dao.deleteOneWeekPlan(id);
+  } catch (error) {
+    console.error("Error deleting week plan from DB");
+    return ErrorClass.new("Error deleting week plan from DB").toClient();
+  }
 }
 //! Delete all week plan
 export function deleteAllWeekPlan() {

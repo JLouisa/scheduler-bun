@@ -3,7 +3,7 @@ import * as available from "../controller/availability";
 
 export const availableRoutes = new Elysia({ prefix: "/availability" })
   // Get all availabilities
-  .get("/", ({ params: { week } }) => available.getAllAvailability())
+  .get("/", () => available.getAllAvailability())
   // Get all availabilities of a week
   .get("week/:week", ({ params: { week } }) =>
     available.getAllWeekAvailability(week)
