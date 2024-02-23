@@ -165,7 +165,7 @@ export async function loginUser(info: types.LoginEmail) {
     );
     const data = await result.json();
 
-    if (result.status === 200 || result.ok) {
+    if (result.status === 200 || data.success) {
       console.log("Login Request successful");
       return data;
     } else if (result.status === 401 || data.error) {

@@ -35,7 +35,7 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
             maxAge: 86400 * (body.remember ? 30 : 1), //86400 seconds in a day
           });
           return {
-            status: "success",
+            success: true,
             user: user.client(),
           };
         }

@@ -67,7 +67,8 @@ export function LoginCard({ loginFn }: { loginFn: any }) {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  placeholder="your@email.com"
+                  placeholder="jonathan@email.com"
+                  defaultValue="jonathan@email.com"
                   onChange={(e) => (emailRef.current = e.target.value)}
                 />
               </div>
@@ -76,7 +77,8 @@ export function LoginCard({ loginFn }: { loginFn: any }) {
                 <Input
                   type="password"
                   id="password"
-                  placeholder="*******"
+                  placeholder="admin123"
+                  defaultValue="admin123"
                   onChange={(e) => (passwordRef.current = e.target.value)}
                 />
               </div>
