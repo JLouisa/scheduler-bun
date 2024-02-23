@@ -8,15 +8,13 @@ type LoginBody = {
   remember: boolean;
 };
 
-export async function postLogin(body: LoginBody, set: any) {
+export async function postLogin(body: LoginBody) {
   try {
     const user = AdminClass.login(body.email, body.password);
     const result = await dao.login(user);
 
     if (result instanceof ErrorClass) {
-      set.status = 401;
-      // If an error occurred during login, return an error response
-      return { error: result.toStr() };
+      return result;
     }
 
     // If login was successful, return the user object

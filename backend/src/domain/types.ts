@@ -172,3 +172,11 @@ export function getDayStrToEnum(day: string): Days {
       return Days.Invalid;
   }
 }
+
+export type ClientUser = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  active: boolean;
+};

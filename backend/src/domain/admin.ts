@@ -1,4 +1,5 @@
 import { NIL as NIL_UUID } from "uuid";
+import { ClientUser } from "./types";
 
 export class AdminClass {
   constructor(
@@ -50,5 +51,15 @@ export class AdminClass {
       this.password,
       this.active
     );
+  }
+  client(): ClientUser {
+    const client = {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      active: this.active,
+    };
+    return client;
   }
 }

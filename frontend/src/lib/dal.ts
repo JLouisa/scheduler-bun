@@ -168,7 +168,7 @@ export async function loginUser(info: types.LoginEmail) {
     if (result.status === 200 || result.ok) {
       console.log("Login Request successful");
       return data;
-    } else if (result.status === 401 || data.failed) {
+    } else if (result.status === 401 || data.error) {
       const msg = data.error || "Username or password is incorrect.";
       console.log("Login Request failed");
       throw new Error(msg);
