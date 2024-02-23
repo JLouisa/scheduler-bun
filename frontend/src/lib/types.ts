@@ -37,8 +37,8 @@ export interface Users {
   vast: boolean;
   minDays: number;
   maxDays: number;
-  primaryRole: number;
-  secondaryRole: number;
+  primaryRole: string;
+  secondaryRole: string;
 }
 
 export interface UserProps {
@@ -53,6 +53,19 @@ export interface UserProps {
   maxDays: number;
   primaryRole: number;
   secondaryRole: number;
+}
+
+export interface NewUserType {
+  firstName: string;
+  lastName: string;
+  employeeId: number;
+  active: boolean;
+  admin: boolean;
+  vast: boolean;
+  minDays: number;
+  maxDays: number;
+  primaryRole: string;
+  secondaryRole: string;
 }
 
 export interface TableSetupProps {
@@ -90,4 +103,28 @@ export type LoginEmail = {
 
 export type RememberMeT = {
   rememberRef: React.MutableRefObject<boolean>;
+};
+
+export enum Roles {
+  Griller,
+  Kitchen,
+  Bar,
+  Service,
+  Management,
+  Dishwasher,
+  None,
+  All,
+}
+
+export type NewUserT = {
+  firstName: string;
+  lastName: string;
+  employeeId: number;
+  admin: boolean;
+  vast: boolean;
+  active: boolean;
+  minDays: number;
+  maxDays: number;
+  primaryRole: string;
+  secondaryRole: string;
 };

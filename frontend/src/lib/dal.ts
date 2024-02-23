@@ -265,12 +265,29 @@ export async function deleteWeekAvailability(spotsId: string) {
     const result = await myFetch.delete(
       `http://localhost:3000/api/v1/weekplan/one/${spotsId}`
     );
+    const data = await result.json();
 
     if (result.status === 200 || result.ok) {
       console.log("Delete Request successful");
-      const data = await result.json();
       return data[0];
     }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}
+
+//! Users
+export async function postNewUser(obj: types.NewUserType) {
+  try {
+    const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Post Request successful");
+      return data;
+    }
+    throw new Error(data.error);
   } catch (error) {
     console.error(error);
     return { error: error };
