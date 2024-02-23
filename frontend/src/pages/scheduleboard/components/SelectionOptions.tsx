@@ -113,11 +113,13 @@ const SelectionOptions = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="del">-</SelectItem>
-          <SelectItem value="Available">Available</SelectItem>
-          <SelectItem value="13">13</SelectItem>
-          <SelectItem value="15">15</SelectItem>
-          <SelectItem value="17">17</SelectItem>
-          <SelectItem value="Free">Free</SelectItem>
+          {(mode === "user" ? userValues : adminValues).map((value, index) => {
+            return (
+              <SelectItem key={index} value={value}>
+                {value}
+              </SelectItem>
+            );
+          })}
         </SelectContent>
       </Select>
     </form>

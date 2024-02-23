@@ -425,6 +425,6 @@ export async function login(body: AdminClass) {
     ).create();
   } catch (error) {
     console.error("Error logging in user from DB", error);
-    return "Error logging in user from DB";
+    return ErrorClass.new("Error logging in user from DB");
   }
 }

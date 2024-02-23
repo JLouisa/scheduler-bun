@@ -3,8 +3,11 @@ import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSkeletons from "./components/LoadingSkeletons";
+import { useState } from "react";
 
 const ScheduleBoard = () => {
+  const [theMode, setTheMode] = useState<string>("user");
+
   // Queries
   const {
     data: userData,
@@ -52,6 +55,7 @@ const ScheduleBoard = () => {
       <TableSetup
         users={userData}
         available={availabilitiesData as types.Week}
+        theMode={theMode}
       />
     </>
   );

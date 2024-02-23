@@ -50,6 +50,7 @@ export interface UserProps {
 export interface TableSetupProps {
   users: UserProps[];
   available: Week | undefined;
+  theMode: string;
 }
 
 export type postAvailability = {

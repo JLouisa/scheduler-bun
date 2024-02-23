@@ -8,7 +8,9 @@ type LoginBody = {
   remember: boolean;
 };
 
-export async function postLogin(body: LoginBody) {
+export async function postLogin(
+  body: LoginBody
+): Promise<AdminClass | ErrorClass> {
   try {
     const user = AdminClass.login(body.email, body.password);
     const result = await dao.login(user);
@@ -22,6 +24,6 @@ export async function postLogin(body: LoginBody) {
   } catch (error) {
     // Handle unexpected errors
     console.error("Error during login:", error);
-    return { error: "An unexpected error occurred during login" };
+    return ErrorClass.new("An unexpected error occurred during login");
   }
 }

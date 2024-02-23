@@ -1,7 +1,6 @@
 import { Elysia, t } from "elysia";
 import { jwt } from "@elysiajs/jwt";
 import * as login from "../controller/login";
-import { env } from "bun";
 import { ErrorClass } from "../../domain/error";
 import { AdminClass } from "../../domain/admin";
 
@@ -17,7 +16,7 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
     "/",
     async ({ body, set, jwt, cookie: { auth } }) => {
       try {
-        const user = await login.postLogin(body);
+        const user: ErrorClass | AdminClass = await login.postLogin(body);
 
         if (user instanceof ErrorClass) {
           set.status = 401;

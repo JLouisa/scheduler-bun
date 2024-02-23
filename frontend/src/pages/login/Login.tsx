@@ -3,14 +3,13 @@ import LoginCard from "./LoginCard";
 import { toast } from "@/components/ui/use-toast";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
-// import { redirect } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
 
   const loginFn = useMutation({
-    mutationKey: ["availability"],
+    mutationKey: ["login"],
     mutationFn: async (data: types.LoginEmail) => {
       const result = await DAL.loginUser(data);
       console.log(result);

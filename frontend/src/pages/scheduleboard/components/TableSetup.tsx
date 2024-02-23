@@ -12,11 +12,8 @@ import {
 } from "@/components/ui/table";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import { DateTime } from "luxon";
-import { useState } from "react";
 
-const TableSetup = ({ users, available }: types.TableSetupProps) => {
-  const [theMode, setTheMode] = useState<string>("user");
-
+const TableSetup = ({ users, available, theMode }: types.TableSetupProps) => {
   const weekNum = DateTime.local().weekNumber;
 
   const days = [
