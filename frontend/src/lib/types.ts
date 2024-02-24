@@ -51,8 +51,8 @@ export interface UserProps {
   vast: boolean;
   minDays: number;
   maxDays: number;
-  primaryRole: number;
-  secondaryRole: number;
+  primaryRole: string;
+  secondaryRole: string;
 }
 
 export interface NewUserType {

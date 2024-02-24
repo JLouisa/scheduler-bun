@@ -9,9 +9,10 @@ import {
 } from "@/components/ui/card";
 import * as types from "@/lib/types";
 import AddUser from "./AddUser";
+import AddOrEditUser from "./AddOrEditUser";
 
 type UserCardProps = {
-  users: types.Users[];
+  users: types.UserProps[];
 };
 
 export function UserCard({ users }: UserCardProps) {
@@ -22,20 +23,11 @@ export function UserCard({ users }: UserCardProps) {
         <CardDescription className="text-center">
           Active or Inactive
         </CardDescription>
-        <AddUser />
+        <AddOrEditUser edit={false} />
       </CardHeader>
       <CardContent>
         {users.map((user) => {
-          return (
-            <Users
-              key={user.id}
-              id={user.id}
-              firstName={user.firstName}
-              lastName={user.lastName}
-              role={user.primaryRole}
-              active={user.active}
-            />
-          );
+          return <Users user={user} key={user.id} />;
         })}
       </CardContent>
       <CardFooter className="flex justify-between"></CardFooter>

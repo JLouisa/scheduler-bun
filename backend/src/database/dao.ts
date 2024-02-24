@@ -10,7 +10,7 @@ import { AvailabilityClass } from "../domain/availability";
 
 // Setup the DB connection
 import { db } from "./setup";
-import { eq, lt, gte, ne } from "drizzle-orm";
+import { eq, lt, gte, ne, desc } from "drizzle-orm";
 import { AdminSchema } from "./schema/admin";
 import { AdminClass } from "../domain/admin";
 import { ErrorClass } from "../domain/error";
@@ -68,7 +68,10 @@ export async function createOneUser(
 // Get all users from DB
 export async function getAllUsers() {
   try {
-    const result = await db.select().from(UserSchema);
+    const result = await db
+      .select()
+      .from(UserSchema)
+      .orderBy(desc(UserSchema.createdAt));
 
     if (result.length === 0) {
       return [];
@@ -121,10 +124,13 @@ export async function getOneUser(id: string) {
   }
 }
 // Update One user from DB
-export async function updateOneUser(obj: UserClass) {
+export async function updateOneUser(
+  obj: UserClass
+): Promise<UserClass | ErrorClass> {
   const theUser = obj.db();
+
   try {
-    return await db
+    const result = await db
       .update(UserSchema)
       .set({
         firstName: theUser.firstName,
@@ -140,8 +146,31 @@ export async function updateOneUser(obj: UserClass) {
       })
       .where(eq(UserSchema.id, theUser.id))
       .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error updating user in DB");
+    }
+
+    if (result.length === 0) {
+      return ErrorClass.new("User not found");
+    }
+
+    return new UserClass(
+      result[0].id,
+      result[0].firstName,
+      result[0].lastName,
+      result[0].employeeId,
+      result[0].vast,
+      result[0].admin,
+      result[0].active,
+      result[0].minDays,
+      result[0].maxDays,
+      result[0].primaryRole,
+      result[0].secondaryRole
+    ).create();
   } catch (error) {
     console.error("Error updating user in DB", error);
+    return ErrorClass.new("Something went wrong updating user in DB");
   }
 }
 // Deactivate One user from DB
@@ -176,9 +205,35 @@ export async function deactivateOneUserToggle(id: string) {
 // Delete One user from DB
 export async function deleteOneUser(id: string) {
   try {
-    await db.delete(UserSchema).where(eq(UserSchema.id, id));
+    const result = await db
+      .delete(UserSchema)
+      .where(eq(UserSchema.id, id))
+      .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error deleting user from DB");
+    }
+
+    if (result.length === 0) {
+      return ErrorClass.new("User not found");
+    }
+
+    return new UserClass(
+      result[0].id,
+      result[0].firstName,
+      result[0].lastName,
+      result[0].employeeId,
+      result[0].vast,
+      result[0].admin,
+      result[0].active,
+      result[0].minDays,
+      result[0].maxDays,
+      result[0].primaryRole,
+      result[0].secondaryRole
+    ).create();
   } catch (error) {
     console.error("Error getting All users from DB", error);
+    return ErrorClass.new("Error getting All users from DB");
   }
 }
 

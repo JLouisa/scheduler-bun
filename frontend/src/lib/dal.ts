@@ -294,6 +294,22 @@ export async function postNewUser(obj: types.NewUserType) {
   }
 }
 
+//! Users
+export async function updateNewUser(obj: types.UserProps) {
+  try {
+    const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Post Request successful");
+      return data;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}
+
 export async function deactivateUser(userId: string) {
   try {
     const result = await myFetch.delete(
@@ -304,6 +320,24 @@ export async function deactivateUser(userId: string) {
     if (result.status === 200 || result.ok) {
       console.log("Deactivate Request successful");
       return data[0];
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}
+
+export async function deleteOneUser(userId: string) {
+  try {
+    const result = await myFetch.delete(
+      `http://localhost:3000/api/v1/user/one/${userId}`
+    );
+    const data = await result.json();
+    console.log(data);
+    if (result.status === 200 || result.ok) {
+      console.log("Deactivate Request successful");
+      return data;
     }
     throw new Error(data.error);
   } catch (error) {

@@ -7,14 +7,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-const RoleSelect = ({ id, roles }: { id: string; roles: string[] }) => {
+const RoleSelect = ({
+  id,
+  roles,
+  theRoleP,
+  theRoleS,
+}: {
+  id: string;
+  roles: string[];
+  theRoleP: string;
+  theRoleS: string;
+}) => {
   return (
     <div className="mt-2">
       <Label htmlFor={id} className="text-sm" />
-      <Select>
+      <Select defaultValue={id === "primaryRole" ? theRoleP : theRoleS}>
         <SelectTrigger id={id}>
           <SelectValue
-            defaultValue={id === "primaryRole" ? "Service" : "None"}
+            placeholder={id === "primaryRole" ? theRoleP : theRoleS}
           />
         </SelectTrigger>
         <SelectContent position="popper">

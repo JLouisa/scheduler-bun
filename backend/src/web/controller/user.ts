@@ -3,6 +3,8 @@ import { ErrorClass } from "../../domain/error";
 import { Roles } from "../../domain/types";
 import { UserClass } from "../../domain/user";
 
+import set from "elysia";
+
 type CreateUserBody = {
   firstName: string;
   lastName: string;
@@ -40,8 +42,8 @@ export async function getOneUser(id: string) {
 
 export async function createUser(body: CreateUserBody) {
   const user = UserClass.new(
-    body.firstName,
-    body.lastName,
+    body.firstName.toLowerCase(),
+    body.lastName.toLowerCase(),
     body.employeeId,
     body.admin,
     body.vast,
@@ -61,14 +63,14 @@ export async function createUser(body: CreateUserBody) {
   return result.client();
 }
 
-export async function updateUser(body: UpdateUserBody) {
+export async function updateUser(body: UpdateUserBody, set: any) {
   const user = new UserClass(
     body.id,
-    body.firstName,
-    body.lastName,
+    body.firstName.toLowerCase(),
+    body.lastName.toLowerCase(),
     body.employeeId,
     body.vast,
-    body.admin,
+    false, //body.admin,
     body.active,
     body.minDays,
     body.maxDays,
@@ -80,12 +82,31 @@ export async function updateUser(body: UpdateUserBody) {
     user.primaryRole === Roles.Invalid ||
     user.secondaryRole === Roles.Invalid
   ) {
-    return "Invalid Role";
+    set.status = 400;
+    return ErrorClass.new("Invalid Role").toClient();
   }
 
-  return await dao.updateOneUser(user);
+  const result: UserClass | ErrorClass = await dao.updateOneUser(user);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.toClient();
+  }
+
+  return result.client();
 }
 
 export async function deactivateOneUserToggle(id: string) {
   return await dao.deactivateOneUserToggle(id);
+}
+
+export async function deleteOneUser(id: string, set: any) {
+  const result = await dao.deleteOneUser(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.toClient();
+  }
+
+  return result.client();
 }

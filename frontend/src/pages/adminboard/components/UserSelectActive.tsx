@@ -12,13 +12,15 @@ import { toast } from "@/components/ui/use-toast";
 import * as types from "@/lib/types";
 import { capitalizeFirstLetter } from "@/lib/utils";
 
-type UserSelectActiveProps = {
-  id: string;
-  active: boolean;
-};
+interface EditUserProps {
+  theUser: types.UserProps;
+  setTheUser: React.Dispatch<React.SetStateAction<types.UserProps>>;
+}
 
-export function UserSelectActive({ id, active }: UserSelectActiveProps) {
-  const [activeState, setActiveState] = useState<boolean | undefined>(active);
+export function UserSelectActive({ theUser, setTheUser }: EditUserProps) {
+  const [activeState, setActiveState] = useState<boolean | undefined>(
+    theUser.active
+  );
   const [disableBtn, setDisableBtn] = useState<boolean>(false);
 
   //Send activeState to the backend
@@ -35,6 +37,7 @@ export function UserSelectActive({ id, active }: UserSelectActiveProps) {
         )} has been successfully ${user.active ? "Activated" : "Deactivated"}`,
       });
       console.log(user.active);
+      setTheUser(user);
       setActiveState(user.active);
       setDisableBtn(false);
     },
@@ -51,8 +54,7 @@ export function UserSelectActive({ id, active }: UserSelectActiveProps) {
   const activeHandle = (e: any) => {
     setDisableBtn(true);
     console.log(e.value);
-    // e.value === "Active" ? setActiveState(true) : setActiveState(false);
-    toggleUserActiveState.mutate(id);
+    toggleUserActiveState.mutate(theUser.id);
   };
 
   return (
@@ -62,7 +64,7 @@ export function UserSelectActive({ id, active }: UserSelectActiveProps) {
           activeHandle(e.target);
         }}
       >
-        <Select>
+        <Select defaultValue={theUser.active ? "Active" : "Inactive"}>
           <SelectTrigger disabled={disableBtn} id="framework">
             <SelectValue placeholder={activeState ? "Active" : "Inactive"} />
           </SelectTrigger>

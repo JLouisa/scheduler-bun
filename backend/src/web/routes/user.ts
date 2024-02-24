@@ -24,7 +24,7 @@ export const userRoutes = new Elysia({ prefix: "/user" })
     return user.getOneUser(id);
   })
   // Update one user
-  .put("/", ({ body }) => user.updateUser(body), {
+  .put("/", ({ body, set }) => user.updateUser(body, set), {
     body: t.Object({
       id: t.String(),
       firstName: t.String(),
@@ -39,9 +39,9 @@ export const userRoutes = new Elysia({ prefix: "/user" })
       secondaryRole: t.String(),
     }),
   })
-  //! Delete one users
-  .delete("/one/:id", ({ params: { id } }) => `Delete one users ${id}`)
   //! Delete all users
   .delete("/all", () => `Delete all users`)
+  //! Delete one users
+  .delete("/one/:id", ({ set, params: { id } }) => user.deleteOneUser(id, set))
   // Deactivate one users
   .delete("/:id", ({ params: { id } }) => user.deactivateOneUserToggle(id));

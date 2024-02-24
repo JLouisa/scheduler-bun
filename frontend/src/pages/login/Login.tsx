@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import LoginCard from "./LoginCard";
+import LoginCard from "./components/LoginCard";
 import { toast } from "@/components/ui/use-toast";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";

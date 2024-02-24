@@ -1,26 +1,33 @@
+import EditUser from "./EditUser";
 import UserAvatar from "./UserAvatar";
 import UserSelectActive from "./UserSelectActive";
+import { capitalizeFirstLetter } from "@/lib/utils";
+import * as types from "@/lib/types";
+import { useState } from "react";
+import AddOrEditUser from "./AddOrEditUser";
 
 type UserProps = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-  active: boolean;
+  user: types.UserProps;
 };
 
-const Users = ({ id, firstName, lastName, role, active }: UserProps) => {
+const Users = ({ user }: UserProps) => {
+  const [theUser, setTheUser] = useState<types.UserProps>(user);
+
   return (
     <div className="w-full flex justify-between items-center gap-4 mt-4">
       <UserAvatar />
-      <div>
-        <span className="truncate text-center">
-          {firstName + " " + lastName}
-        </span>
-        <br />
-        <span className="text-gray-400 text-center truncate">{role}</span>
+      <div className="flex flex-col justify-center items-center">
+        <div className="truncate">
+          {capitalizeFirstLetter(theUser.firstName) +
+            " " +
+            capitalizeFirstLetter(theUser.lastName)}
+        </div>
+        <div className="text-gray-400 truncate">{theUser.primaryRole}</div>
       </div>
-      <UserSelectActive active={active} id={id} />
+      <div className="flex justify-between items-center gap-4">
+        <AddOrEditUser theUser={theUser} setTheUser={setTheUser} edit={true} />
+        <UserSelectActive theUser={theUser} setTheUser={setTheUser} />
+      </div>
     </div>
   );
 };
