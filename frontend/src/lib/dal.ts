@@ -293,3 +293,21 @@ export async function postNewUser(obj: types.NewUserType) {
     return { error: error };
   }
 }
+
+export async function deactivateUser(userId: string) {
+  try {
+    const result = await myFetch.delete(
+      `http://localhost:3000/api/v1/user/${userId}`
+    );
+    const data = await result.json();
+    console.log(data[0]);
+    if (result.status === 200 || result.ok) {
+      console.log("Deactivate Request successful");
+      return data[0];
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}

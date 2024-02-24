@@ -14,18 +14,10 @@ import { toast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import * as DAL from "@/lib/dal";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { roleToString } from "@/lib/utils";
 import * as types from "@/lib/types";
 import RoleSelect from "./RoleSelect";
 
-export function AddUser() {
+const AddUser = () => {
   const createNewUser = useMutation({
     mutationKey: ["postNewUser"],
     mutationFn: async (data: any) => {
@@ -192,6 +184,6 @@ export function AddUser() {
       </DialogContent>
     </Dialog>
   );
-}
+};
 
 export default AddUser;

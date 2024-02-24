@@ -36,6 +36,8 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   })
 
   //! Delete one weekPlan
-  .delete("/one/:id", ({ params: { id } }) => weekPlan.deleteWeekPlan(id))
+  .delete("/one/:id", ({ params: { id }, set }) =>
+    weekPlan.deleteWeekPlan(id, set)
+  )
   //! Delete all weekPlans
   .delete("/all", () => `Delete all weekPlan`);

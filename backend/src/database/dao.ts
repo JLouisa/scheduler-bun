@@ -17,11 +17,13 @@ import { ErrorClass } from "../domain/error";
 
 //! Users
 // Create One user in DB
-export async function createOneUser(obj: UserClass) {
+export async function createOneUser(
+  obj: UserClass
+): Promise<UserClass | ErrorClass> {
   const theUser = obj.db();
 
   try {
-    return await db
+    const newUser = await db
       .insert(UserSchema)
       .values({
         firstName: theUser.firstName.toLowerCase(),
@@ -36,8 +38,31 @@ export async function createOneUser(obj: UserClass) {
         secondaryRole: theUser.secondaryRole,
       })
       .returning();
+
+    if (!Array.isArray(newUser)) {
+      return ErrorClass.new("Error creating a new user in DB");
+    }
+
+    if (newUser.length === 0) {
+      return ErrorClass.new("Something went wrong creating a new user in DB");
+    }
+
+    return new UserClass(
+      newUser[0].id,
+      newUser[0].firstName,
+      newUser[0].lastName,
+      newUser[0].employeeId,
+      newUser[0].vast,
+      newUser[0].admin,
+      newUser[0].active,
+      newUser[0].minDays,
+      newUser[0].maxDays,
+      newUser[0].primaryRole,
+      newUser[0].secondaryRole
+    ).create();
   } catch (error) {
     console.error("Error creating one user in DB", error);
+    return ErrorClass.new("Technical Error in creating user in DB");
   }
 }
 // Get all users from DB
@@ -49,20 +74,21 @@ export async function getAllUsers() {
       return [];
     }
 
-    return result.map((user) =>
-      new UserClass(
-        user.id,
-        user.firstName,
-        user.lastName,
-        user.employeeId,
-        user.vast,
-        user.admin,
-        user.active,
-        user.minDays,
-        user.maxDays,
-        user.primaryRole,
-        user.secondaryRole
-      ).create()
+    return result.map(
+      (user) =>
+        new UserClass(
+          user.id,
+          user.firstName,
+          user.lastName,
+          user.employeeId,
+          user.vast,
+          user.admin,
+          user.active,
+          user.minDays,
+          user.maxDays,
+          user.primaryRole,
+          user.secondaryRole
+        )
     );
   } catch (error) {
     console.error("Error getting All users from DB", error);
@@ -125,16 +151,19 @@ export async function deactivateOneUserToggle(id: string) {
   try {
     const user = await getOneUser(id);
 
-    if (!user) {
-      return "User not found";
+    if (user instanceof ErrorClass) {
+      return user.toClient();
     }
 
-    toggle = !user.active;
+    if (user instanceof UserClass) {
+      toggle = !user.active;
+    }
   } catch (error) {
     console.error("Error Deactivate user from DB", error);
+    return ErrorClass.new("Error Deactivate user in DB").toClient();
   }
   try {
-    await db
+    return await db
       .update(UserSchema)
       .set({ active: toggle })
       .where(eq(UserSchema.id, id))
@@ -143,6 +172,7 @@ export async function deactivateOneUserToggle(id: string) {
     console.error("Error Deactivate user from DB", error);
   }
 }
+
 // Delete One user from DB
 export async function deleteOneUser(id: string) {
   try {
@@ -411,10 +441,19 @@ export async function updateWeekPlan(id: string, time: string) {
 // Delete One week plan from DB
 export async function deleteOneWeekPlan(id: string) {
   try {
-    return await db
+    const result = await db
       .delete(WeekPlanSchema)
       .where(eq(WeekPlanSchema.id, id))
       .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error deleting week plan from DB");
+    }
+    if (result.length === 0) {
+      return ErrorClass.new("Week plan not found");
+    }
+
+    return result;
   } catch (error) {
     console.error("Error deleting week plan from DB", error);
     return ErrorClass.new("Error deleting week plan from DB").toStr();

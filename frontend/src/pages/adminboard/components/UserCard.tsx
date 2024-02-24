@@ -29,6 +29,7 @@ export function UserCard({ users }: UserCardProps) {
           return (
             <Users
               key={user.id}
+              id={user.id}
               firstName={user.firstName}
               lastName={user.lastName}
               role={user.primaryRole}

@@ -1,4 +1,5 @@
 import * as dao from "../../database/dao";
+import { ErrorClass } from "../../domain/error";
 import { Roles } from "../../domain/types";
 import { UserClass } from "../../domain/user";
 
@@ -52,7 +53,12 @@ export async function createUser(body: CreateUserBody) {
   );
 
   const result = await dao.createOneUser(user);
-  return result;
+
+  if (result instanceof ErrorClass) {
+    return result.toClient();
+  }
+
+  return result.client();
 }
 
 export async function updateUser(body: UpdateUserBody) {

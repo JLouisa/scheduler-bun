@@ -75,4 +75,19 @@ export class UserClass {
       helper.getRoleEnumToStr(this.secondaryRole as Roles)
     );
   }
+  client(): UserClass {
+    return new UserClass(
+      this.id,
+      this.firstName,
+      this.lastName,
+      this.employeeId,
+      this.vast,
+      this.admin,
+      this.active,
+      this.minDays,
+      this.maxDays,
+      helper.getRoleEnumToStr(this.primaryRole as Roles),
+      helper.getRoleEnumToStr(this.secondaryRole as Roles)
+    );
+  }
 }

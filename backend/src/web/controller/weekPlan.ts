@@ -81,11 +81,18 @@ export async function updateWeekPlan(body: UpdateWeekPlan) {
 }
 
 //! Delete one week plan
-export async function deleteWeekPlan(id: string) {
+export async function deleteWeekPlan(id: string, set: any) {
   try {
-    return await dao.deleteOneWeekPlan(id);
+    const result = await dao.deleteOneWeekPlan(id);
+    if (result instanceof ErrorClass) {
+      set.status(500);
+      return result.toClient();
+    }
+
+    return result;
   } catch (error) {
     console.error("Error deleting week plan from DB");
+    set.status(500);
     return ErrorClass.new("Error deleting week plan from DB").toClient();
   }
 }

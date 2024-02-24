@@ -2,13 +2,14 @@ import UserAvatar from "./UserAvatar";
 import UserSelectActive from "./UserSelectActive";
 
 type UserProps = {
+  id: string;
   firstName: string;
   lastName: string;
   role: string;
   active: boolean;
 };
 
-const Users = ({ firstName, lastName, role, active }: UserProps) => {
+const Users = ({ id, firstName, lastName, role, active }: UserProps) => {
   return (
     <div className="w-full flex justify-between items-center gap-4 mt-4">
       <UserAvatar />
@@ -19,7 +20,7 @@ const Users = ({ firstName, lastName, role, active }: UserProps) => {
         <br />
         <span className="text-gray-400 text-center truncate">{role}</span>
       </div>
-      <UserSelectActive active={active} />
+      <UserSelectActive active={active} id={id} />
     </div>
   );
 };
