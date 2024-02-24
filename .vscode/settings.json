@@ -12,16 +12,20 @@
     "Zondag",
     "adminboard",
     "bunx",
+    "currentweek",
     "elysiajs",
     "logysia",
     "lucide",
     "luxon",
+    "nextweek",
     "prio",
+    "rawweek",
     "tanstack",
     "toastify",
     "uuidv",
     "weekplan",
-    "weekschedule"
+    "weekschedule",
+    "zustand"
   ],
   "cSpell.customDictionaries": {
     "custom-dictionary-workspace": {

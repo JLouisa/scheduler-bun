@@ -1,14 +1,15 @@
+import App from "./App";
+import CurrentWeek from "./pages/currentWeek/CurrentWeek";
+import RawWeek from "./pages/rawWeek/RawWeek";
+import NextWeek from "./pages/nextWeek/NextWeek";
+import Dashboard from "./pages/dashboard/Dashboard";
+import ForgotEmail from "./pages/forgot/ForgotEmail";
+import Login from "./pages/login/Login";
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import App from "./App.js";
-import ScheduleBoard from "./pages/scheduleboard/ScheduleBoard";
-import Login from "./pages/login/Login";
-import AdminBoard from "./pages/adminboard/AdminBoard.js";
-import ForgotEmail from "./pages/forgot/ForgotEmail.js";
-import WeekBoard from "./pages/weekboard/WeekBoard.js";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -16,11 +17,12 @@ const Router = () => {
       path: "/",
       element: <App />,
       children: [
-        { path: "", element: <Navigate to="/scheduleboard" /> },
-        { path: "/scheduleboard", element: <ScheduleBoard /> },
+        { path: "", element: <Navigate to="/currentweek" /> },
+        { path: "/currentweek", element: <CurrentWeek /> },
+        { path: "/nextweek", element: <NextWeek /> },
         { path: "/login", element: <Login /> },
-        { path: "/admin", element: <AdminBoard /> },
-        { path: "/weekschedule", element: <WeekBoard /> },
+        { path: "/dashboard", element: <Dashboard /> },
+        { path: "/rawweek", element: <RawWeek /> },
         { path: "/forgot-password", element: <ForgotEmail /> },
       ],
     },

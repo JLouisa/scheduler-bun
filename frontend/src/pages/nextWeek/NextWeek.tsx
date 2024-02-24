@@ -1,13 +1,13 @@
-import TableSetup from "./components/TableSetup";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import LoadingSkeletons from "./components/LoadingSkeletons";
+import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
-import LoadingSkeletons from "./components/LoadingSkeletons";
-import { useState } from "react";
+import { createWeekID } from "@/lib/utils";
 
-const ScheduleBoard = () => {
-  const [theMode, setTheMode] = useState<string>("user");
-  const [weeklyId, setWeeklyId] = useState<string>("2024-8");
+const NextWeek = () => {
+  const [weeklyId, setWeeklyId] = useState<string>(createWeekID());
 
   // Queries
   const {
@@ -30,11 +30,7 @@ const ScheduleBoard = () => {
     queryFn: () => DAL.getAllAvailabilities(weeklyId),
   });
 
-  if (!isLoadingUsers && !isLoadingAvailabilities) {
-    console.log(`react-query is done loading`);
-    console.log(userData);
-    console.log(availabilitiesData);
-  }
+  const userOptions = ["Available", "13", "15", "17", "Free"];
 
   if (isLoadingUsers || isLoadingAvailabilities) {
     return <LoadingSkeletons count={10} />;
@@ -58,12 +54,12 @@ const ScheduleBoard = () => {
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}
-          theMode={theMode}
           weeklyId={weeklyId}
+          options={userOptions}
         />
       </div>
     </>
   );
 };
 
-export default ScheduleBoard;
+export default NextWeek;

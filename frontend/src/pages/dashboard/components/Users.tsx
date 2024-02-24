@@ -1,4 +1,3 @@
-import EditUser from "./EditUser";
 import UserAvatar from "./UserAvatar";
 import UserSelectActive from "./UserSelectActive";
 import { capitalizeFirstLetter } from "@/lib/utils";
@@ -8,9 +7,10 @@ import AddOrEditUser from "./AddOrEditUser";
 
 type UserProps = {
   user: types.UserProps;
+  refetch: () => void;
 };
 
-const Users = ({ user }: UserProps) => {
+const Users = ({ user, refetch }: UserProps) => {
   const [theUser, setTheUser] = useState<types.UserProps>(user);
 
   return (
@@ -25,7 +25,12 @@ const Users = ({ user }: UserProps) => {
         <div className="text-gray-400 truncate">{theUser.primaryRole}</div>
       </div>
       <div className="flex justify-between items-center gap-4">
-        <AddOrEditUser theUser={theUser} setTheUser={setTheUser} edit={true} />
+        <AddOrEditUser
+          theUser={theUser}
+          setTheUser={setTheUser}
+          edit={true}
+          refetch={refetch}
+        />
         <UserSelectActive theUser={theUser} setTheUser={setTheUser} />
       </div>
     </div>

@@ -3,8 +3,6 @@ import { ErrorClass } from "../../domain/error";
 import { Roles } from "../../domain/types";
 import { UserClass } from "../../domain/user";
 
-import set from "elysia";
-
 type CreateUserBody = {
   firstName: string;
   lastName: string;
@@ -40,7 +38,7 @@ export async function getOneUser(id: string) {
   return await dao.getOneUser(id);
 }
 
-export async function createUser(body: CreateUserBody) {
+export async function createUser(body: CreateUserBody, set: any) {
   const user = UserClass.new(
     body.firstName.toLowerCase(),
     body.lastName.toLowerCase(),
@@ -57,6 +55,7 @@ export async function createUser(body: CreateUserBody) {
   const result = await dao.createOneUser(user);
 
   if (result instanceof ErrorClass) {
+    set.status = 400;
     return result.toClient();
   }
 

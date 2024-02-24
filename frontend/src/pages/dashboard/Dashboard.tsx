@@ -1,15 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import UserCard from "./components/UserCard";
-import LoadingSkeletons from "../scheduleboard/components/LoadingSkeletons";
+import LoadingSkeletons from "@/pages/dashboard/components/LoadingSkeletons";
 import * as DAL from "@/lib/dal";
 
-const AdminBoard = () => {
+const Dashboard = () => {
   // Get all users from the database
   const {
     data: userData,
     isLoading: isLoadingUsers,
     error: userError,
     isError: isUserError,
+    refetch,
   } = useQuery({
     queryKey: ["users"],
     queryFn: DAL.getAllUsers,
@@ -25,9 +26,9 @@ const AdminBoard = () => {
 
   return (
     <>
-      <UserCard users={userData} />
+      <UserCard users={userData} refetch={refetch} />
     </>
   );
 };
 
-export default AdminBoard;
+export default Dashboard;

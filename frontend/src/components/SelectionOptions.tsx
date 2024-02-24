@@ -1,3 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
+import * as DAL from "@/lib/dal";
+import * as types from "@/lib/types";
+import { capitalizeFirstLetter } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -5,30 +11,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import * as DAL from "@/lib/dal";
-import { useToast } from "@/components/ui/use-toast";
-import * as types from "@/lib/types";
-import { capitalizeFirstLetter } from "@/lib/utils";
 
 const SelectionOptions = ({
   day,
   time,
-  mode,
   user,
   availabilityId,
-  weeklyId,
+  options,
 }: types.SelectionOptionsProps) => {
   const [spotsId, setSpotsId] = useState<string | undefined>(availabilityId);
   const [timeValue, setTimeValue] = useState<string>(time);
 
   const { toast } = useToast();
 
-  const updateWeekAvailability = useMutation({
-    mutationKey: ["updateOnWeekAvailability"],
-    mutationFn: async (data: types.WeekProps) => {
-      const result = await DAL.postOneWeek(data);
+  const updateAvailability = useMutation({
+    mutationKey: ["availability"],
+    mutationFn: async (data: any) => {
+      const result = await DAL.postAvailability(data);
       return result;
     },
     onSuccess: (data) => {
@@ -50,10 +49,10 @@ const SelectionOptions = ({
     },
   });
 
-  const deleteWeekAvailability = useMutation({
-    mutationKey: ["deleteWeekAvailability"],
+  const deleteAvailability = useMutation({
+    mutationKey: ["deleteAvailability"],
     mutationFn: async (data: string) => {
-      const result = await DAL.deleteWeekAvailability(data);
+      const result = await DAL.deleteAvailability(data);
       return result;
     },
     onSuccess: () => {
@@ -66,34 +65,8 @@ const SelectionOptions = ({
     },
   });
 
-  const userValues = ["Available", "13", "15", "17", "Free"];
-  const adminValues = [
-    "Available",
-    "13",
-    "13-17",
-    "15",
-    "15-17",
-    "17",
-    "18",
-    "(17)18",
-    "(17)",
-    "(18)",
-    "Free",
-  ];
-  const adminValues2 = [
-    "13",
-    "13-17",
-    "15",
-    "15-17",
-    "17",
-    "18",
-    "(17)18",
-    "(17)",
-    "(18)",
-  ];
-
   function matchDay(t: string) {
-    return mode === "user" ? userValues.includes(t) : adminValues.includes(t);
+    return options.includes(t);
   }
 
   const updateSelection = async (e: any) => {
@@ -101,14 +74,11 @@ const SelectionOptions = ({
 
     if (e.target.value === "del" && spotsId !== undefined) {
       console.log("Delete");
-      console.log(spotsId);
-      deleteWeekAvailability.mutate(spotsId);
+      deleteAvailability.mutate(spotsId);
     } else if (e.target.value !== "del") {
-      console.log("Post WeekAvailability");
-      console.log(weeklyId, spotsId, user.id, day, e.target.value);
-      updateWeekAvailability.mutate({
-        id: spotsId ? spotsId : "",
-        weeklyId: weeklyId as string,
+      console.log("Post");
+      updateAvailability.mutate({
+        availabilityId: spotsId ? spotsId : "",
         userId: user.id,
         day,
         time: e.target.value,
@@ -128,7 +98,7 @@ const SelectionOptions = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="del">-</SelectItem>
-          {(mode === "user" ? userValues : adminValues2).map((value, index) => {
+          {options.map((value, index) => {
             return (
               <SelectItem key={index} value={value}>
                 {value}

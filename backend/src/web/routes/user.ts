@@ -5,7 +5,7 @@ export const userRoutes = new Elysia({ prefix: "/user" })
   // Get all users
   .get("/", () => user.getAllUsers())
   // Create a new user
-  .post("/", ({ body }) => user.createUser(body), {
+  .post("/", ({ body, set }) => user.createUser(body, set), {
     body: t.Object({
       firstName: t.String(),
       lastName: t.String(),

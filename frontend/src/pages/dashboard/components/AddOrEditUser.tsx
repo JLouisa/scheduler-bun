@@ -24,9 +24,15 @@ interface EditUserProps {
   theUser?: types.UserProps;
   setTheUser?: React.Dispatch<React.SetStateAction<types.UserProps>>;
   edit: boolean;
+  refetch?: () => void;
 }
 
-const AddOrEditUser = ({ theUser, setTheUser, edit }: EditUserProps) => {
+const AddOrEditUser = ({
+  theUser,
+  setTheUser,
+  edit,
+}: // refetch,
+EditUserProps) => {
   const [isActive, setIsActive] = useState<boolean>(theUser?.active || true);
   const [isVast, setIsVast] = useState<boolean>(theUser?.vast || false);
   const [open, setOpen] = useState(false);
@@ -39,7 +45,7 @@ const AddOrEditUser = ({ theUser, setTheUser, edit }: EditUserProps) => {
         : await DAL.postNewUser(data as types.NewUserT);
       return result;
     },
-    onSuccess: (user) => {
+    onSuccess: (user: types.UserProps) => {
       toast({
         title: `${capitalizeFirstLetter(user.firstName)} ${user.lastName}`,
         description: `${capitalizeFirstLetter(user.firstName)}${
@@ -48,7 +54,14 @@ const AddOrEditUser = ({ theUser, setTheUser, edit }: EditUserProps) => {
             : "'s info has been Successfully created"
         }!`,
       });
-      if (edit) setTheUser!(user);
+
+      if (edit) {
+        setTheUser!(user);
+      } else {
+        window.location.reload();
+        // refetch();
+      }
+
       setOpen(false);
     },
     onError: (error) => {
@@ -162,6 +175,8 @@ const AddOrEditUser = ({ theUser, setTheUser, edit }: EditUserProps) => {
                       ? "number"
                       : "text"
                   }
+                  max={field.id === "maxDays" ? 7 : 9999}
+                  min={field.id === "minDays" ? 1 : 0}
                   id={field.id}
                   defaultValue={field.defaultValue}
                   className="col-span-3"

@@ -8,14 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import * as types from "@/lib/types";
-import AddUser from "./AddUser";
 import AddOrEditUser from "./AddOrEditUser";
 
 type UserCardProps = {
   users: types.UserProps[];
+  refetch: () => void;
 };
 
-export function UserCard({ users }: UserCardProps) {
+export function UserCard({ users, refetch }: UserCardProps) {
   return (
     <Card className="w-[500px] mt-4">
       <CardHeader>
@@ -27,7 +27,7 @@ export function UserCard({ users }: UserCardProps) {
       </CardHeader>
       <CardContent>
         {users.map((user) => {
-          return <Users user={user} key={user.id} />;
+          return <Users user={user} key={user.id} refetch={refetch} />;
         })}
       </CardContent>
       <CardFooter className="flex justify-between"></CardFooter>

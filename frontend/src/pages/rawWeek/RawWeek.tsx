@@ -1,13 +1,14 @@
-import TableSetup from "./components/TableSetup";
+// import TableSetup from "./components/TableSetup";
+import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import { useQuery } from "@tanstack/react-query";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import { useState } from "react";
+import { createWeekID } from "@/lib/utils";
 
-const WeekBoard = () => {
-  const [theMode, setTheMode] = useState<string>("admin");
-  const [weeklyId, setWeeklyId] = useState<string>("2024-8");
+const RawWeek = () => {
+  const [weeklyId, setWeeklyId] = useState<string>(createWeekID());
 
   // Queries
   const {
@@ -30,6 +31,20 @@ const WeekBoard = () => {
     queryFn: () => DAL.getAllWeeks(weeklyId),
   });
 
+  const adminOptions = [
+    "Available",
+    "13",
+    "13-17",
+    "15",
+    "15-17",
+    "17",
+    "18",
+    "(17)18",
+    "(17)",
+    "(18)",
+    "Free",
+  ];
+
   if (!isLoadingUsers && !isLoadingAvailabilities) {
     console.log(`react-query is done loading`);
     console.log(userData);
@@ -51,22 +66,19 @@ const WeekBoard = () => {
     );
   }
 
-  const dev = false;
-  if (dev) return <div>Test</div>;
-
   return (
     <>
       <div className="w-full">
-        <h1 className="text-xl text-center mt-4">Week Schedule</h1>
+        <h1 className="text-xl text-center mt-4">Raw Week</h1>
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}
-          theMode={theMode}
           weeklyId={weeklyId}
+          options={adminOptions}
         />
       </div>
     </>
   );
 };
 
-export default WeekBoard;
+export default RawWeek;

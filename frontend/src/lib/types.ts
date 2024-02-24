@@ -1,5 +1,3 @@
-import { boolean } from "zod";
-
 export interface AvailableProps {
   createdAt: string;
   day: string;
@@ -71,8 +69,8 @@ export interface NewUserType {
 export interface TableSetupProps {
   users: UserProps[];
   available: Week | undefined;
-  theMode: string;
   weeklyId: string;
+  options: string[];
 }
 
 export type postAvailability = {
@@ -89,10 +87,10 @@ export type LoadingSkeletonsType = {
 export interface SelectionOptionsProps {
   day: string;
   time: string;
-  mode: string;
   user: UserProps;
   availabilityId: string | undefined;
   weeklyId?: string;
+  options: string[];
 }
 
 export type LoginEmail = {
