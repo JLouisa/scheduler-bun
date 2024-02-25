@@ -1,4 +1,4 @@
-import * as dao from "../../database/dao";
+import * as dao from "../../database/dao/loginDAO";
 import { AdminClass } from "../../domain/admin";
 import { ErrorClass } from "../../domain/error";
 
@@ -13,14 +13,15 @@ export async function postLogin(
 ): Promise<AdminClass | ErrorClass> {
   try {
     const user = AdminClass.login(body.email, body.password);
-    const result = await dao.login(user);
+
+    const result: AdminClass[] | ErrorClass = await dao.login(user);
 
     if (result instanceof ErrorClass) {
       return result;
     }
 
     // If login was successful, return the user object
-    return result;
+    return result[0];
   } catch (error) {
     // Handle unexpected errors
     console.error("Error during login:", error);

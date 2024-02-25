@@ -31,7 +31,7 @@ export class AdminClass {
     return new AdminClass(NIL_UUID, "", "", email, password, true);
   }
   // Create a new instance of the class from DB for logic work
-  create(): AdminClass {
+  dbOut(): AdminClass {
     return new AdminClass(
       this.id,
       this.firstName,
@@ -42,7 +42,7 @@ export class AdminClass {
     );
   }
   // Create a new instance of the class for database insertion
-  db(): AdminClass {
+  dbIn(): AdminClass {
     return new AdminClass(
       this.id,
       this.firstName,
@@ -52,7 +52,17 @@ export class AdminClass {
       this.active
     );
   }
-  client(): ClientUser {
+  clientOut(): ClientUser {
+    const client = {
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      active: this.active,
+    };
+    return client;
+  }
+  clientIn(): ClientUser {
     const client = {
       id: this.id,
       firstName: this.firstName,

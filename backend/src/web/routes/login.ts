@@ -20,7 +20,7 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
 
         if (user instanceof ErrorClass) {
           set.status = 401;
-          return { error: user.toStr() };
+          return user.clientOut();
         }
 
         if (user instanceof AdminClass) {
@@ -33,10 +33,7 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
             httpOnly: true, // Prevents JavaScript from accessing the cookie
             maxAge: 86400 * (body.remember ? 30 : 1), //86400 seconds in a day
           });
-          return {
-            success: true,
-            user: user.client(),
-          };
+          return user.clientOut();
         }
       } catch (error) {
         console.error("Error during login:", error);

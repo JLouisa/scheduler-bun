@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { isAuth } from "../../lib/auth";
 import { jwt } from "@elysiajs/jwt";
+import { ErrorClass } from "../../domain/error";
 
 export const adminRoutes = new Elysia({ prefix: "/auth" })
   .use(
@@ -14,7 +15,7 @@ export const adminRoutes = new Elysia({ prefix: "/auth" })
 
     if (!profile) {
       set.status = 401;
-      return { msg: "Unauthorized", obj: profile };
+      return ErrorClass.new("Unauthorized").clientOut();
     }
 
     return `Hello is authenticated`;

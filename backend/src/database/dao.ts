@@ -1,50 +1,14 @@
 // Import the db schemas
-import { AdminSchema } from "./schema/admin";
 import { WeekStatusSchema } from "./schema/weekStatus";
 
 // Import the domain classes
 import { WeekStatusClass } from "../domain/weekStatus";
-import { AdminClass } from "../domain/admin";
 import { ErrorClass } from "../domain/error";
 import { WeekStatusCollection } from "../domain/types";
 
 // Setup the DB connection
 import { db } from "./setup";
 import { eq, lt, gte, ne, desc } from "drizzle-orm";
-
-//! Login
-export async function login(body: AdminClass) {
-  try {
-    const user = await db
-      .select()
-      .from(AdminSchema)
-      .where(eq(AdminSchema.email, body.email));
-
-    if (user.length === 0) {
-      return ErrorClass.new("Email or password is incorrect");
-    }
-
-    if (!user[0].active) {
-      return ErrorClass.new("User is not active");
-    }
-
-    if (user[0].password !== body.password) {
-      return ErrorClass.new("Email or password is incorrect");
-    }
-
-    return new AdminClass(
-      user[0].id,
-      user[0].firstName,
-      user[0].lastName,
-      user[0].email,
-      user[0].password,
-      user[0].active
-    ).create();
-  } catch (error) {
-    console.error("Error logging in user from DB", error);
-    return ErrorClass.new("Error logging in user from DB");
-  }
-}
 
 //! WeekStatus
 // Create One week status in DB
