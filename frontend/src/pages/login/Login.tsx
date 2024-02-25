@@ -19,13 +19,13 @@ const Login = () => {
       toast({
         title: `Login successful`,
       });
-      navigate("/admin");
+      navigate("/dashboard");
     },
     onError: () => {
       toast({
         variant: "destructive",
-        title: `Username or password is incorrect.`,
-        description: "Uh oh! Something went wrong. Please try again.",
+        title: "Uh oh! Something went wrong.",
+        description: "Username or password is incorrect. Please try again.",
       });
     },
   });

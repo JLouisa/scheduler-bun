@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import UserCard from "./components/UserCard";
 import LoadingSkeletons from "@/pages/dashboard/components/LoadingSkeletons";
 import * as DAL from "@/lib/dal";
+import ViewWeeks from "@/pages/dashboard/components/WeekViews";
 
 const Dashboard = () => {
   // Get all users from the database
@@ -27,6 +28,7 @@ const Dashboard = () => {
   return (
     <>
       <UserCard users={userData} refetch={refetch} />
+      <ViewWeeks />
     </>
   );
 };

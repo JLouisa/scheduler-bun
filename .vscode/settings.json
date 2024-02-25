@@ -25,6 +25,7 @@
     "uuidv",
     "weekplan",
     "weekschedule",
+    "weekstatus",
     "zustand"
   ],
   "cSpell.customDictionaries": {

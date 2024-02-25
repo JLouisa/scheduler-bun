@@ -39,6 +39,13 @@ export enum Roles {
   Invalid,
 }
 
+export enum WeekStatus {
+  InProgress,
+  Pending,
+  Completed,
+  Invalid,
+}
+
 export function createWeekID(num = 0) {
   const today = DateTime.local();
   const year = today.year;
@@ -48,6 +55,32 @@ export function createWeekID(num = 0) {
 
 export function getRoleEnumToStr(role: Roles): string {
   return Roles[role];
+}
+
+export function getWeekStatusEnumToStr(status: WeekStatus): string {
+  switch (status) {
+    case WeekStatus.InProgress:
+      return "In Progress";
+    case WeekStatus.Pending:
+      return "Pending";
+    case WeekStatus.Completed:
+      return "Completed";
+    default:
+      return "Invalid";
+  }
+}
+
+export function getWeekStatusStrToEnum(status: string): WeekStatus {
+  switch (status) {
+    case "In Progress":
+      return WeekStatus.InProgress;
+    case "Pending":
+      return WeekStatus.Pending;
+    case "Completed":
+      return WeekStatus.Completed;
+    default:
+      return WeekStatus.Invalid;
+  }
 }
 
 export function getRoleStrToEnum(role: string): Roles {

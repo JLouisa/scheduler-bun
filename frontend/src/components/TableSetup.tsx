@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Fragment } from "react";
 
 const TableSetup = ({ users, available, options }: types.TableSetupProps) => {
   const weekNum = DateTime.local().weekNumber;
@@ -50,6 +51,7 @@ const TableSetup = ({ users, available, options }: types.TableSetupProps) => {
   const lightCell = "w-[100px] border-r-2 text-center text-slate-500";
   const nameCell = "font-medium border-r-2 truncate";
 
+  // const cleaner = users.filter((user) => user.primaryRole === "Cleaner");
   const grillers = users.filter((user) => user.primaryRole === "Griller");
   const bar = users.filter((user) => user.primaryRole === "Bar");
   const servers = users.filter((user) => user.primaryRole === "Service");
@@ -76,6 +78,8 @@ const TableSetup = ({ users, available, options }: types.TableSetupProps) => {
     },
   ];
 
+  const roles = [cleaner, managers, kitchen, dishwashers, service];
+
   return (
     <>
       <Table className="mt-8 border-t-2 border-l-2 shadow-md">
@@ -97,172 +101,45 @@ const TableSetup = ({ users, available, options }: types.TableSetupProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {cleaner.map((user) => {
+          {roles.map((role, index) => {
             return (
-              <TableRow key={user.id}>
-                <TableCell className={`${nameCell}`}>
-                  {capitalizeFirstLetter(user.firstName)}
-                </TableCell>
-                <TableCell className={`${lightCell}`}>
-                  {user.employeeId}
-                </TableCell>
-                <TableCell
-                  className={`${lightCell}`}
-                >{`${user.minDays}-${user.maxDays}`}</TableCell>
-                {days.map((day) => {
+              <Fragment key={index}>
+                <TableRow>
+                  <TableCell> </TableCell>
+                  <TableCell> </TableCell>
+                </TableRow>
+                {role.map((user) => {
                   return (
-                    <TableCell className={`${tableCell}`} key={day}>
-                      <SelectionOptions
-                        day={day}
-                        time={getTime(user.id, day as keyof types.Week)}
-                        user={user}
-                        availabilityId={getSpot(
-                          user.id,
-                          day as keyof types.Week
-                        )}
-                        options={options}
-                      />
-                    </TableCell>
+                    <TableRow key={user.id}>
+                      <TableCell className={`${nameCell}`}>
+                        {capitalizeFirstLetter(user.firstName)}
+                      </TableCell>
+                      <TableCell className={`${lightCell}`}>
+                        {user.employeeId}
+                      </TableCell>
+                      <TableCell
+                        className={`${lightCell}`}
+                      >{`${user.minDays}-${user.maxDays}`}</TableCell>
+                      {days.map((day) => {
+                        return (
+                          <TableCell className={`${tableCell}`} key={day}>
+                            <SelectionOptions
+                              day={day}
+                              time={getTime(user.id, day as keyof types.Week)}
+                              user={user}
+                              availabilityId={getSpot(
+                                user.id,
+                                day as keyof types.Week
+                              )}
+                              options={options}
+                            />
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
                   );
                 })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <TableCell> </TableCell>
-            <TableCell> </TableCell>
-          </TableRow>
-          {managers.map((user) => {
-            return (
-              <TableRow key={user.id}>
-                <TableCell className={`${nameCell}`}>
-                  {capitalizeFirstLetter(user.firstName)}
-                </TableCell>
-                <TableCell className={`${lightCell}`}>
-                  {user.employeeId}
-                </TableCell>
-                <TableCell
-                  className={`${lightCell}`}
-                >{`${user.minDays}-${user.maxDays}`}</TableCell>
-                {days.map((day) => {
-                  return (
-                    <TableCell className={`${tableCell}`} key={day}>
-                      <SelectionOptions
-                        day={day}
-                        time={getTime(user.id, day as keyof types.Week)}
-                        user={user}
-                        availabilityId={getSpot(
-                          user.id,
-                          day as keyof types.Week
-                        )}
-                        options={options}
-                      />
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <TableCell> </TableCell>
-          </TableRow>
-          {dishwashers.map((user) => {
-            return (
-              <TableRow key={user.id}>
-                <TableCell className={`${nameCell}`}>
-                  {capitalizeFirstLetter(user.firstName)}
-                </TableCell>
-                <TableCell className={`${lightCell}`}>
-                  {user.employeeId}
-                </TableCell>
-                <TableCell
-                  className={`${lightCell}`}
-                >{`${user.minDays}-${user.maxDays}`}</TableCell>
-                {days.map((day) => {
-                  return (
-                    <TableCell className={`${tableCell}`} key={day}>
-                      <SelectionOptions
-                        day={day}
-                        time={getTime(user.id, day as keyof types.Week)}
-                        user={user}
-                        availabilityId={getSpot(
-                          user.id,
-                          day as keyof types.Week
-                        )}
-                        options={options}
-                      />
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <TableCell> </TableCell>
-          </TableRow>
-          {kitchen.map((user) => {
-            return (
-              <TableRow key={user.id}>
-                <TableCell className={`${nameCell}`}>
-                  {capitalizeFirstLetter(user.firstName)}
-                </TableCell>
-                <TableCell className={`${lightCell}`}>
-                  {user.employeeId}
-                </TableCell>
-                <TableCell
-                  className={`${lightCell}`}
-                >{`${user.minDays}-${user.maxDays}`}</TableCell>
-                {days.map((day) => {
-                  return (
-                    <TableCell className={`${tableCell}`} key={day}>
-                      <SelectionOptions
-                        day={day}
-                        time={getTime(user.id, day as keyof types.Week)}
-                        user={user}
-                        availabilityId={getSpot(
-                          user.id,
-                          day as keyof types.Week
-                        )}
-                        options={options}
-                      />
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-          <TableRow>
-            <TableCell> </TableCell>
-          </TableRow>
-          {service.map((user) => {
-            return (
-              <TableRow key={user.id}>
-                <TableCell className={`${nameCell}`}>
-                  {capitalizeFirstLetter(user.firstName)}
-                </TableCell>
-                <TableCell className={`${lightCell}`}>
-                  {user.employeeId}
-                </TableCell>
-                <TableCell
-                  className={`${lightCell}`}
-                >{`${user.minDays}-${user.maxDays}`}</TableCell>
-                {days.map((day) => {
-                  return (
-                    <TableCell className={`${tableCell}`} key={day}>
-                      <SelectionOptions
-                        day={day}
-                        time={getTime(user.id, day as keyof types.Week)}
-                        user={user}
-                        availabilityId={getSpot(
-                          user.id,
-                          day as keyof types.Week
-                        )}
-                        options={options}
-                      />
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
+              </Fragment>
             );
           })}
         </TableBody>

@@ -17,7 +17,7 @@ type UserCardProps = {
 
 export function UserCard({ users, refetch }: UserCardProps) {
   return (
-    <Card className="w-[500px] mt-4">
+    <Card className="w-[500px]">
       <CardHeader>
         <CardTitle className="text-center">Employees</CardTitle>
         <CardDescription className="text-center">

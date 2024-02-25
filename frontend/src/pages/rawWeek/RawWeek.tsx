@@ -1,10 +1,9 @@
-// import TableSetup from "./components/TableSetup";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import LoadingSkeletons from "./components/LoadingSkeletons";
 import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
-import { useQuery } from "@tanstack/react-query";
-import LoadingSkeletons from "./components/LoadingSkeletons";
-import { useState } from "react";
 import { createWeekID } from "@/lib/utils";
 
 const RawWeek = () => {
@@ -32,7 +31,6 @@ const RawWeek = () => {
   });
 
   const adminOptions = [
-    "Available",
     "13",
     "13-17",
     "15",

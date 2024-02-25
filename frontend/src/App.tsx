@@ -6,7 +6,7 @@ const App: React.FC = () => {
   return (
     <MaxWidthWrapper>
       <Header />
-      <main className="h-full w-full flex justify-center items-center">
+      <main className="h-full w-full flex justify-start items-start mt-4 gap-8">
         <Outlet />
       </main>
     </MaxWidthWrapper>
