@@ -1,4 +1,4 @@
-import * as dao from "../../database/dao";
+import * as dao from "../../database/dao/userDAO";
 import { ErrorClass } from "../../domain/error";
 import { Roles } from "../../domain/types";
 import { UserClass } from "../../domain/user";
@@ -49,12 +49,7 @@ export async function getOneUser(id: string) {
     return result.clientOut();
   }
 
-  // Return user
-  if (result instanceof ErrorClass) {
-    return result.clientOut();
-  }
-  // Return empty array
-  return result;
+  return result.map((user) => user.clientOut());
 }
 
 export async function createUser(body: CreateUserBody, set: any) {
@@ -122,17 +117,24 @@ export async function updateUser(body: UpdateUserBody, set: any) {
   return result.clientOut();
 }
 
-export async function deactivateOneUserToggle(id: string) {
-  return await dao.deactivateOneUserToggle(id);
-}
-
-export async function deleteOneUser(id: string, set: any) {
-  const result = await dao.deleteOneUser(id);
+export async function deactivateOneUserToggle(id: string, set: any) {
+  const result = await dao.deactivateOneUserToggle(id);
 
   if (result instanceof ErrorClass) {
     set.status = 400;
     return result.clientOut();
   }
 
-  return result.clientOut();
+  return result.map((user) => user.clientOut());
+}
+
+export async function deleteOneUser(id: string, set: any) {
+  const result: UserClass[] | ErrorClass = await dao.deleteOneUser(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((user) => user.clientOut());
 }

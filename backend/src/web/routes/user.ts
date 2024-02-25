@@ -20,7 +20,7 @@ export const userRoutes = new Elysia({ prefix: "/user" })
     }),
   })
   // Get one user
-  .get("/:id", ({ params: { id } }) => {
+  .get("/:id", ({ params: { id }, set }) => {
     return user.getOneUser(id);
   })
   // Update one user
@@ -40,8 +40,10 @@ export const userRoutes = new Elysia({ prefix: "/user" })
     }),
   })
   //! Delete all users
-  .delete("/all", () => `Delete all users`)
+  .delete("/all", ({ set }) => `Delete all users`)
   //! Delete one users
   .delete("/one/:id", ({ set, params: { id } }) => user.deleteOneUser(id, set))
   // Deactivate one users
-  .delete("/:id", ({ params: { id } }) => user.deactivateOneUserToggle(id));
+  .delete("/:id", ({ params: { id }, set }) =>
+    user.deactivateOneUserToggle(id, set)
+  );

@@ -16,15 +16,6 @@ import { NIL as NIL_UUID } from "uuid";
 export async function createAvailability(obj: AvailabilityClass) {
   const theAvailability = obj.dbIn();
   try {
-    // const result = await db
-    //   .insert(AvailabilitySchema)
-    //   .values({
-    //     weeklyId: theAvailability.weeklyId,
-    //     userId: theAvailability.userId,
-    //     day: theAvailability.day,
-    //     time: theAvailability.time,
-    //   })
-    //   .returning();
     const result = await db
       .insert(AvailabilitySchema)
       .values({
