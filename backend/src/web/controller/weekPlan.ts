@@ -35,8 +35,7 @@ export async function calcWeekPlan(id: string) {
   const weekPlan = await dao.getAllWeekPlan(id);
 
   if (weekPlan.length === 0) {
-    const calcNewWeekPlan = await weekCreator(id);
-    return calcNewWeekPlan;
+    return await weekCreator(id);
   }
 
   return weekPlan.map((week) => week.db());
@@ -86,14 +85,14 @@ export async function deleteWeekPlan(id: string, set: any) {
     const result = await dao.deleteOneWeekPlan(id);
     if (result instanceof ErrorClass) {
       set.status(500);
-      return result.toClient();
+      return result.clientOut();
     }
 
     return result;
   } catch (error) {
     console.error("Error deleting week plan from DB");
     set.status(500);
-    return ErrorClass.new("Error deleting week plan from DB").toClient();
+    return ErrorClass.new("Error deleting week plan from DB").clientOut();
   }
 }
 //! Delete all week plan

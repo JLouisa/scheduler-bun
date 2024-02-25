@@ -3,7 +3,7 @@ import * as user from "../controller/user";
 
 export const userRoutes = new Elysia({ prefix: "/user" })
   // Get all users
-  .get("/", () => user.getAllUsers())
+  .get("/", ({ set }) => user.getAllUsers(set))
   // Create a new user
   .post("/", ({ body, set }) => user.createUser(body, set), {
     body: t.Object({

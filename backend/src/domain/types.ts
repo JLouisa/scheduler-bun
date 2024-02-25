@@ -46,11 +46,19 @@ export enum WeekStatus {
   Invalid,
 }
 
+export type WeekStatusCollection = {
+  weeklyId1: string;
+  weeklyId2: string;
+  weeklyId3: string;
+  weeklyId4: string;
+  weeklyId5: string;
+};
+
 export function createWeekID(num = 0) {
   const today = DateTime.local();
   const year = today.year;
-  const weekNumber = today.weekNumber + num;
-  return `${year}-${weekNumber}`;
+  const weekNumber = today.weekNumber - num;
+  return `${year}-${weekNumber < 10 ? "0" + weekNumber : weekNumber}`;
 }
 
 export function getRoleEnumToStr(role: Roles): string {

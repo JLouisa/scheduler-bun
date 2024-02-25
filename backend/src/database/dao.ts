@@ -2,25 +2,29 @@
 import { UserSchema } from "./schema/users";
 import { WeekPlanSchema } from "./schema/weekPlan";
 import { AvailabilitySchema } from "./schema/availabilities";
+import { AdminSchema } from "./schema/admin";
+import { WeekStatusSchema } from "./schema/weekStatus";
 
 // Import the domain classes
 import { UserClass } from "../domain/user";
 import { WeekPlanClass } from "../domain/weekPlan";
 import { AvailabilityClass } from "../domain/availability";
+import { WeekStatusClass } from "../domain/weekStatus";
+import { AdminClass } from "../domain/admin";
+import { ErrorClass } from "../domain/error";
+import { WeekStatusCollection } from "../domain/types";
 
 // Setup the DB connection
 import { db } from "./setup";
 import { eq, lt, gte, ne, desc } from "drizzle-orm";
-import { AdminSchema } from "./schema/admin";
-import { AdminClass } from "../domain/admin";
-import { ErrorClass } from "../domain/error";
+import E from "elysia";
 
 //! Users
 // Create One user in DB
 export async function createOneUser(
   obj: UserClass
 ): Promise<UserClass | ErrorClass> {
-  const theUser = obj.db();
+  const theUser = obj.dbIn();
 
   try {
     const newUser = await db
@@ -59,7 +63,7 @@ export async function createOneUser(
       newUser[0].maxDays,
       newUser[0].primaryRole,
       newUser[0].secondaryRole
-    ).create();
+    ).dbOut();
   } catch (error) {
     console.error("Error creating one user in DB", error);
     return ErrorClass.new("Technical Error in creating user in DB");
@@ -77,25 +81,24 @@ export async function getAllUsers() {
       return [];
     }
 
-    return result.map(
-      (user) =>
-        new UserClass(
-          user.id,
-          user.firstName,
-          user.lastName,
-          user.employeeId,
-          user.vast,
-          user.admin,
-          user.active,
-          user.minDays,
-          user.maxDays,
-          user.primaryRole,
-          user.secondaryRole
-        )
+    return result.map((user) =>
+      new UserClass(
+        user.id,
+        user.firstName,
+        user.lastName,
+        user.employeeId,
+        user.vast,
+        user.admin,
+        user.active,
+        user.minDays,
+        user.maxDays,
+        user.primaryRole,
+        user.secondaryRole
+      ).dbOut()
     );
   } catch (error) {
     console.error("Error getting All users from DB", error);
-    return [];
+    return ErrorClass.new("Error getting users from DB");
   }
 }
 // Get one user from DB
@@ -105,6 +108,10 @@ export async function getOneUser(id: string) {
       .select()
       .from(UserSchema)
       .where(eq(UserSchema.id, id));
+
+    if (result.length === 0) {
+      return [];
+    }
 
     return new UserClass(
       result[0].id,
@@ -118,16 +125,17 @@ export async function getOneUser(id: string) {
       result[0].maxDays,
       result[0].primaryRole,
       result[0].secondaryRole
-    ).create();
+    ).dbOut();
   } catch (error) {
     console.error("Error getting One users from DB", error);
+    return ErrorClass.new("Error getting user from DB");
   }
 }
 // Update One user from DB
 export async function updateOneUser(
   obj: UserClass
 ): Promise<UserClass | ErrorClass> {
-  const theUser = obj.db();
+  const theUser = obj.dbIn();
 
   try {
     const result = await db
@@ -167,7 +175,7 @@ export async function updateOneUser(
       result[0].maxDays,
       result[0].primaryRole,
       result[0].secondaryRole
-    ).create();
+    ).dbOut();
   } catch (error) {
     console.error("Error updating user in DB", error);
     return ErrorClass.new("Something went wrong updating user in DB");
@@ -181,7 +189,7 @@ export async function deactivateOneUserToggle(id: string) {
     const user = await getOneUser(id);
 
     if (user instanceof ErrorClass) {
-      return user.toClient();
+      return user.clientOut();
     }
 
     if (user instanceof UserClass) {
@@ -189,7 +197,7 @@ export async function deactivateOneUserToggle(id: string) {
     }
   } catch (error) {
     console.error("Error Deactivate user from DB", error);
-    return ErrorClass.new("Error Deactivate user in DB").toClient();
+    return ErrorClass.new("Error Deactivate user in DB").clientOut();
   }
   try {
     return await db
@@ -230,7 +238,7 @@ export async function deleteOneUser(id: string) {
       result[0].maxDays,
       result[0].primaryRole,
       result[0].secondaryRole
-    ).create();
+    ).dbOut();
   } catch (error) {
     console.error("Error getting All users from DB", error);
     return ErrorClass.new("Error getting All users from DB");
@@ -551,5 +559,171 @@ export async function login(body: AdminClass) {
   } catch (error) {
     console.error("Error logging in user from DB", error);
     return ErrorClass.new("Error logging in user from DB");
+  }
+}
+
+//! WeekStatus
+// Create One week status in DB
+export async function createOneWeekStatus(obj: WeekStatusClass) {
+  const theWeekStatus = obj.dbIn();
+
+  try {
+    const result = await getOneWeekStatusByWeeklyId(theWeekStatus.weeklyId);
+
+    if (result instanceof ErrorClass) {
+      return result;
+    }
+
+    if (result instanceof WeekStatusClass) {
+      return result;
+    }
+
+    if (result.length === 0) {
+      // Do nothing, continue to create
+    }
+  } catch (error) {
+    console.error("Error creating week status in DB", error);
+    return ErrorClass.new("Error creating week status in DB");
+  }
+
+  try {
+    const result = await db
+      .insert(WeekStatusSchema)
+      .values({
+        weeklyId: theWeekStatus.weeklyId,
+        status: theWeekStatus.status,
+      })
+      .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error creating week status in DB");
+    }
+
+    if (result.length === 0) {
+      return ErrorClass.new("Something went wrong creating week status in DB");
+    }
+
+    return new WeekStatusClass(
+      result[0].id,
+      result[0].weeklyId,
+      result[0].status
+    ).dbOut();
+  } catch (error) {
+    console.error("Error creating week status in DB", error);
+    return ErrorClass.new("Error creating week status in DB");
+  }
+}
+
+// Get one week status by id from DB
+export async function getOneWeekStatusByWeeklyId(weeklyId: string) {
+  try {
+    const result = await db
+      .select()
+      .from(WeekStatusSchema)
+      .where(eq(WeekStatusSchema.weeklyId, weeklyId));
+
+    if (result.length === 0) {
+      return [];
+    }
+
+    return new WeekStatusClass(
+      result[0].id,
+      result[0].weeklyId,
+      result[0].status
+    ).dbOut();
+  } catch (error) {
+    console.error("Error getting one week status from DB", error);
+    return ErrorClass.new("Error getting one week status from DB");
+  }
+}
+
+// Get one week status by id from DB
+export async function getOneWeekStatus(id: string) {
+  try {
+    const result = await db
+      .select()
+      .from(WeekStatusSchema)
+      .where(eq(WeekStatusSchema.id, id));
+
+    if (result.length === 0) {
+      return [];
+    }
+
+    return new WeekStatusClass(
+      result[0].id,
+      result[0].weeklyId,
+      result[0].status
+    ).dbOut();
+  } catch (error) {
+    console.error("Error getting one week status from DB", error);
+    return ErrorClass.new("Error getting one week status from DB");
+  }
+}
+
+// Get last 5 week status
+export async function getLastWeekStatus(collection: WeekStatusCollection) {
+  try {
+    const result = await db
+      .select()
+      .from(WeekStatusSchema)
+      .orderBy(desc(WeekStatusSchema.weeklyId))
+      .limit(5);
+
+    if (result.length === 0) {
+      return [];
+    }
+    console.log(result[0].weeklyId, collection.weeklyId1);
+    if (result[0].weeklyId === collection.weeklyId1) {
+      return result.map((week) =>
+        new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+      );
+    }
+
+    const newWeek = WeekStatusClass.new(collection.weeklyId1, "In Progress");
+    const returnWeek = await createOneWeekStatus(newWeek);
+
+    if (returnWeek instanceof ErrorClass) {
+      return returnWeek;
+    }
+
+    return [returnWeek];
+  } catch (error) {
+    console.error("Error getting last week status from DB", error);
+    return ErrorClass.new("Error getting last week status from DB");
+  }
+}
+
+// Update One week status from DB
+export async function updateOneWeekStatus(obj: WeekStatusClass) {
+  const theWeekStatus = obj.dbIn();
+
+  try {
+    const result = await db
+      .update(WeekStatusSchema)
+      .set({
+        status: theWeekStatus.status,
+      })
+      .where(
+        eq(WeekStatusSchema.id, theWeekStatus.id) &&
+          eq(WeekStatusSchema.weeklyId, theWeekStatus.weeklyId)
+      )
+      .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error updating week status");
+    }
+
+    if (result.length === 0) {
+      return [];
+    }
+
+    return new WeekStatusClass(
+      result[0].id,
+      result[0].weeklyId,
+      result[0].status
+    ).dbOut();
+  } catch (error) {
+    console.error("Error updating week status in DB", error);
+    return ErrorClass.new("Error updating week status");
   }
 }

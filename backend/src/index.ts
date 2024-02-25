@@ -11,6 +11,7 @@ import { availableRoutes } from "./web/routes/availability";
 import { weekPlanRoutes } from "./web/routes/weekPlan";
 import { loginRoutes } from "./web/routes/login";
 import { adminRoutes } from "./web/routes/admin";
+import { weekStatusRoutes } from "./web/routes/weekStatus";
 
 // Init server
 const app = new Elysia()
@@ -33,6 +34,7 @@ const app = new Elysia()
       .use(weekPlanRoutes)
       .use(loginRoutes)
       .use(adminRoutes)
+      .use(weekStatusRoutes)
   )
 
   .onError(({ code }) => {

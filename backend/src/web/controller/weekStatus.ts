@@ -4,28 +4,86 @@ import * as helper from "../../domain/types";
 import { ErrorClass } from "../../domain/error";
 
 type WeekStatus = {
+  weeklyId: string;
+  status: string;
+};
+
+type UpdateWeekStatus = {
   id: string;
   weeklyId: string;
+  status: string;
 };
 
 //! Get all week status
-export async function getLastWeekStatus() {
-  return "Get all week status with weeklyId: " + helper.createWeekID();
+export async function getLastWeekStatus(set: any) {
+  const collection = WeekStatusClass.collection();
+  const result: WeekStatusClass[] | ErrorClass = await dao.getLastWeekStatus(
+    collection
+  );
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((weekStatus) => weekStatus.clientOut());
 }
 
 //! Get one week status
-export function getOneWeekStatus(id: string) {
-  return "Get one week plan with id: " + id;
+export async function getOneWeekStatus(id: string, set: any) {
+  const result = await dao.getOneWeekStatus(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  if (result instanceof WeekStatusClass) {
+    return [result.clientOut()];
+  }
+
+  return result;
 }
 
 //! Create one week status
-export async function createWeekStatus(body: WeekStatus) {
-  return "Create one week status";
+export async function createWeekStatus(body: WeekStatus, set: any) {
+  const weekStatus = WeekStatusClass.new(body.weeklyId, body.status);
+  const result = await dao.createOneWeekStatus(weekStatus);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return [result.clientOut()];
 }
 
 //! Update one week status
-export async function updateWeekStatus(body: WeekStatus) {
-  return "Update one week status";
+export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
+  const newWeekStatus = new WeekStatusClass(
+    body.id,
+    body.weeklyId,
+    body.status
+  );
+
+  if (newWeekStatus.status === helper.WeekStatus.Invalid) {
+    set.status = 400;
+    return new ErrorClass("Invalid status");
+  }
+
+  const result: WeekStatusClass | WeekStatusClass[] | ErrorClass =
+    await dao.updateOneWeekStatus(newWeekStatus);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  if (result instanceof WeekStatusClass) {
+    return [result.clientOut()];
+  }
+
+  return result;
 }
 
 //! Delete one week status
@@ -33,6 +91,6 @@ export async function deleteWeekStatus(id: string, set: any) {
   return "Delete one week status";
 }
 //! Delete all week status
-export function deleteAllWeekStatus() {
+export function deleteAllWeekStatus(set: any) {
   return "Delete all week status";
 }

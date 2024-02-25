@@ -20,5 +20,5 @@ export function createWeekID(num = 0) {
   const today = DateTime.local();
   const year = today.year;
   const weekNumber = today.weekNumber - num;
-  return `${year}-${weekNumber}`;
+  return `${year}-${weekNumber < 10 ? "0" + weekNumber : weekNumber}`;
 }

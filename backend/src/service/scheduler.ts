@@ -22,7 +22,6 @@ export async function weekCreator(weeklyId: string) {
   if (InitAvailabilities.length === 0) {
     throw new Error("No available spots");
   }
-
   // Exclude every available spot with time "Free"
   const availabilities = InitAvailabilities.filter(
     (availability) => availability.time !== theTypes.ScheduleTime.Free
@@ -113,7 +112,9 @@ export async function weekCreator(weeklyId: string) {
     ],
   };
 
-  const week = WeekWorkerClass.create(users!, theWeek, theLogic, chosenMap);
+  // return theWeek;
+
+  const week = WeekWorkerClass.create(users, theWeek, theLogic, chosenMap);
 
   const finalWeekPlan: WeekPlanClass[] = [];
 

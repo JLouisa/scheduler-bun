@@ -3,24 +3,24 @@ import * as weekStatus from "../controller/weekStatus";
 
 export const weekStatusRoutes = new Elysia({ prefix: "/weekstatus" })
   // Get all weekStatus
-  .get("/all/:weeklyId", () => weekStatus.getLastWeekStatus())
+  .get("/", ({ set }) => weekStatus.getLastWeekStatus(set))
   // Get one weekStatus
-  .get("/:id", ({ params: { id } }) => {
-    return weekStatus.getOneWeekStatus(id);
+  .get("/:id", ({ set, params: { id } }) => {
+    return weekStatus.getOneWeekStatus(id, set);
   })
   // Create a new weekStatus
-  .post("/", ({ body }) => weekStatus.createWeekStatus(body), {
+  .post("/", ({ set, body }) => weekStatus.createWeekStatus(body, set), {
     body: t.Object({
-      id: t.String(),
       weeklyId: t.String(),
+      status: t.String(),
     }),
   })
-
   // Update one weekStatus
-  .put("/", ({ body }) => weekStatus.updateWeekStatus(body), {
+  .put("/", ({ set, body }) => weekStatus.updateWeekStatus(body, set), {
     body: t.Object({
       id: t.String(),
       weeklyId: t.String(),
+      status: t.String(),
     }),
   })
   //! Delete all weekStatus

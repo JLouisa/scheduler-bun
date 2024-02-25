@@ -6,7 +6,7 @@ export class ErrorClass {
   toStr(): string {
     return this.message;
   }
-  toClient() {
+  clientOut() {
     return {
       error: this.message,
     };

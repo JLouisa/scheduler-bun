@@ -1,6 +1,7 @@
 import { text, sqliteTable } from "drizzle-orm/sqlite-core";
 import { v4 as uuidv4 } from "uuid";
 import { UserSchema } from "./users";
+import { WeekStatusSchema } from "./weekStatus";
 
 //Todo: Add the correct types
 export const WeekPlanSchema: any = sqliteTable("week_plan", {
@@ -9,7 +10,9 @@ export const WeekPlanSchema: any = sqliteTable("week_plan", {
     .unique()
     .notNull()
     .primaryKey(),
-  weeklyId: text("weekly_id").notNull(),
+  weeklyId: text("weekly_id")
+    .references(() => WeekStatusSchema.weeklyId)
+    .notNull(),
   userId: text("user_id")
     .references(() => UserSchema.id)
     .notNull(),

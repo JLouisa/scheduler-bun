@@ -50,7 +50,14 @@ export class WeekWorkerClass {
     theLogic: theLogicT,
     chosen: Map<string, number>
   ) {
-    return new WeekWorkerClass(
+    console.log(`users`)
+    console.log(users)
+    console.log(`week`)
+    console.log(week)
+    console.log(`chosen`)
+    console.log(chosen)
+    
+    const result = new WeekWorkerClass(
       WorkersClass.create(users, week.monday, theLogic, chosen, helper.Days.Monday),
       WorkersClass.create(users, week.tuesday, theLogic, chosen, helper.Days.Tuesday),
       WorkersClass.create(users, week.wednesday, theLogic, chosen, helper.Days.Wednesday),
@@ -59,6 +66,8 @@ export class WeekWorkerClass {
       WorkersClass.create(users, week.saturday, theLogic, chosen, helper.Days.Saturday),
       WorkersClass.create(users, week.sunday, theLogic, chosen, helper.Days.Sunday)
     );
+    console.log(result);
+    return result;
   }
 }
 

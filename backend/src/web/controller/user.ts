@@ -30,12 +30,31 @@ type UpdateUserBody = {
   secondaryRole: string;
 };
 
-export async function getAllUsers() {
-  return await dao.getAllUsers();
+export async function getAllUsers(set: any) {
+  const result = await dao.getAllUsers();
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((user) => user.clientOut());
 }
 
 export async function getOneUser(id: string) {
-  return await dao.getOneUser(id);
+  const result = await dao.getOneUser(id);
+
+  // Return error
+  if (result instanceof ErrorClass) {
+    return result.clientOut();
+  }
+
+  // Return user
+  if (result instanceof ErrorClass) {
+    return result.clientOut();
+  }
+  // Return empty array
+  return result;
 }
 
 export async function createUser(body: CreateUserBody, set: any) {
@@ -50,16 +69,24 @@ export async function createUser(body: CreateUserBody, set: any) {
     body.maxDays,
     body.primaryRole,
     body.secondaryRole
-  );
+  ).clientIn();
+
+  if (
+    user.primaryRole === Roles.Invalid ||
+    user.secondaryRole === Roles.Invalid
+  ) {
+    set.status = 400;
+    return ErrorClass.new("Invalid Role").clientOut();
+  }
 
   const result = await dao.createOneUser(user);
 
   if (result instanceof ErrorClass) {
     set.status = 400;
-    return result.toClient();
+    return result.clientOut();
   }
 
-  return result.client();
+  return result.clientOut();
 }
 
 export async function updateUser(body: UpdateUserBody, set: any) {
@@ -75,24 +102,24 @@ export async function updateUser(body: UpdateUserBody, set: any) {
     body.maxDays,
     body.primaryRole,
     body.secondaryRole
-  ).create();
+  ).clientIn();
 
   if (
     user.primaryRole === Roles.Invalid ||
     user.secondaryRole === Roles.Invalid
   ) {
     set.status = 400;
-    return ErrorClass.new("Invalid Role").toClient();
+    return ErrorClass.new("Invalid Role").clientOut();
   }
 
   const result: UserClass | ErrorClass = await dao.updateOneUser(user);
 
   if (result instanceof ErrorClass) {
     set.status = 400;
-    return result.toClient();
+    return result.clientOut();
   }
 
-  return result.client();
+  return result.clientOut();
 }
 
 export async function deactivateOneUserToggle(id: string) {
@@ -104,8 +131,8 @@ export async function deleteOneUser(id: string, set: any) {
 
   if (result instanceof ErrorClass) {
     set.status = 400;
-    return result.toClient();
+    return result.clientOut();
   }
 
-  return result.client();
+  return result.clientOut();
 }

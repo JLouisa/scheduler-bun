@@ -44,7 +44,7 @@ export class UserClass {
     );
   }
   // Create a new instance of the class from DB for logic work
-  create(): UserClass {
+  dbOut(): UserClass {
     return new UserClass(
       this.id,
       this.firstName,
@@ -60,7 +60,7 @@ export class UserClass {
     );
   }
   // Create a new instance of the class for database insertion
-  db(): UserClass {
+  dbIn(): UserClass {
     return new UserClass(
       this.id,
       this.firstName,
@@ -75,7 +75,22 @@ export class UserClass {
       helper.getRoleEnumToStr(this.secondaryRole as Roles)
     );
   }
-  client(): UserClass {
+  clientIn(): UserClass {
+    return new UserClass(
+      this.id,
+      this.firstName,
+      this.lastName,
+      this.employeeId,
+      this.vast,
+      this.admin,
+      this.active,
+      this.minDays,
+      this.maxDays,
+      helper.getRoleStrToEnum(this.primaryRole as string),
+      helper.getRoleStrToEnum(this.secondaryRole as string)
+    );
+  }
+  clientOut(): UserClass {
     return new UserClass(
       this.id,
       this.firstName,
