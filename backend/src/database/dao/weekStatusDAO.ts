@@ -1,13 +1,13 @@
 // Import the db schemas
-import { WeekStatusSchema } from "./schema/weekStatus";
+import { WeekStatusSchema } from "../schema/weekStatus";
 
 // Import the domain classes
-import { WeekStatusClass } from "../domain/weekStatus";
-import { ErrorClass } from "../domain/error";
-import { WeekStatusCollection } from "../domain/types";
+import { WeekStatusClass } from "../../domain/weekStatus";
+import { ErrorClass } from "../../domain/error";
+import { WeekStatusCollection } from "../../domain/types";
 
 // Setup the DB connection
-import { db } from "./setup";
+import { db } from "../setup";
 import { eq, lt, gte, ne, desc } from "drizzle-orm";
 
 //! WeekStatus
@@ -24,10 +24,6 @@ export async function createOneWeekStatus(obj: WeekStatusClass) {
 
     if (result instanceof WeekStatusClass) {
       return result;
-    }
-
-    if (result.length === 0) {
-      // Do nothing, continue to create
     }
   } catch (error) {
     console.error("Error creating week status in DB", error);
@@ -47,15 +43,9 @@ export async function createOneWeekStatus(obj: WeekStatusClass) {
       return ErrorClass.new("Error creating week status in DB");
     }
 
-    if (result.length === 0) {
-      return ErrorClass.new("Something went wrong creating week status in DB");
-    }
-
-    return new WeekStatusClass(
-      result[0].id,
-      result[0].weeklyId,
-      result[0].status
-    ).dbOut();
+    return result.map((week) =>
+      new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+    );
   } catch (error) {
     console.error("Error creating week status in DB", error);
     return ErrorClass.new("Error creating week status in DB");
@@ -70,15 +60,9 @@ export async function getOneWeekStatusByWeeklyId(weeklyId: string) {
       .from(WeekStatusSchema)
       .where(eq(WeekStatusSchema.weeklyId, weeklyId));
 
-    if (result.length === 0) {
-      return [];
-    }
-
-    return new WeekStatusClass(
-      result[0].id,
-      result[0].weeklyId,
-      result[0].status
-    ).dbOut();
+    return result.map((week) =>
+      new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+    );
   } catch (error) {
     console.error("Error getting one week status from DB", error);
     return ErrorClass.new("Error getting one week status from DB");
@@ -93,15 +77,12 @@ export async function getOneWeekStatus(id: string) {
       .from(WeekStatusSchema)
       .where(eq(WeekStatusSchema.id, id));
 
-    if (result.length === 0) {
-      return [];
-    }
+    if (!Array.isArray(result))
+      return ErrorClass.new("Error getting week status");
 
-    return new WeekStatusClass(
-      result[0].id,
-      result[0].weeklyId,
-      result[0].status
-    ).dbOut();
+    return result.map((week) =>
+      new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+    );
   } catch (error) {
     console.error("Error getting one week status from DB", error);
     return ErrorClass.new("Error getting one week status from DB");
@@ -109,7 +90,9 @@ export async function getOneWeekStatus(id: string) {
 }
 
 // Get last 5 week status
-export async function getLastWeekStatus(collection: WeekStatusCollection) {
+export async function getLastWeekStatus(
+  collection: WeekStatusCollection
+): Promise<WeekStatusClass[] | ErrorClass> {
   try {
     const result = await db
       .select()
@@ -117,10 +100,10 @@ export async function getLastWeekStatus(collection: WeekStatusCollection) {
       .orderBy(desc(WeekStatusSchema.weeklyId))
       .limit(5);
 
-    if (result.length === 0) {
-      return [];
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error getting week status");
     }
-    console.log(result[0].weeklyId, collection.weeklyId1);
+
     if (result[0].weeklyId === collection.weeklyId1) {
       return result.map((week) =>
         new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
@@ -134,7 +117,7 @@ export async function getLastWeekStatus(collection: WeekStatusCollection) {
       return returnWeek;
     }
 
-    return [returnWeek];
+    return returnWeek.map((week) => week.dbOut());
   } catch (error) {
     console.error("Error getting last week status from DB", error);
     return ErrorClass.new("Error getting last week status from DB");
@@ -161,15 +144,9 @@ export async function updateOneWeekStatus(obj: WeekStatusClass) {
       return ErrorClass.new("Error updating week status");
     }
 
-    if (result.length === 0) {
-      return [];
-    }
-
-    return new WeekStatusClass(
-      result[0].id,
-      result[0].weeklyId,
-      result[0].status
-    ).dbOut();
+    return result.map((week) =>
+      new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+    );
   } catch (error) {
     console.error("Error updating week status in DB", error);
     return ErrorClass.new("Error updating week status");

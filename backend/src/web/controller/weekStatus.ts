@@ -1,5 +1,5 @@
 import { WeekStatusClass } from "../../domain/weekStatus";
-import * as dao from "../../database/dao";
+import * as dao from "../../database/dao/weekStatusDAO";
 import * as helper from "../../domain/types";
 import { ErrorClass } from "../../domain/error";
 
@@ -38,11 +38,7 @@ export async function getOneWeekStatus(id: string, set: any) {
     return result.clientOut();
   }
 
-  if (result instanceof WeekStatusClass) {
-    return [result.clientOut()];
-  }
-
-  return result;
+  return result.map((weekStatus) => weekStatus.clientOut());
 }
 
 //! Create one week status
@@ -55,7 +51,7 @@ export async function createWeekStatus(body: WeekStatus, set: any) {
     return result.clientOut();
   }
 
-  return [result.clientOut()];
+  return result.map((weekStatus) => weekStatus.clientOut());
 }
 
 //! Update one week status
@@ -79,11 +75,7 @@ export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
     return result.clientOut();
   }
 
-  if (result instanceof WeekStatusClass) {
-    return [result.clientOut()];
-  }
-
-  return result;
+  return result.map((weekStatus) => weekStatus.clientOut());
 }
 
 //! Delete one week status
