@@ -1,9 +1,13 @@
 import { Days, ScheduleTime } from "../../domain/types";
+
 import { WeekPlanClass } from "../../domain/weekPlan";
-import * as dao from "../../database/dao";
-import { weekCreator } from "../../service/scheduler";
-import * as helper from "../../domain/types";
 import { ErrorClass } from "../../domain/error";
+import { weekCreator } from "../../service/scheduler";
+
+import * as dao from "../../database/dao/weekPlanDAO";
+import * as helper from "../../domain/types";
+import * as availabilityDAO from "../../database/dao/availabilityDAO";
+import { AvailabilityClass } from "../../domain/availability";
 
 type WeekPlan = {
   id: string;
@@ -21,9 +25,24 @@ type UpdateWeekPlan = {
   time: ScheduleTime | string;
 };
 
+type CreateWeekPlan = {
+  id: string;
+  weeklyId: string;
+  userId: string;
+  day: string;
+  time: string;
+};
+
 // Get one weekPlan
-export function getOneWeekPlan(id: string, set: any) {
-  return "Get one week plan with id: " + id;
+export async function getOneWeekPlan(id: string, set: any) {
+  const result = await dao.getOneWeekPlan(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((week) => week.clientOut());
 }
 
 // Get all weekPlans
@@ -35,7 +54,7 @@ export async function getAllWeekPlan(weeklyId: string, set: any) {
     return weekPlan.clientOut();
   }
 
-  return weekPlan.map((week) => week.db());
+  return weekPlan.map((week) => week.clientOut());
 }
 
 // Calculate the time for the weekPlan
@@ -48,34 +67,61 @@ export async function calcWeekPlan(weeklyId: string, set: any) {
   }
 
   if (weekPlan.length === 0) {
-    return await weekCreator(weeklyId);
+    const availabilities: AvailabilityClass[] | ErrorClass =
+      await availabilityDAO.getAllAvailabilitiesS(weeklyId);
+
+    if (availabilities instanceof ErrorClass) {
+      set.status = 500;
+      return availabilities.clientOut();
+    }
+
+    return await weekCreator(weeklyId, availabilities);
   }
 
-  return weekPlan.map((week) => week.db());
+  return weekPlan.map((week) => week.clientOut());
 }
 
 // Create a new weekPlan
-export async function createWeekPlan(body: WeekPlan, set: any) {
-  const week = new WeekPlanClass(
-    body.id,
-    body.weeklyId,
+export async function createWeekPlan(body: CreateWeekPlan, set: any) {
+  const week = WeekPlanClass.new(
     body.userId,
+    body.weeklyId,
     body.day,
-    body.time
-  ).create();
+    body.time,
+    body.id
+  );
 
-  const select: WeekPlanClass | ErrorClass = await dao.getOneWeekPlan(week.id);
-
-  if (select instanceof ErrorClass) {
-    return await dao.createOneWeek(week);
+  // Check if the day and time are valid
+  if (
+    week.day === helper.Days.Invalid ||
+    week.time === helper.ScheduleTime.Invalid
+  ) {
+    set.status = 400;
+    return ErrorClass.new("Invalid information").clientOut();
   }
 
-  if (select instanceof WeekPlanClass) {
-    return await dao.updateWeekPlan(
-      select.id,
-      helper.getScheduleTimeEnumToStr(week.time as ScheduleTime)
-    );
+  // Check if the availability already exists
+  const result = await dao.createOneWeek(week);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
   }
+
+  return result.map((availability) => availability.clientOut());
+
+  // const select: WeekPlanClass[] | ErrorClass = await dao.getOneWeekPlan(week.id);
+
+  // if (select instanceof ErrorClass) {
+  //   return await dao.createOneWeek(week);
+  // }
+
+  // if (select instanceof WeekPlanClass) {
+  //   return await dao.updateWeekPlan(
+  //     select.id,
+  //     helper.getScheduleTimeEnumToStr(week.time as ScheduleTime)
+  //   );
+  // }
 }
 
 // Update one weekPlan
@@ -86,30 +132,41 @@ export async function updateWeekPlan(body: UpdateWeekPlan, set: any) {
     body.userId,
     body.day,
     body.time
-  ).create();
+  ).clientIn();
 
-  return await dao.updateWeekPlan(
+  if (
+    week.day === helper.Days.Invalid ||
+    week.time === helper.ScheduleTime.Invalid
+  ) {
+    set.status = 400;
+    return ErrorClass.new("Invalid information").clientOut();
+  }
+
+  const result = await dao.updateWeekPlan(
     week.id,
     helper.getScheduleTimeEnumToStr(week.time as ScheduleTime)
   );
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((availability) => availability.clientOut());
 }
 
 //! Delete one week plan
 export async function deleteWeekPlan(id: string, set: any) {
-  try {
-    const result = await dao.deleteOneWeekPlan(id);
-    if (result instanceof ErrorClass) {
-      set.status(500);
-      return result.clientOut();
-    }
+  const result = await dao.deleteOneWeekPlan(id);
 
-    return result;
-  } catch (error) {
-    console.error("Error deleting week plan from DB");
-    set.status(500);
-    return ErrorClass.new("Error deleting week plan from DB").clientOut();
+  if (result instanceof ErrorClass) {
+    set.status(400);
+    return result.clientOut();
   }
+
+  return result.map((week) => week.clientOut());
 }
+
 //! Delete all week plan
 export function deleteAllWeekPlan(set: any) {
   return "Delete all week plan";

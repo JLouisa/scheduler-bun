@@ -7,7 +7,7 @@ import { UserClass } from "../../domain/user";
 
 // Setup the DB connection
 import { db } from "../setup";
-import { eq, lt, gte, ne, desc } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 // Create One user in DB
 export async function createOneUser(

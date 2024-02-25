@@ -1,10 +1,8 @@
 // Import the db schemas
-import { WeekPlanSchema } from "./schema/weekPlan";
 import { AdminSchema } from "./schema/admin";
 import { WeekStatusSchema } from "./schema/weekStatus";
 
 // Import the domain classes
-import { WeekPlanClass } from "../domain/weekPlan";
 import { WeekStatusClass } from "../domain/weekStatus";
 import { AdminClass } from "../domain/admin";
 import { ErrorClass } from "../domain/error";
@@ -13,124 +11,6 @@ import { WeekStatusCollection } from "../domain/types";
 // Setup the DB connection
 import { db } from "./setup";
 import { eq, lt, gte, ne, desc } from "drizzle-orm";
-
-//! WeekPlan
-// Create WeekPlan in DB
-export async function createOneWeek(obj: WeekPlanClass) {
-  const theWeek = obj.db();
-
-  try {
-    return await db
-      .insert(WeekPlanSchema)
-      .values({
-        weeklyId: theWeek.weeklyId,
-        userId: theWeek.userId,
-        day: theWeek.day,
-        time: theWeek.time,
-      })
-      .returning();
-  } catch (error) {
-    console.error("Error getting One availability from DB", error);
-  }
-}
-
-// Save calculated week plan to DB
-export async function createListWeekPlans(weekPlans: WeekPlanClass[]) {
-  const promises = weekPlans.map((week) => createOneWeek(week));
-  return (await Promise.all(promises)).flat();
-}
-
-// Get all week plans from DB
-export async function getAllWeekPlan(id: string) {
-  try {
-    const result = await db
-      .select()
-      .from(WeekPlanSchema)
-      .where(eq(WeekPlanSchema.weeklyId, id));
-
-    if (!Array.isArray(result)) {
-      return ErrorClass.new("Error getting weekPlans");
-    }
-
-    return result.map((week) =>
-      new WeekPlanClass(
-        week.id,
-        week.weeklyId,
-        week.userId,
-        week.day,
-        week.time
-      ).create()
-    );
-  } catch (error) {
-    console.error("Error getting All week plans from DB", error);
-    return ErrorClass.new("Error getting weekPlans");
-  }
-}
-
-// Get all week plans from DB
-export async function getOneWeekPlan(
-  id: string
-): Promise<WeekPlanClass | ErrorClass> {
-  try {
-    const result = await db
-      .select()
-      .from(WeekPlanSchema)
-      .where(eq(WeekPlanSchema.id, id));
-
-    if (result.length === 0) {
-      return ErrorClass.new("Something went wrong retrieving week plan");
-    }
-
-    return new WeekPlanClass(
-      result[0].id,
-      result[0].weeklyId,
-      result[0].userId,
-      result[0].day,
-      result[0].time
-    ).create();
-  } catch (error) {
-    console.error("Error getting one week plans from DB", error);
-    return ErrorClass.new("Error getting one week plans from DB");
-  }
-}
-
-// Update One week plan from DB
-export async function updateWeekPlan(id: string, time: string) {
-  return await db
-    .update(WeekPlanSchema)
-    .set({
-      time: time,
-    })
-    .where(eq(WeekPlanSchema.id, id))
-    .returning();
-}
-
-// Delete One week plan from DB
-export async function deleteOneWeekPlan(id: string) {
-  try {
-    const result = await db
-      .delete(WeekPlanSchema)
-      .where(eq(WeekPlanSchema.id, id))
-      .returning();
-
-    if (!Array.isArray(result)) {
-      return ErrorClass.new("Error deleting week plan from DB");
-    }
-    if (result.length === 0) {
-      return ErrorClass.new("Week plan not found");
-    }
-
-    return result;
-  } catch (error) {
-    console.error("Error deleting week plan from DB", error);
-    return ErrorClass.new("Error deleting week plan from DB").toStr();
-  }
-}
-
-// Delete All week plan from DB
-export async function deleteAllWeekPlan() {
-  return await db.delete(WeekPlanSchema);
-}
 
 //! Login
 export async function login(body: AdminClass) {

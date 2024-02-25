@@ -1,9 +1,13 @@
-import * as dao from "../database/dao";
+import * as availabilityDAO from "../database/dao/availabilityDAO";
+import * as weekPlanDAO from "../database/dao/weekPlanDAO";
+import * as userDAO from "../database/dao/userDAO";
+
 import { AvailabilityClass } from "../domain/availability";
 import * as library from "../lib/library";
 import * as theTypes from "../domain/types";
 import { theLogicT, WeekWorkerClass } from "../service/types";
 import { WeekPlanClass } from "../domain/weekPlan";
+import { UserClass } from "../domain/user";
 
 export type theWeekT = {
   monday: AvailabilityClass[];
@@ -15,29 +19,41 @@ export type theWeekT = {
   sunday: AvailabilityClass[];
 };
 
-export async function weekCreator(weeklyId: string) {
+export async function weekCreator(
+  weeklyId: string,
+  availables: AvailabilityClass[]
+) {
   // List of all available spots
-  const InitAvailabilities = await dao.getAllAvailabilitiesS(weeklyId);
+  const InitAvailabilities = await availabilityDAO.getAllAvailabilitiesS(
+    weeklyId
+  );
 
-  if (InitAvailabilities.length === 0) {
-    throw new Error("No available spots");
-  }
+  // if (InitAvailabilities instanceof ErrorClass) {
+  //   return InitAvailabilities;
+  // }
+
+  // if (InitAvailabilities.length === 0) {
+  //   throw new Error("No available spots");
+  // }
   // Exclude every available spot with time "Free"
-  const availabilities = InitAvailabilities.filter(
+  const availabilities = availables.filter(
     (availability) => availability.time !== theTypes.ScheduleTime.Free
   );
 
-  const users = await dao.getAllUsers();
-  if (users.length === 0) {
-    throw new Error("No users");
+  const users = await userDAO.getAllUsers();
+
+  if (users instanceof Error) {
+    return users;
   }
 
   // Create a Map with userId as key and 0 as value
   const chosenMap = new Map<string, number>();
 
-  users.forEach((user) => {
-    chosenMap.set(user.id, 0);
-  });
+  if (Array.isArray(users)) {
+    users.forEach((user) => {
+      chosenMap.set(user.id, 0);
+    });
+  }
 
   // list of all available spots on per day basis sorted by time
   const monday = library.bubbleSort(
@@ -114,7 +130,12 @@ export async function weekCreator(weeklyId: string) {
 
   // return theWeek;
 
-  const week = WeekWorkerClass.create(users, theWeek, theLogic, chosenMap);
+  const week = WeekWorkerClass.create(
+    users as UserClass[],
+    theWeek,
+    theLogic,
+    chosenMap
+  );
 
   const finalWeekPlan: WeekPlanClass[] = [];
 
@@ -180,7 +201,7 @@ export async function weekCreator(weeklyId: string) {
       finalWeekPlan.push(role);
     });
 
-  const savedWeekPlan = await dao.createListWeekPlans(finalWeekPlan);
+  const savedWeekPlan = await weekPlanDAO.createListWeekPlans(finalWeekPlan);
 
   return savedWeekPlan;
 }

@@ -16,17 +16,18 @@ export class WeekPlanClass {
     userId: string,
     weeklyId: string,
     day: string,
-    time: string
+    time: string,
+    id: string = NIL_UUID
   ): WeekPlanClass {
     return new WeekPlanClass(
-      NIL_UUID,
+      id === "" ? NIL_UUID : id,
       weeklyId,
       userId,
       helper.getDayStrToEnum(day),
       helper.getScheduleTimeStrToEnum(time)
     );
   }
-  create(): WeekPlanClass {
+  clientIn(): WeekPlanClass {
     return new WeekPlanClass(
       this.id,
       this.weeklyId,
@@ -35,13 +36,31 @@ export class WeekPlanClass {
       helper.getScheduleTimeStrToEnum(this.time as string)
     );
   }
-  db(): WeekPlanClass {
+  clientOut(): WeekPlanClass {
     return new WeekPlanClass(
       this.id,
       this.weeklyId,
       this.userId,
       helper.getDayEnumToStr(this.day as Days),
       helper.getScheduleTimeEnumToStr(this.time as ScheduleTime)
+    );
+  }
+  dbIn(): WeekPlanClass {
+    return new WeekPlanClass(
+      this.id,
+      this.weeklyId,
+      this.userId,
+      helper.getDayEnumToStr(this.day as Days),
+      helper.getScheduleTimeEnumToStr(this.time as ScheduleTime)
+    );
+  }
+  dbOut(): WeekPlanClass {
+    return new WeekPlanClass(
+      this.id,
+      this.weeklyId,
+      this.userId,
+      helper.getDayStrToEnum(this.day as string),
+      helper.getScheduleTimeStrToEnum(this.time as string)
     );
   }
   static createList(
