@@ -444,8 +444,8 @@ export async function getAllWeekPlan(id: string) {
       .from(WeekPlanSchema)
       .where(eq(WeekPlanSchema.weeklyId, id));
 
-    if (result.length === 0) {
-      return [];
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error getting weekPlans");
     }
 
     return result.map((week) =>
@@ -459,7 +459,7 @@ export async function getAllWeekPlan(id: string) {
     );
   } catch (error) {
     console.error("Error getting All week plans from DB", error);
-    return [];
+    return ErrorClass.new("Error getting weekPlans");
   }
 }
 

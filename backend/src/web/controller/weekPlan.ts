@@ -21,27 +21,41 @@ type UpdateWeekPlan = {
   time: ScheduleTime | string;
 };
 
-export async function getAllWeekPlan(weeklyId: string) {
-  const weekPlan = await dao.getAllWeekPlan(weeklyId);
-
-  return weekPlan.map((week) => week.db());
-}
-
-export function getOneWeekPlan(id: string) {
+// Get one weekPlan
+export function getOneWeekPlan(id: string, set: any) {
   return "Get one week plan with id: " + id;
 }
 
-export async function calcWeekPlan(id: string) {
-  const weekPlan = await dao.getAllWeekPlan(id);
+// Get all weekPlans
+export async function getAllWeekPlan(weeklyId: string, set: any) {
+  const weekPlan = await dao.getAllWeekPlan(weeklyId);
 
-  if (weekPlan.length === 0) {
-    return await weekCreator(id);
+  if (weekPlan instanceof ErrorClass) {
+    set.status = 400;
+    return weekPlan.clientOut();
   }
 
   return weekPlan.map((week) => week.db());
 }
 
-export async function createWeekPlan(body: WeekPlan) {
+// Calculate the time for the weekPlan
+export async function calcWeekPlan(weeklyId: string, set: any) {
+  const weekPlan = await dao.getAllWeekPlan(weeklyId);
+
+  if (weekPlan instanceof ErrorClass) {
+    set.status = 500;
+    return weekPlan.clientOut();
+  }
+
+  if (weekPlan.length === 0) {
+    return await weekCreator(weeklyId);
+  }
+
+  return weekPlan.map((week) => week.db());
+}
+
+// Create a new weekPlan
+export async function createWeekPlan(body: WeekPlan, set: any) {
   const week = new WeekPlanClass(
     body.id,
     body.weeklyId,
@@ -64,7 +78,8 @@ export async function createWeekPlan(body: WeekPlan) {
   }
 }
 
-export async function updateWeekPlan(body: UpdateWeekPlan) {
+// Update one weekPlan
+export async function updateWeekPlan(body: UpdateWeekPlan, set: any) {
   const week = new WeekPlanClass(
     body.id,
     body.weeklyId,
@@ -96,6 +111,6 @@ export async function deleteWeekPlan(id: string, set: any) {
   }
 }
 //! Delete all week plan
-export function deleteAllWeekPlan() {
+export function deleteAllWeekPlan(set: any) {
   return "Delete all week plan";
 }

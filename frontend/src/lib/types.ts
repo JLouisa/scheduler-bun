@@ -114,6 +114,19 @@ export enum Roles {
   All,
 }
 
+export enum WeekStatus {
+  InProgress,
+  Pending,
+  Completed,
+  Invalid,
+}
+
+export type WeekStatusT = {
+  id: string;
+  weeklyId: string;
+  status: string | WeekStatus;
+};
+
 export type NewUserT = {
   firstName: string;
   lastName: string;

@@ -345,3 +345,18 @@ export async function deleteOneUser(userId: string) {
     return { error: error };
   }
 }
+
+export async function getAllWeekStatus() {
+  try {
+    const result = await myFetch.get("http://localhost:3000/api/v1/weekstatus");
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Get Request successful");
+      return data;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    return { error: error };
+  }
+}

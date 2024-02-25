@@ -23,6 +23,7 @@ const Router = () => {
         { path: "/login", element: <Login /> },
         { path: "/dashboard", element: <Dashboard /> },
         { path: "/rawweek", element: <RawWeek /> },
+        { path: "/rawweek/:id", element: <RawWeek /> },
         { path: "/forgot-password", element: <ForgotEmail /> },
       ],
     },

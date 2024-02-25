@@ -3,18 +3,20 @@ import * as weekPlan from "../controller/weekPlan";
 
 export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   // Get all weekPlans
-  .get("/all/:weeklyId", ({ params: { weeklyId } }) =>
-    weekPlan.getAllWeekPlan(weeklyId)
+  .get("/all/:weeklyId", ({ set, params: { weeklyId } }) =>
+    weekPlan.getAllWeekPlan(weeklyId, set)
   )
   // Get one weekPlan
-  .get("/:id", ({ params: { id } }) => {
-    return weekPlan.getOneWeekPlan(id);
+  .get("/:id", ({ set, params: { id } }) => {
+    return weekPlan.getOneWeekPlan(id, set);
   })
   //Calculate the time for the weekPlan
-  .get("/create/:id", ({ params: { id } }) => weekPlan.calcWeekPlan(id))
+  .get("/create/:id", ({ set, params: { id } }) =>
+    weekPlan.calcWeekPlan(id, set)
+  )
 
   // Create a new weekPlan
-  .post("/", ({ body }) => weekPlan.createWeekPlan(body), {
+  .post("/", ({ set, body }) => weekPlan.createWeekPlan(body, set), {
     body: t.Object({
       id: t.String(),
       weeklyId: t.String(),
@@ -25,7 +27,7 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   })
 
   // Update one weekPlan
-  .put("/", ({ body }) => weekPlan.updateWeekPlan(body), {
+  .put("/", ({ set, body }) => weekPlan.updateWeekPlan(body, set), {
     body: t.Object({
       id: t.String(),
       weeklyId: t.String(),

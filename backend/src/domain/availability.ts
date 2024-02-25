@@ -27,7 +27,7 @@ export class AvailabilityClass {
     id: string = NIL_UUID
   ): AvailabilityClass {
     return new AvailabilityClass(
-      id,
+      id === "" ? NIL_UUID : id,
       helper.createWeekID(),
       userId,
       helper.getDayStrToEnum(day),
@@ -36,7 +36,7 @@ export class AvailabilityClass {
     );
   }
   // Create a new instance of the class from DB for logic work
-  create(): AvailabilityClass {
+  dbOut(): AvailabilityClass {
     return new AvailabilityClass(
       this.id,
       this.weeklyId,
@@ -47,13 +47,33 @@ export class AvailabilityClass {
     );
   }
   // Create a new instance of the class for database insertion
-  db(): AvailabilityClass {
+  dbIn(): AvailabilityClass {
     return new AvailabilityClass(
       this.id,
       this.weeklyId,
       this.userId,
       helper.getDayEnumToStr(this.day as Days),
       helper.getScheduleTimeEnumToStr(this.time as ScheduleTime),
+      this.createdAt
+    );
+  }
+  clientOut(): AvailabilityClass {
+    return new AvailabilityClass(
+      this.id,
+      this.weeklyId,
+      this.userId,
+      helper.getDayEnumToStr(this.day as Days),
+      helper.getScheduleTimeEnumToStr(this.time as ScheduleTime),
+      this.createdAt
+    );
+  }
+  clientIn(): AvailabilityClass {
+    return new AvailabilityClass(
+      this.id,
+      this.weeklyId,
+      this.userId,
+      helper.getDayStrToEnum(this.day as string),
+      helper.getScheduleTimeStrToEnum(this.time as string),
       this.createdAt
     );
   }

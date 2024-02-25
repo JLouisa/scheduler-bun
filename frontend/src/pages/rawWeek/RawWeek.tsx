@@ -5,9 +5,11 @@ import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import { createWeekID } from "@/lib/utils";
+import { useParams } from "react-router-dom";
 
 const RawWeek = () => {
-  const [weeklyId, setWeeklyId] = useState<string>(createWeekID());
+  const { id } = useParams();
+  const weeklyId = id ? id : createWeekID();
 
   // Queries
   const {
@@ -67,7 +69,10 @@ const RawWeek = () => {
   return (
     <>
       <div className="w-full">
-        <h1 className="text-xl text-center mt-4">Raw Week</h1>
+        <div className="w-full flex justify-between items-center">
+          <h1 className="text-xl text-center mt-4 flex-grow">Raw Week</h1>
+          <span className="text-xl text-end">{weeklyId}</span>
+        </div>
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

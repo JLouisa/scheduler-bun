@@ -1,6 +1,6 @@
-import * as dao from "../../database/dao";
+import * as dao from "../../database/dao/availabilityDAO";
 import { AvailabilityClass } from "../../domain/availability";
-import { ScheduleTime } from "../../domain/types";
+import { ErrorClass } from "../../domain/error";
 import * as helper from "../../domain/types";
 
 type Availability = {
@@ -18,53 +18,114 @@ type CreateAvailability = {
   time: string;
 };
 
-export async function createAvailability(body: CreateAvailability) {
+//! Create a new availability
+export async function createAvailability(body: CreateAvailability, set: any) {
   const available = AvailabilityClass.new(
     body.userId,
     body.day,
     body.time,
     body.availabilityId
   );
-  const select = await dao.getOneAvailability(available.id);
 
-  if (select.length === 0) {
-    return await dao.createAvailability(available);
+  // Check if the day and time are valid
+  if (
+    available.day === helper.Days.Invalid ||
+    available.time === helper.ScheduleTime.Invalid
+  ) {
+    set.status = 400;
+    return ErrorClass.new("Invalid information").clientOut();
   }
 
-  return dao.updateOneAvailability(
-    available.id,
-    helper.getScheduleTimeEnumToStr(available.time as helper.ScheduleTime)
-  );
-}
+  // Check if the availability already exists
+  const result = await dao.createAvailability(available);
 
-export async function getAllAvailability(ID = helper.createWeekID()) {
-  return await dao.getAllAvailabilities(ID);
-}
-
-export async function getAllWeekAvailability(weeklyId: string) {
-  return await dao.getAllWeekAvailabilities(weeklyId);
-}
-
-export async function getOneAvailability(id: string) {
-  return await dao.getOneAvailability(id);
-}
-
-export async function updateAvailability(id: string, time: string) {
-  const theTime: ScheduleTime = helper.getScheduleTimeStrToEnum(time);
-  if (theTime === ScheduleTime.Invalid) {
-    return { failed: "Invalid time" };
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
   }
 
-  return await dao.updateOneAvailability(
+  return result.map((availability) => availability.clientOut());
+}
+
+//! Get all availabilities in DB
+export async function getAllAvailability(set: any, ID = helper.createWeekID()) {
+  const result = await dao.getAllAvailabilities(ID);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((availability) => availability.clientOut());
+}
+
+//! Get all availabilities of a week
+export async function getAllWeekAvailability(weeklyId: string, set: any) {
+  const result = await dao.getAllWeekAvailabilities(weeklyId);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((availability) => availability.clientOut());
+}
+
+//! Get one availability
+export async function getOneAvailability(id: string, set: any) {
+  const result = await dao.getOneAvailability(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((availability) => availability.clientOut());
+}
+
+//! Update one availability
+export async function updateAvailability(id: string, time: string, set: any) {
+  const theTime: helper.ScheduleTime = helper.getScheduleTimeStrToEnum(time);
+
+  // Check if the time is valid
+  if (theTime === helper.ScheduleTime.Invalid) {
+    return ErrorClass.new("Invalid time").clientOut();
+  }
+
+  const result = await dao.updateOneAvailability(
     id,
     helper.getScheduleTimeEnumToStr(theTime)
   );
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.map((availability) => availability.clientOut());
 }
 
-export async function deleteOneAvailability(id: string) {
-  return dao.deleteOneAvailability(id);
+//! Delete one availability
+export async function deleteOneAvailability(id: string, set: any) {
+  const result = dao.deleteOneAvailability(id);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result;
 }
 
-export async function deleteAllAvailability() {
-  return dao.deleteAllAvailability();
+//! Delete all availabilities
+export async function deleteAllAvailability(set: any) {
+  const result = dao.deleteAllAvailability();
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+  return { success: result };
 }
+
+//! ------------------------------------Done------------------------------------------

@@ -3,15 +3,17 @@ import * as available from "../controller/availability";
 
 export const availableRoutes = new Elysia({ prefix: "/availability" })
   // Get all availabilities
-  .get("/", () => available.getAllAvailability())
+  .get("/", ({ set }) => available.getAllAvailability(set))
   // Get all availabilities of a week
-  .get("week/:week", ({ params: { week } }) =>
-    available.getAllWeekAvailability(week)
+  .get("week/:week", ({ set, params: { week } }) =>
+    available.getAllWeekAvailability(week, set)
   )
   // Get one availability
-  .get("/:id", ({ params: { id } }) => available.getOneAvailability(id))
+  .get("/:id", ({ set, params: { id } }) =>
+    available.getOneAvailability(id, set)
+  )
   // Create a new availability
-  .post("/", ({ body }) => available.createAvailability(body), {
+  .post("/", ({ set, body }) => available.createAvailability(body, set), {
     body: t.Object({
       availabilityId: t.String(),
       userId: t.String(),
@@ -20,13 +22,19 @@ export const availableRoutes = new Elysia({ prefix: "/availability" })
     }),
   })
   // Update one availability
-  .put("/", ({ body }) => available.updateAvailability(body.id, body.time), {
-    body: t.Object({
-      id: t.String(),
-      time: t.String(),
-    }),
-  })
+  .put(
+    "/",
+    ({ set, body }) => available.updateAvailability(body.id, body.time, set),
+    {
+      body: t.Object({
+        id: t.String(),
+        time: t.String(),
+      }),
+    }
+  )
   // Delete one availability
-  .delete("/:id", ({ params: { id } }) => available.deleteOneAvailability(id))
+  .delete("/:id", ({ params: { id }, set }) =>
+    available.deleteOneAvailability(id, set)
+  )
   //! Delete all availabilities
-  .delete("/all", () => available.deleteAllAvailability());
+  .delete("/all", (set) => available.deleteAllAvailability(set));
