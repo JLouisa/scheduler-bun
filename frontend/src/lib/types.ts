@@ -1,10 +1,10 @@
 export interface AvailableProps {
-  createdAt: string;
   day: string;
   id: string;
   time: string;
   userId: string;
   weeklyId: string;
+  createdAt: string;
 }
 
 export interface WeekProps {

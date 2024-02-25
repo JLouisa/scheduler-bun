@@ -45,15 +45,15 @@ export enum WeekStatus {
 
 // Define the schema for user data
 export const UserSchema = z.object({
-  id: z.string().uuid().default(""),
+  id: z.string().uuid().or(z.void().default(undefined)),
   firstName: z.string(),
   lastName: z.string(),
-  employeeId: z.number().max(9999).min(0),
+  employeeId: z.number().int().max(9999).min(0).nonnegative(),
   vast: z.boolean(),
   admin: z.boolean(),
   active: z.boolean(),
-  minDays: z.number().min(0),
-  maxDays: z.number().max(7).min(0),
+  minDays: z.number().int().min(0).nonnegative(),
+  maxDays: z.number().int().max(7).min(0).nonnegative(),
   primaryRole: z.nativeEnum(Roles),
   secondaryRole: z.nativeEnum(Roles),
 });
@@ -61,7 +61,7 @@ export type User = z.infer<typeof UserSchema>;
 
 export class UserClass implements User {
   constructor(
-    public id: string,
+    public id: string | undefined,
     public firstName: string,
     public lastName: string,
     public employeeId: number,
@@ -85,7 +85,7 @@ export class UserClass implements User {
     maxDays: number,
     primaryRole: Roles,
     secondaryRole: Roles,
-    id: string = ""
+    id: undefined = undefined
   ) {
     return new UserClass(
       id,
@@ -104,7 +104,7 @@ export class UserClass implements User {
 
   static serverIn(user: User) {
     return new UserClass(
-      user.id,
+      user.id as string,
       user.firstName,
       user.lastName,
       user.employeeId,
@@ -126,6 +126,7 @@ export const AvailabilitySchema = z.object({
   userId: z.string(),
   day: z.string(),
   time: z.string(),
+  createdAt: z.string().optional(),
 });
 export type Availability = z.infer<typeof AvailabilitySchema>;
 
@@ -135,13 +136,15 @@ export class AvailabilityClass implements Availability {
     public weeklyId: string,
     public userId: string,
     public day: Days | string,
-    public time: ScheduleTime | string
+    public time: ScheduleTime | string,
+    public createdAt?: string
   ) {
     this.id = id;
     this.weeklyId = weeklyId;
     this.userId = userId;
     this.day = day;
     this.time = time;
+    this.createdAt = createdAt;
   }
 
   static new(
@@ -160,7 +163,52 @@ export class AvailabilityClass implements Availability {
       availability.weeklyId,
       availability.userId,
       availability.day,
-      availability.time
+      availability.time,
+      availability.createdAt
+    );
+  }
+}
+
+export const LoginEmailSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+  remember: z.boolean(),
+});
+export type LoginEmail = z.infer<typeof LoginEmailSchema>;
+
+export class LoginClass implements LoginEmail {
+  constructor(
+    public email: string,
+    public password: string,
+    public remember: boolean
+  ) {}
+
+  static new(email: string, password: string, remember: boolean) {
+    return new LoginClass(email, password, remember);
+  }
+}
+
+export class WeekClass {
+  constructor(
+    public Monday: Availability[],
+    public Tuesday: Availability[],
+    public Wednesday: Availability[],
+    public Thursday: Availability[],
+    public Friday: Availability[],
+    public Saturday: Availability[],
+    public Sunday: Availability[]
+  ) {}
+  static new(availabilities: Availability[]): WeekClass {
+    return new WeekClass(
+      availabilities.filter((item: Availability) => item.day === Days.Monday),
+      availabilities.filter((item: Availability) => item.day === Days.Tuesday),
+      availabilities.filter(
+        (item: Availability) => item.day === Days.Wednesday
+      ),
+      availabilities.filter((item: Availability) => item.day === Days.Thursday),
+      availabilities.filter((item: Availability) => item.day === Days.Friday),
+      availabilities.filter((item: Availability) => item.day === Days.Saturday),
+      availabilities.filter((item: Availability) => item.day === Days.Sunday)
     );
   }
 }

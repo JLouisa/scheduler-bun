@@ -1,4 +1,5 @@
 import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 
 const myFetch = {
   async get(url: string) {
@@ -41,48 +42,70 @@ export async function getAllUsers() {
   try {
     const result = await myFetch.get("http://localhost:3000/api/v1/user");
     const data = await result.json();
-    return data;
+
+    if (result.status === 200 || result.ok) {
+      console.log("Get Request successful");
+      // Convert to User objects
+      const users = data.map((user: schema.User) => {
+        return schema.UserClass.serverIn(user);
+      });
+      return users;
+    } else {
+      throw new Error(data.error);
+    }
   } catch (error) {
-    return { error: error };
+    throw new Error(`Something went wrong getting users, ${error}`);
   }
 }
 
 export async function getAllAvailabilities(weeklyId: string) {
-  let finalData;
-
   try {
     const result = await myFetch.get(
       `http://localhost:3000/api/v1/availability/week/${weeklyId}`
     );
-    finalData = await result.json();
+
+    let finalData = await result.json();
+
+    if (result.status === 200 || result.ok) {
+      console.log("Get Request successful");
+
+      const availabilities = finalData.map(
+        (availability: schema.Availability) => {
+          return schema.AvailabilityClass.serverIn(availability);
+        }
+      );
+
+      return schema.WeekClass.new(availabilities);
+    } else {
+      throw new Error(finalData.error);
+    }
   } catch (error) {
-    console.error(error);
-    return { error: error };
+    throw new Error(`${error}`);
   }
 
-  return (finalData = {
-    Monday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "monday"
-    ),
-    Tuesday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "tuesday"
-    ),
-    Wednesday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "wednesday"
-    ),
-    Thursday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "thursday"
-    ),
-    Friday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "friday"
-    ),
-    Saturday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "saturday"
-    ),
-    Sunday: finalData.filter(
-      (item: types.AvailableProps) => item.day.toLowerCase() === "sunday"
-    ),
-  });
+  // return (finalData = {
+  //   Monday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Monday
+  //   ),
+  //   Tuesday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Tuesday
+  //   ),
+  //   Wednesday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Wednesday
+  //   ),
+  //   Thursday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Thursday
+  //   ),
+  //   Friday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Friday
+  //   ),
+  //   Saturday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Saturday
+  //   ),
+  //   Sunday: availabilities.filter(
+  //     (item: schema.Availability) => item.day === schema.Days.Sunday
+  //   ),
+  // });
 }
 
 export async function postAvailability({
@@ -279,6 +302,7 @@ export async function deleteWeekAvailability(spotsId: string) {
 }
 
 //! Users
+// Create Users
 export async function postNewUser(obj: types.NewUserType) {
   try {
     const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
@@ -294,7 +318,7 @@ export async function postNewUser(obj: types.NewUserType) {
   }
 }
 
-//! Users
+// UpdateUsers
 export async function updateNewUser(obj: types.UserProps) {
   try {
     const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
