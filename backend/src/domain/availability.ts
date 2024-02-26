@@ -5,7 +5,7 @@ import * as helper from "./types";
 
 export class AvailabilityClass {
   constructor(
-    public id: string,
+    public id: string | undefined,
     public weeklyId: string,
     public userId: string,
     public day: Days | string,
@@ -24,10 +24,10 @@ export class AvailabilityClass {
     userId: string,
     day: string,
     time: string,
-    id: string = NIL_UUID
+    id: string | undefined = undefined
   ): AvailabilityClass {
     return new AvailabilityClass(
-      id === "" ? NIL_UUID : id,
+      id,
       helper.createWeekID(),
       userId,
       helper.getDayStrToEnum(day),

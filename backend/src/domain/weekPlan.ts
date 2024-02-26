@@ -20,7 +20,7 @@ export class WeekPlanClass {
     id: string = NIL_UUID
   ): WeekPlanClass {
     return new WeekPlanClass(
-      id === "" ? NIL_UUID : id,
+      id === undefined ? NIL_UUID : id,
       weeklyId,
       userId,
       helper.getDayStrToEnum(day),

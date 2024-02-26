@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createWeekID } from "./utils";
 
 // Enums
 export enum ScheduleTime {
@@ -33,6 +34,7 @@ export enum Roles {
   Service = "Service",
   Management = "Management",
   Dishwasher = "Dishwasher",
+  Cleaner = "Cleaner",
   None = "None",
   All = "All",
 }
@@ -45,7 +47,7 @@ export enum WeekStatus {
 
 // Define the schema for user data
 export const UserSchema = z.object({
-  id: z.string().uuid().or(z.void().default(undefined)),
+  id: z.string().uuid().or(z.undefined()),
   firstName: z.string(),
   lastName: z.string(),
   employeeId: z.number().int().max(9999).min(0).nonnegative(),
@@ -121,45 +123,36 @@ export class UserClass implements User {
 
 // Define the schema for availability data
 export const AvailabilitySchema = z.object({
-  id: z.string(),
+  id: z.string().uuid().or(z.undefined()),
   weeklyId: z.string(),
   userId: z.string(),
-  day: z.string(),
-  time: z.string(),
+  day: z.nativeEnum(Days),
+  time: z.nativeEnum(ScheduleTime),
   createdAt: z.string().optional(),
 });
 export type Availability = z.infer<typeof AvailabilitySchema>;
 
 export class AvailabilityClass implements Availability {
   constructor(
-    public id: string,
+    public id: string | undefined,
     public weeklyId: string,
     public userId: string,
-    public day: Days | string,
-    public time: ScheduleTime | string,
+    public day: Days,
+    public time: ScheduleTime,
     public createdAt?: string
-  ) {
-    this.id = id;
-    this.weeklyId = weeklyId;
-    this.userId = userId;
-    this.day = day;
-    this.time = time;
-    this.createdAt = createdAt;
-  }
-
+  ) {}
   static new(
-    weeklyId: string,
     userId: string,
-    day: string,
-    time: string,
-    id: string = ""
+    day: Days,
+    time: ScheduleTime,
+    id: string | undefined = undefined
   ): AvailabilityClass {
-    return new AvailabilityClass(id, weeklyId, userId, day, time);
+    return new AvailabilityClass(id, createWeekID(), userId, day, time);
   }
 
-  static serverIn(availability: Availability) {
+  static serverIn(availability: Availability): AvailabilityClass {
     return new AvailabilityClass(
-      availability.id,
+      availability.id as string,
       availability.weeklyId,
       availability.userId,
       availability.day,

@@ -1,6 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Roles } from "@/lib/types";
+import { Roles } from "@/lib/schema";
 import { DateTime } from "luxon";
 
 export function cn(...inputs: ClassValue[]) {

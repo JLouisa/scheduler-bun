@@ -15,11 +15,13 @@ import { NIL as NIL_UUID } from "uuid";
 // Create availability in DB
 export async function createAvailability(obj: AvailabilityClass) {
   const theAvailability = obj.dbIn();
+  console.log(`theAvailability`);
+  console.log(theAvailability);
   try {
     const result = await db
       .insert(AvailabilitySchema)
       .values({
-        id: theAvailability.id === NIL_UUID ? undefined : theAvailability.id,
+        id: theAvailability.id,
         weeklyId: theAvailability.weeklyId,
         userId: theAvailability.userId,
         day: theAvailability.day,
@@ -46,7 +48,7 @@ export async function createAvailability(obj: AvailabilityClass) {
       ).dbOut()
     );
   } catch (error) {
-    console.error("Error creating availability", error);
+    console.error("Error creating availability2", error);
     return ErrorClass.new("Error creating availability");
   }
 }

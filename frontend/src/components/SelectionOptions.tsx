@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import {
   Select,
@@ -25,26 +26,26 @@ const SelectionOptions = ({
   const { toast } = useToast();
 
   const updateAvailability = useMutation({
-    mutationKey: ["availability"],
-    mutationFn: async (data: any) => {
+    mutationKey: ["postAvailability"],
+    mutationFn: async (data: schema.Availability) => {
       const result = await DAL.postAvailability(data);
       return result;
     },
-    onSuccess: (data) => {
-      setSpotsId(data.id);
-      setTimeValue(data.time);
+    onSuccess: (result: schema.Availability) => {
+      setSpotsId(result.id);
+      setTimeValue(result.time);
       toast({
         title: `Update successful`,
         description: `${capitalizeFirstLetter(user.firstName)}: ${day}, ${
-          data.time
+          result.time
         }`,
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         variant: "destructive",
         title: `Uh oh! Something went wrong.`,
-        description: "There was a problem with your request. Please try again.",
+        description: `There was a problem with your request. Please try again. ${error.message}`,
       });
     },
   });
@@ -77,12 +78,13 @@ const SelectionOptions = ({
       deleteAvailability.mutate(spotsId);
     } else if (e.target.value !== "del") {
       console.log("Post");
-      updateAvailability.mutate({
-        availabilityId: spotsId ? spotsId : "",
-        userId: user.id,
+      const available: schema.Availability = schema.AvailabilityClass.new(
+        user.id as string,
         day,
-        time: e.target.value,
-      });
+        e.target.value,
+        spotsId ? spotsId : undefined
+      );
+      updateAvailability.mutate(available);
     }
   };
 

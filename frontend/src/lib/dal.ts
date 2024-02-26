@@ -38,6 +38,8 @@ const myFetch = {
   },
 };
 
+//! Users
+// Get all users
 export async function getAllUsers() {
   try {
     const result = await myFetch.get("http://localhost:3000/api/v1/user");
@@ -58,6 +60,8 @@ export async function getAllUsers() {
   }
 }
 
+//! Availabilities
+// Get all availabilities
 export async function getAllAvailabilities(weeklyId: string) {
   try {
     const result = await myFetch.get(
@@ -82,52 +86,23 @@ export async function getAllAvailabilities(weeklyId: string) {
   } catch (error) {
     throw new Error(`${error}`);
   }
-
-  // return (finalData = {
-  //   Monday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Monday
-  //   ),
-  //   Tuesday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Tuesday
-  //   ),
-  //   Wednesday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Wednesday
-  //   ),
-  //   Thursday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Thursday
-  //   ),
-  //   Friday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Friday
-  //   ),
-  //   Saturday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Saturday
-  //   ),
-  //   Sunday: availabilities.filter(
-  //     (item: schema.Availability) => item.day === schema.Days.Sunday
-  //   ),
-  // });
 }
 
-export async function postAvailability({
-  availabilityId,
-  userId,
-  day,
-  time,
-}: types.postAvailability) {
+// Post availability
+export async function postAvailability(availableInfo: schema.Availability) {
+  console.log(availableInfo);
   try {
     const result = await myFetch.post(
       `http://localhost:3000/api/v1/availability`,
-      {
-        availabilityId,
-        userId,
-        day,
-        time,
-      }
+      availableInfo
     );
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
       console.log("Post Request successful");
+      const zodded = schema.AvailabilitySchema.parse(data[0]);
+      return schema.AvailabilityClass.serverIn(zodded);
+      // return schema.AvailabilityClass.serverIn(data[0]);
       return data[0];
     } else if (result.status === 404 || data.failed) {
       console.log("Post Request failed");
@@ -139,6 +114,7 @@ export async function postAvailability({
   }
 }
 
+// Delete availability
 export async function deleteAvailability(spotsId: string) {
   try {
     const result = await myFetch.delete(
@@ -156,6 +132,7 @@ export async function deleteAvailability(spotsId: string) {
   }
 }
 
+// Update availability
 export async function updateAvailability(spotsId: string, time: string) {
   try {
     const result = await myFetch.put(
@@ -180,7 +157,8 @@ export async function updateAvailability(spotsId: string, time: string) {
   }
 }
 
-export async function loginUser(info: types.LoginEmail) {
+//! Login
+export async function loginUser(info: schema.LoginEmail) {
   try {
     const result = await myFetch.post(
       "http://localhost:3000/api/v1/login",
@@ -205,7 +183,8 @@ export async function loginUser(info: types.LoginEmail) {
   }
 }
 
-//! Get all processed weeks
+//! Weeks
+// Get Weeks
 export async function getAllWeeks(weeklyId: string) {
   let finalData;
 
@@ -252,6 +231,7 @@ export async function getAllWeeks(weeklyId: string) {
   });
 }
 
+// Post Weeks
 export async function postOneWeek({
   id,
   weeklyId,
@@ -283,6 +263,7 @@ export async function postOneWeek({
   }
 }
 
+// Delete Weeks
 export async function deleteWeekAvailability(spotsId: string) {
   try {
     const result = await myFetch.delete(
@@ -303,7 +284,7 @@ export async function deleteWeekAvailability(spotsId: string) {
 
 //! Users
 // Create Users
-export async function postNewUser(obj: types.NewUserType) {
+export async function postNewUser(obj: schema.User) {
   try {
     const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
     const data = await result.json();
@@ -319,7 +300,7 @@ export async function postNewUser(obj: types.NewUserType) {
 }
 
 // UpdateUsers
-export async function updateNewUser(obj: types.UserProps) {
+export async function updateNewUser(obj: schema.User) {
   try {
     const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
     const data = await result.json();
@@ -334,6 +315,7 @@ export async function updateNewUser(obj: types.UserProps) {
   }
 }
 
+// Deactivate Users
 export async function deactivateUser(userId: string) {
   try {
     const result = await myFetch.delete(
@@ -352,6 +334,7 @@ export async function deactivateUser(userId: string) {
   }
 }
 
+// Delete one user
 export async function deleteOneUser(userId: string) {
   try {
     const result = await myFetch.delete(
@@ -370,6 +353,8 @@ export async function deleteOneUser(userId: string) {
   }
 }
 
+//! WeekStatus
+// Get all week status
 export async function getAllWeekStatus() {
   try {
     const result = await myFetch.get("http://localhost:3000/api/v1/weekstatus");

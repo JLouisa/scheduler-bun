@@ -12,7 +12,7 @@ type Availability = {
 };
 
 type CreateAvailability = {
-  availabilityId?: string;
+  id?: string;
   userId: string;
   day: string;
   time: string;
@@ -24,7 +24,7 @@ export async function createAvailability(body: CreateAvailability, set: any) {
     body.userId,
     body.day,
     body.time,
-    body.availabilityId
+    body?.id
   );
 
   // Check if the day and time are valid
