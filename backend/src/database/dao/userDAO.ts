@@ -182,17 +182,17 @@ export async function deactivateOneUserToggle(
 
   try {
     const user = await getOneUser(id);
+    console.log(`user`);
+    console.log(user);
 
     if (!Array.isArray(user)) {
       return ErrorClass.new("Error Deactivate user");
     }
 
-    if (user instanceof UserClass) {
-      toggle = !user.active;
-    }
+    toggle = !user[0].active;
   } catch (error) {
     console.error("Error Deactivate user from DB", error);
-    return ErrorClass.new("Error Deactivate user in DB");
+    return ErrorClass.new("Error Deactivate user from DB");
   }
 
   try {
@@ -203,7 +203,7 @@ export async function deactivateOneUserToggle(
       .returning();
 
     if (!Array.isArray(result)) {
-      return ErrorClass.new("Error Deactivate user from DB");
+      return ErrorClass.new("Error Deactivate user2");
     }
 
     return result.map((user) =>
@@ -222,8 +222,8 @@ export async function deactivateOneUserToggle(
       ).dbOut()
     );
   } catch (error) {
-    console.error("Error Deactivate user from DB", error);
-    return ErrorClass.new("Error Deactivate user");
+    console.error("Error Deactivate user in DB", error);
+    return ErrorClass.new("Error Deactivate in user");
   }
 }
 

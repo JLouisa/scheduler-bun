@@ -11,6 +11,6 @@ export const WeekStatusSchema: any = sqliteTable("week_status", {
     .primaryKey(),
   weeklyId: text("weekly_id").unique().notNull(),
   status: text("status", {
-    enum: ["In Progress", "Pending", "Completed"],
+    enum: ["Open", "Pending", "In Progress", "Completed"],
   }).notNull(),
 });

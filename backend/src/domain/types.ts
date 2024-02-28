@@ -40,6 +40,7 @@ export enum Roles {
 }
 
 export enum WeekStatus {
+  Open = "Open",
   InProgress = "In Progress",
   Pending = "Pending",
   Completed = "Completed",

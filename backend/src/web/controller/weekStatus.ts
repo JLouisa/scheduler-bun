@@ -78,6 +78,17 @@ export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
   return result.map((weekStatus) => weekStatus.clientOut());
 }
 
+//! Maintain week status
+export async function maintainWeekStatus(set: any) {
+  const result = await dao.maintainWeekStatus();
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+  return result.map((weekStatus) => weekStatus.clientOut());
+}
+
 //! Delete one week status
 export async function deleteWeekStatus(id: string, set: any) {
   return "Delete one week status";
