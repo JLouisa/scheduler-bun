@@ -1,49 +1,49 @@
 import { DateTime } from "luxon";
 
 export enum ScheduleTime {
-  Available,
-  StartAtOne,
-  FromOneToFive,
-  StartAtThree,
-  FromThreeToFive,
-  StartAtFive,
-  StartAtSix,
-  OnCallAtFiveStartAtSix,
-  OnCallAtFive,
-  OnCallAtSix,
-  Free,
-  None,
-  Invalid,
+  Available = "Available",
+  StartAtOne = "13",
+  FromOneToFive = "13-17",
+  StartAtThree = "15",
+  FromThreeToFive = "15-17",
+  StartAtFive = "17",
+  StartAtSix = "18",
+  OnCallAtFiveStartAtSix = "(17)18",
+  OnCallAtFive = "(17)",
+  OnCallAtSix = "(18)",
+  Free = "Free",
+  None = "None",
+  Invalid = "Invalid",
 }
 
 export enum Days {
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
-  Invalid,
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+  Sunday = "Sunday",
+  Invalid = "Invalid",
 }
 
 export enum Roles {
-  Griller,
-  Kitchen,
-  Bar,
-  Service,
-  Management,
-  Dishwasher,
-  None,
-  All,
-  Invalid,
+  Griller = "Griller",
+  Kitchen = "Kitchen",
+  Bar = "Bar",
+  Service = "Service",
+  Management = "Management",
+  Dishwasher = "Dishwasher",
+  None = "None",
+  All = "All",
+  Invalid = "Invalid",
 }
 
 export enum WeekStatus {
-  InProgress,
-  Pending,
-  Completed,
-  Invalid,
+  InProgress = "In Progress",
+  Pending = "Pending",
+  Completed = "Completed",
+  Invalid = "Invalid",
 }
 
 export type WeekStatusCollection = {
@@ -66,16 +66,11 @@ export function getRoleEnumToStr(role: Roles): string {
 }
 
 export function getWeekStatusEnumToStr(status: WeekStatus): string {
-  switch (status) {
-    case WeekStatus.InProgress:
-      return "In Progress";
-    case WeekStatus.Pending:
-      return "Pending";
-    case WeekStatus.Completed:
-      return "Completed";
-    default:
-      return "Invalid";
+  if (status === WeekStatus.InProgress) {
+    return "In Progress";
   }
+
+  return WeekStatus[status];
 }
 
 export function getWeekStatusStrToEnum(status: string): WeekStatus {
@@ -116,30 +111,30 @@ export function getRoleStrToEnum(role: string): Roles {
 
 export function getScheduleTimeEnumToStr(time: ScheduleTime): string {
   switch (time) {
-    case ScheduleTime.Available:
-      return "Available";
-    case ScheduleTime.StartAtOne:
-      return "13";
-    case ScheduleTime.FromOneToFive:
-      return "13-17";
-    case ScheduleTime.StartAtThree:
-      return "15";
-    case ScheduleTime.FromThreeToFive:
-      return "15-17";
-    case ScheduleTime.StartAtFive:
-      return "17";
-    case ScheduleTime.StartAtSix:
-      return "18";
-    case ScheduleTime.OnCallAtFiveStartAtSix:
-      return "(17)18";
-    case ScheduleTime.OnCallAtFive:
-      return "(17)";
-    case ScheduleTime.OnCallAtSix:
-      return "(18)";
-    case ScheduleTime.Free:
-      return "Free";
+    case "Available":
+      return ScheduleTime.Available;
+    case "13":
+      return ScheduleTime.StartAtOne;
+    case "13-17":
+      return ScheduleTime.FromOneToFive;
+    case "15":
+      return ScheduleTime.StartAtThree;
+    case "15-17":
+      return ScheduleTime.FromThreeToFive;
+    case "17":
+      return ScheduleTime.StartAtFive;
+    case "18":
+      return ScheduleTime.StartAtSix;
+    case "(17)18":
+      return ScheduleTime.OnCallAtFiveStartAtSix;
+    case "(17)":
+      return ScheduleTime.OnCallAtFive;
+    case "(18)":
+      return ScheduleTime.OnCallAtSix;
+    case "Free":
+      return ScheduleTime.Free;
     default:
-      return "Invalid time";
+      return ScheduleTime.Invalid;
   }
 }
 
@@ -173,24 +168,7 @@ export function getScheduleTimeStrToEnum(time: string): ScheduleTime {
 }
 
 export function getDayEnumToStr(day: Days): string {
-  switch (day) {
-    case Days.Monday:
-      return "Monday";
-    case Days.Tuesday:
-      return "Tuesday";
-    case Days.Wednesday:
-      return "Wednesday";
-    case Days.Thursday:
-      return "Thursday";
-    case Days.Friday:
-      return "Friday";
-    case Days.Saturday:
-      return "Saturday";
-    case Days.Sunday:
-      return "Sunday";
-    default:
-      return "Invalid day";
-  }
+  return Days[day];
 }
 
 export function getDayStrToEnum(day: string): Days {

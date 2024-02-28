@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import TableSetup from "@/components/TableSetup";
-import * as DAL from "@/lib/dal";
-import * as types from "@/lib/types";
 import { createWeekID } from "@/lib/utils";
 import { useParams } from "react-router-dom";
+import * as DAL from "@/lib/dal";
+import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 
 const RawWeek = () => {
   const { id } = useParams();
@@ -32,17 +32,17 @@ const RawWeek = () => {
     queryFn: () => DAL.getAllWeeks(weeklyId),
   });
 
-  const adminOptions = [
-    "13",
-    "13-17",
-    "15",
-    "15-17",
-    "17",
-    "18",
-    "(17)18",
-    "(17)",
-    "(18)",
-    "Free",
+  const adminOptions: schema.ScheduleTime[] = [
+    schema.ScheduleTime.StartAtOne,
+    schema.ScheduleTime.FromOneToFive,
+    schema.ScheduleTime.StartAtThree,
+    schema.ScheduleTime.FromThreeToFive,
+    schema.ScheduleTime.StartAtFive,
+    schema.ScheduleTime.StartAtSix,
+    schema.ScheduleTime.OnCallAtFiveStartAtSix,
+    schema.ScheduleTime.OnCallAtFive,
+    schema.ScheduleTime.OnCallAtSix,
+    schema.ScheduleTime.Free,
   ];
 
   if (!isLoadingUsers && !isLoadingAvailabilities) {
@@ -78,6 +78,7 @@ const RawWeek = () => {
           available={availabilitiesData as types.Week}
           weeklyId={weeklyId}
           options={adminOptions}
+          nextWeek={false}
         />
       </div>
     </>

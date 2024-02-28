@@ -10,27 +10,11 @@ import * as availabilityDAO from "../../database/dao/availabilityDAO";
 import { AvailabilityClass } from "../../domain/availability";
 
 type WeekPlan = {
-  id: string;
+  id?: string;
   weeklyId: string;
   userId: string;
-  day: Days | string;
-  time: ScheduleTime | string;
-};
-
-type UpdateWeekPlan = {
-  id: string;
-  weeklyId: string;
-  userId: string;
-  day: Days | string;
-  time: ScheduleTime | string;
-};
-
-type CreateWeekPlan = {
-  id: string;
-  weeklyId: string;
-  userId: string;
-  day: string;
-  time: string;
+  day: Days;
+  time: ScheduleTime;
 };
 
 // Get one weekPlan
@@ -82,7 +66,7 @@ export async function calcWeekPlan(weeklyId: string, set: any) {
 }
 
 // Create a new weekPlan
-export async function createWeekPlan(body: CreateWeekPlan, set: any) {
+export async function createWeekPlan(body: WeekPlan, set: any) {
   const week = WeekPlanClass.new(
     body.userId,
     body.weeklyId,
@@ -125,9 +109,9 @@ export async function createWeekPlan(body: CreateWeekPlan, set: any) {
 }
 
 // Update one weekPlan
-export async function updateWeekPlan(body: UpdateWeekPlan, set: any) {
+export async function updateWeekPlan(body: WeekPlan, set: any) {
   const week = new WeekPlanClass(
-    body.id,
+    body.id as string,
     body.weeklyId,
     body.userId,
     body.day,

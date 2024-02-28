@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 import * as weekStatus from "../controller/weekStatus";
+import * as model from "./model";
 
 export const weekStatusRoutes = new Elysia({ prefix: "/weekstatus" })
   // Get all weekStatus
@@ -10,18 +11,11 @@ export const weekStatusRoutes = new Elysia({ prefix: "/weekstatus" })
   })
   // Create a new weekStatus
   .post("/", ({ set, body }) => weekStatus.createWeekStatus(body, set), {
-    body: t.Object({
-      weeklyId: t.String(),
-      status: t.String(),
-    }),
+    body: model.WeekStatusPartialModel,
   })
   // Update one weekStatus
   .put("/", ({ set, body }) => weekStatus.updateWeekStatus(body, set), {
-    body: t.Object({
-      id: t.String(),
-      weeklyId: t.String(),
-      status: t.String(),
-    }),
+    body: model.WeekStatusFullModel,
   })
   //! Delete all weekStatus
   .delete("/all", () => `Delete all weekStatus`)

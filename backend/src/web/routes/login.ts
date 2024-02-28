@@ -3,6 +3,7 @@ import { jwt } from "@elysiajs/jwt";
 import * as login from "../controller/login";
 import { ErrorClass } from "../../domain/error";
 import { AdminClass } from "../../domain/admin";
+import * as model from "./model";
 
 export const loginRoutes = new Elysia({ prefix: "/login" })
   // Login as an admin
@@ -38,14 +39,12 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
       } catch (error) {
         console.error("Error during login:", error);
         set.status = 500; // Internal Server Error
-        return { error: "An unexpected error occurred during login" };
+        return ErrorClass.new(
+          "An unexpected error occurred during login"
+        ).clientOut();
       }
     },
     {
-      body: t.Object({
-        email: t.String(),
-        password: t.String(),
-        remember: t.Boolean(),
-      }),
+      body: model.LoginModel,
     }
   );

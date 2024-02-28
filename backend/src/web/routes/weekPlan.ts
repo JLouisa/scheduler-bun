@@ -1,5 +1,6 @@
 import { Elysia, t } from "elysia";
 import * as weekPlan from "../controller/weekPlan";
+import * as model from "./model";
 
 export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   // Get all weekPlans
@@ -17,24 +18,12 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
 
   // Create a new weekPlan
   .post("/", ({ set, body }) => weekPlan.createWeekPlan(body, set), {
-    body: t.Object({
-      id: t.String(),
-      weeklyId: t.String(),
-      userId: t.String(),
-      day: t.String(),
-      time: t.String(),
-    }),
+    body: model.AvailableFullModel,
   })
 
   // Update one weekPlan
   .put("/", ({ set, body }) => weekPlan.updateWeekPlan(body, set), {
-    body: t.Object({
-      id: t.String(),
-      weeklyId: t.String(),
-      userId: t.String(),
-      day: t.String(),
-      time: t.String(),
-    }),
+    body: model.AvailableFullModel,
   })
 
   //! Delete one weekPlan

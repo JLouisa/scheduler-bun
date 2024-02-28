@@ -14,7 +14,7 @@ export enum ScheduleTime {
   OnCallAtFive = "(17)",
   OnCallAtSix = "(18)",
   Free = "Free",
-  None = "None",
+  None = "-",
 }
 
 export enum Days {

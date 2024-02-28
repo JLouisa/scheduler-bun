@@ -22,7 +22,8 @@ export interface TableSetupProps {
   users: schema.User[];
   available: Week | undefined;
   weeklyId: string;
-  options: string[];
+  options: schema.ScheduleTime[];
+  nextWeek: boolean;
 }
 
 export type LoadingSkeletonsType = {
@@ -31,11 +32,12 @@ export type LoadingSkeletonsType = {
 
 export interface SelectionOptionsProps {
   day: schema.Days;
-  time: schema.ScheduleTime | string;
+  time: schema.ScheduleTime;
   user: schema.User;
   availabilityId: string | undefined;
   weeklyId?: string;
-  options: string[];
+  options: schema.ScheduleTime[];
+  nextWeek: boolean;
 }
 
 export type RememberMeT = {

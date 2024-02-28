@@ -19,23 +19,28 @@ const SelectionOptions = ({
   user,
   availabilityId,
   options,
+  nextWeek,
 }: types.SelectionOptionsProps) => {
   const [spotsId, setSpotsId] = useState<string | undefined>(availabilityId);
-  const [timeValue, setTimeValue] = useState<string>(time);
+  const [timeValue, setTimeValue] = useState<schema.ScheduleTime>(time);
 
   const { toast } = useToast();
 
   const updateAvailability = useMutation({
-    mutationKey: ["postAvailability"],
+    mutationKey: [nextWeek ? "postAvailability" : "postWeekPlan"],
     mutationFn: async (data: schema.Availability) => {
-      const result = await DAL.postAvailability(data);
+      const result = nextWeek
+        ? await DAL.postAvailability(data)
+        : await DAL.postOneWeek(data);
       return result;
     },
     onSuccess: (result: schema.Availability) => {
       setSpotsId(result.id);
       setTimeValue(result.time);
       toast({
-        title: `Update successful`,
+        title: nextWeek
+          ? "Availability Update Successful"
+          : "Week Spot Update Successful",
         description: `${capitalizeFirstLetter(user.firstName)}: ${day}, ${
           result.time
         }`,
@@ -51,22 +56,25 @@ const SelectionOptions = ({
   });
 
   const deleteAvailability = useMutation({
-    mutationKey: ["deleteAvailability"],
-    mutationFn: async (data: string) => {
-      const result = await DAL.deleteAvailability(data);
+    mutationKey: [nextWeek ? "deleteAvailability" : "deleteOneWeekPlan"],
+    mutationFn: async (id: string) => {
+      const result = nextWeek
+        ? await DAL.deleteAvailability(id)
+        : await DAL.deleteOneWeekAvailability(id);
       return result;
     },
     onSuccess: () => {
       setSpotsId(undefined);
-      setTimeValue("-");
+      setTimeValue(schema.ScheduleTime.None);
 
       toast({
-        description: `Deletion successful`,
+        title: "Deletion successful",
+        description: nextWeek ? "Availability Deleted" : "Week Spot Deleted",
       });
     },
   });
 
-  function matchDay(t: string) {
+  function matchDay(t: schema.ScheduleTime) {
     return options.includes(t);
   }
 
@@ -96,7 +104,11 @@ const SelectionOptions = ({
     >
       <Select>
         <SelectTrigger className="w-full text-center">
-          <SelectValue placeholder={matchDay(timeValue) ? timeValue : "-"} />
+          <SelectValue
+            placeholder={
+              matchDay(timeValue) ? timeValue : schema.ScheduleTime.None
+            }
+          />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="del">-</SelectItem>

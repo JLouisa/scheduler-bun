@@ -1,13 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { createWeekID } from "@/lib/utils";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
-import { createWeekID } from "@/lib/utils";
+import * as schema from "@/lib/schema";
 
 const NextWeek = () => {
   const [weeklyId, setWeeklyId] = useState<string>(createWeekID());
+
+  // const weeklyId = createWeekID(-1);
 
   // Queries
   const {
@@ -30,7 +33,13 @@ const NextWeek = () => {
     queryFn: () => DAL.getAllAvailabilities(weeklyId),
   });
 
-  const userOptions = ["Available", "13", "15", "17", "Free"];
+  const userOptions: schema.ScheduleTime[] = [
+    schema.ScheduleTime.StartAtOne,
+    schema.ScheduleTime.StartAtThree,
+    schema.ScheduleTime.StartAtFive,
+    schema.ScheduleTime.Free,
+    schema.ScheduleTime.None,
+  ];
 
   if (isLoadingUsers || isLoadingAvailabilities) {
     return <LoadingSkeletons count={10} />;
@@ -56,6 +65,7 @@ const NextWeek = () => {
           available={availabilitiesData as types.Week}
           weeklyId={weeklyId}
           options={userOptions}
+          nextWeek={true}
         />
       </div>
     </>

@@ -1,23 +1,13 @@
 import { Elysia, t } from "elysia";
 import * as user from "../controller/user";
+import * as model from "./model";
 
 export const userRoutes = new Elysia({ prefix: "/user" })
   // Get all users
   .get("/", ({ set }) => user.getAllUsers(set))
   // Create a new user
   .post("/", ({ body, set }) => user.createUser(body, set), {
-    body: t.Object({
-      firstName: t.String(),
-      lastName: t.String(),
-      employeeId: t.Number(),
-      admin: t.Boolean(),
-      vast: t.Boolean(),
-      active: t.Boolean(),
-      minDays: t.Number(),
-      maxDays: t.Number(),
-      primaryRole: t.String(),
-      secondaryRole: t.String(),
-    }),
+    body: model.UserPartialModel,
   })
   // Get one user
   .get("/:id", ({ params: { id }, set }) => {
@@ -25,19 +15,7 @@ export const userRoutes = new Elysia({ prefix: "/user" })
   })
   // Update one user
   .put("/", ({ body, set }) => user.updateUser(body, set), {
-    body: t.Object({
-      id: t.String(),
-      firstName: t.String(),
-      lastName: t.String(),
-      employeeId: t.Number(),
-      admin: t.Boolean(),
-      vast: t.Boolean(),
-      active: t.Boolean(),
-      minDays: t.Number(),
-      maxDays: t.Number(),
-      primaryRole: t.String(),
-      secondaryRole: t.String(),
-    }),
+    body: model.UserFullModel,
   })
   //! Delete all users
   .delete("/all", ({ set }) => `Delete all users`)

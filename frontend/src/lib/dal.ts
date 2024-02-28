@@ -232,25 +232,16 @@ export async function getAllWeeks(weeklyId: string) {
 }
 
 // Post Weeks
-export async function postOneWeek({
-  id,
-  weeklyId,
-  userId,
-  day,
-  time,
-}: types.WeekProps) {
+export async function postOneWeek(availableInfo: schema.Availability) {
   try {
-    const result = await myFetch.post(`http://localhost:3000/api/v1/weekplan`, {
-      id,
-      weeklyId,
-      userId,
-      day,
-      time,
-    });
+    const result = await myFetch.post(
+      `http://localhost:3000/api/v1/weekplan`,
+      availableInfo
+    );
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
-      console.log("Update Request successful");
+      console.log("Update WeekPlan Request successful");
       console.log(data[0]);
       return data[0];
     } else if (result.status === 404 || data.failed) {
@@ -264,7 +255,7 @@ export async function postOneWeek({
 }
 
 // Delete Weeks
-export async function deleteWeekAvailability(spotsId: string) {
+export async function deleteOneWeekAvailability(spotsId: string) {
   try {
     const result = await myFetch.delete(
       `http://localhost:3000/api/v1/weekplan/one/${spotsId}`
