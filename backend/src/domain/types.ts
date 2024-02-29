@@ -48,11 +48,11 @@ export enum WeekStatus {
 }
 
 export type WeekStatusCollection = {
-  weeklyId1: string;
-  weeklyId2: string;
-  weeklyId3: string;
-  weeklyId4: string;
-  weeklyId5: string;
+  weeklyIdNext: string;
+  weeklyIdCurrent: string;
+  weeklyIdPrev1: string;
+  weeklyIdPrev2: string;
+  weeklyIdPrev3: string;
 };
 
 export function createWeekID(num = 0) {
@@ -76,6 +76,8 @@ export function getWeekStatusEnumToStr(status: WeekStatus): string {
 
 export function getWeekStatusStrToEnum(status: string): WeekStatus {
   switch (status) {
+    case "Open":
+      return WeekStatus.Open;
     case "In Progress":
       return WeekStatus.InProgress;
     case "Pending":
@@ -83,7 +85,7 @@ export function getWeekStatusStrToEnum(status: string): WeekStatus {
     case "Completed":
       return WeekStatus.Completed;
     default:
-      return WeekStatus.Invalid;
+      throw new Error("Invalid week status");
   }
 }
 

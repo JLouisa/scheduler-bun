@@ -6,10 +6,13 @@ import { useParams } from "react-router-dom";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
+import HeadUI from "@/components/HeadUI";
+import bearStore from "@/lib/bearStore";
 
 const RawWeek = () => {
   const { id } = useParams();
-  const weeklyId = id ? id : createWeekID();
+  const { dev } = bearStore();
+  const weeklyId = id ? id : createWeekID(dev);
 
   // Queries
   const {
@@ -69,10 +72,7 @@ const RawWeek = () => {
   return (
     <>
       <div className="w-full">
-        <div className="w-full flex justify-between items-center">
-          <h1 className="text-xl text-center mt-4 flex-grow">Raw Week</h1>
-          <span className="text-xl text-end">{weeklyId}</span>
-        </div>
+        <HeadUI weekName="Raw Week Schedule" weeklyId={weeklyId} />
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

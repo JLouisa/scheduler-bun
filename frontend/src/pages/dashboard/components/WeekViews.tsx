@@ -5,17 +5,24 @@ import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 
 const WeekView = () => {
-  const weekData = useQuery({
+  const {
+    data: weekData,
+    isLoading,
+    error,
+    isError,
+  } = useQuery({
     queryKey: ["weekStatus"],
     queryFn: DAL.getAllWeekStatus,
+    refetchOnMount: "always",
+    refetchOnReconnect: true,
   });
 
-  if (weekData.isLoading) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  if (weekData.isError) {
-    return <div>Error loading Week Status: {weekData.error.message}</div>;
+  if (isError) {
+    return <div>Error: {String(error)}</div>; // Render an error message
   }
 
   return (
@@ -24,7 +31,7 @@ const WeekView = () => {
         <CardTitle className="text-center">View Weeks</CardTitle>
       </CardHeader>
       <CardContent>
-        {weekData.data.map((week: types.WeekStatusT) => {
+        {weekData.map((week: types.WeekStatusT) => {
           return <WeekName key={week.id} weekStatus={week} />;
         })}
       </CardContent>

@@ -44,11 +44,11 @@ export class WeekStatusClass {
   }
   static collection(): helper.WeekStatusCollection {
     return {
-      weeklyId1: helper.createWeekID(),
-      weeklyId2: helper.createWeekID(1),
-      weeklyId3: helper.createWeekID(2),
-      weeklyId4: helper.createWeekID(3),
-      weeklyId5: helper.createWeekID(4),
+      weeklyIdNext: helper.createWeekID(-1),
+      weeklyIdCurrent: helper.createWeekID(0),
+      weeklyIdPrev1: helper.createWeekID(1),
+      weeklyIdPrev2: helper.createWeekID(2),
+      weeklyIdPrev3: helper.createWeekID(3),
     };
   }
 }

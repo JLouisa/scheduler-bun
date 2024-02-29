@@ -179,24 +179,38 @@ export async function getLastWeekStatus(
       return ErrorClass.new("Error getting week status");
     }
 
+    // Check for the presence of the two most recent weeks in the result
+    const hasWeeklyId1 =
+      result[0].weeklyId === collection.weeklyIdNext ? true : false;
+    const hasWeeklyId2 =
+      result[1].weeklyId === collection.weeklyIdCurrent ? true : false;
+
     const theWeeks: WeekStatusClass[] = [];
 
-    // Check for the presence of the two most recent weeks in the result
-    const hasWeeklyId1 = result.some(
-      (week) => week.weeklyId === collection.weeklyId1
-    );
-    const hasWeeklyId2 = result.some(
-      (week) => week.weeklyId === collection.weeklyId2
-    );
+    if (hasWeeklyId1 && hasWeeklyId2) {
+      return result.map((week) =>
+        new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+      );
+    }
 
     // Add missing entries to theWeeks
     if (!hasWeeklyId1) {
-      theWeeks.push(WeekStatusClass.new(collection.weeklyId1, WeekStatus.Open));
+      const week1 = WeekStatusClass.new(
+        collection.weeklyIdNext,
+        WeekStatus.Open
+      );
+      theWeeks.push(week1);
+      console.log(`week1`);
+      console.log(week1);
     }
     if (!hasWeeklyId2) {
-      theWeeks.push(
-        WeekStatusClass.new(collection.weeklyId2, WeekStatus.InProgress)
+      const week2 = WeekStatusClass.new(
+        collection.weeklyIdCurrent,
+        WeekStatus.InProgress
       );
+      theWeeks.push(week2);
+      console.log(`week2`);
+      console.log(week2);
     }
 
     // Save missing entries to the database

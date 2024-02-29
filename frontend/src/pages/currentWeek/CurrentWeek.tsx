@@ -1,5 +1,15 @@
+import HeadUI from "@/components/HeadUI";
+import { createWeekID } from "@/lib/utils";
+
 const CurrentWeek = () => {
-  return <div>CurrentWeek</div>;
+  const weeklyId = createWeekID();
+  return (
+    <>
+      <div className="w-full">
+        <HeadUI weekName="Current Week Schedule" weeklyId={weeklyId} />
+      </div>
+    </>
+  );
 };
 
 export default CurrentWeek;

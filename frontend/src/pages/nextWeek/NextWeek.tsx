@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { createWeekID } from "@/lib/utils";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import TableSetup from "@/components/TableSetup";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
+import HeadUI from "@/components/HeadUI";
+import bearStore from "@/lib/bearStore";
 
 const NextWeek = () => {
-  const [weeklyId, setWeeklyId] = useState<string>(createWeekID());
-
-  // const weeklyId = createWeekID(-1);
+  const { dev } = bearStore();
+  const weeklyId = createWeekID(dev); // Place in production -> -1
 
   // Queries
   const {
@@ -59,7 +59,7 @@ const NextWeek = () => {
   return (
     <>
       <div className="w-full">
-        <h1 className="text-xl text-center mt-4">Available Schedule</h1>
+        <HeadUI weekName="Next Week Schedule" weeklyId={weeklyId} />
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

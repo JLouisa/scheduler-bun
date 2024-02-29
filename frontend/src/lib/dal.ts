@@ -110,7 +110,7 @@ export async function postAvailability(availableInfo: schema.Availability) {
     }
   } catch (error) {
     console.error(error);
-    return error;
+    throw error;
   }
 }
 
@@ -128,7 +128,7 @@ export async function deleteAvailability(spotsId: string) {
     }
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -250,7 +250,7 @@ export async function postOneWeek(availableInfo: schema.Availability) {
     }
   } catch (error) {
     console.error(error);
-    return error;
+    throw error;
   }
 }
 
@@ -269,7 +269,7 @@ export async function deleteOneWeekAvailability(spotsId: string) {
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -286,7 +286,7 @@ export async function postNewUser(obj: schema.User) {
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -302,7 +302,7 @@ export async function updateNewUser(obj: schema.User) {
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -321,7 +321,7 @@ export async function deactivateUser(userId: string) {
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -340,7 +340,7 @@ export async function deleteOneUser(userId: string) {
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }
 
@@ -352,11 +352,14 @@ export async function getAllWeekStatus() {
     const data = await result.json();
     if (result.status === 200 || result.ok) {
       console.log("Get Request successful");
-      return data;
+      return data.map((weekStatus: schema.WeekStatus) => {
+        const zodded = schema.WeekStatusSchema.parse(weekStatus);
+        return schema.WeekStatusClass.serverIn(zodded);
+      });
     }
     throw new Error(data.error);
   } catch (error) {
     console.error(error);
-    return { error: error };
+    throw error;
   }
 }

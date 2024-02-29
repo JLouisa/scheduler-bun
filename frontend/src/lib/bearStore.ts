@@ -3,11 +3,15 @@ import { create } from "zustand";
 interface BearState {
   isAdmin: boolean;
   setIsAdmin: (isAdmin: boolean) => void;
+  dev: number;
+  setDev: (dev: number) => void;
 }
 
 const bearStore = create<BearState>((set) => ({
   isAdmin: false,
   setIsAdmin: (isAdmin) => set({ isAdmin }),
+  dev: 0,
+  setDev: (dev) => set({ dev }),
 }));
 
 export default bearStore;

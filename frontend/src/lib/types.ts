@@ -47,5 +47,5 @@ export type RememberMeT = {
 export type WeekStatusT = {
   id: string;
   weeklyId: string;
-  status: schema.WeekStatus;
+  status: schema.Status;
 };

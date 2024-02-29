@@ -39,7 +39,7 @@ export enum Roles {
   All = "All",
 }
 
-export enum WeekStatus {
+export enum Status {
   Open = "Open",
   InProgress = "In Progress",
   Pending = "Pending",
@@ -203,6 +203,29 @@ export class WeekClass {
       availabilities.filter((item: Availability) => item.day === Days.Friday),
       availabilities.filter((item: Availability) => item.day === Days.Saturday),
       availabilities.filter((item: Availability) => item.day === Days.Sunday)
+    );
+  }
+}
+
+// Define the schema for availability data
+export const WeekStatusSchema = z.object({
+  id: z.string().uuid(),
+  weeklyId: z.string(),
+  status: z.nativeEnum(Status),
+});
+export type WeekStatus = z.infer<typeof WeekStatusSchema>;
+
+export class WeekStatusClass implements WeekStatus {
+  constructor(
+    public id: string,
+    public weeklyId: string,
+    public status: Status
+  ) {}
+  static serverIn(weekStatus: WeekStatus): WeekStatusClass {
+    return new WeekStatusClass(
+      weekStatus.id,
+      weekStatus.weeklyId,
+      weekStatus.status
     );
   }
 }
