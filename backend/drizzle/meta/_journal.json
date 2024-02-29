@@ -57,6 +57,13 @@
       "when": 1708851913965,
       "tag": "0007_moaning_menace",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1709227005930,
+      "tag": "0008_complete_roulette",
+      "breakpoints": true
     }
   ]
 }

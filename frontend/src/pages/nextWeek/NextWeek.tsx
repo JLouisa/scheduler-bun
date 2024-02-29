@@ -34,6 +34,7 @@ const NextWeek = () => {
   });
 
   const userOptions: schema.ScheduleTime[] = [
+    schema.ScheduleTime.Available,
     schema.ScheduleTime.StartAtOne,
     schema.ScheduleTime.StartAtThree,
     schema.ScheduleTime.StartAtFive,
