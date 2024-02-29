@@ -39,7 +39,6 @@ const NextWeek = () => {
     schema.ScheduleTime.StartAtThree,
     schema.ScheduleTime.StartAtFive,
     schema.ScheduleTime.Free,
-    schema.ScheduleTime.None,
   ];
 
   if (isLoadingUsers || isLoadingAvailabilities) {
