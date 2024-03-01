@@ -4,6 +4,7 @@ import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Badge, badgeVariants } from "@/components/ui/badge";
 
 const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
   const [theWeekStatus, setTheWeekStatus] =
@@ -13,17 +14,19 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
   return (
     <div className="flex justify-between items-center gap-4 mt-2">
       <span>Week: {theWeekStatus.weeklyId}</span>
-      <span
+      <Badge
         className={`${
-          theWeekStatus.status === schema.Status.InProgress
-            ? "text-orange-700"
+          theWeekStatus.status === schema.Status.Open
+            ? "bg-blue-500"
+            : theWeekStatus.status === schema.Status.InProgress
+            ? "bg-yellow-500"
             : theWeekStatus.status === schema.Status.Pending
-            ? "text-blue-900"
-            : "text-green-700"
+            ? "bg-orange-700"
+            : "bg-green-700"
         } font-bold`}
       >
         {theWeekStatus.status}
-      </span>
+      </Badge>
       <div className="flex justify-evenly items-center gap-4">
         <Link to={`/rawweek/${theWeekStatus.weeklyId}`}>
           <Button onClick={() => console.log(theWeekStatus.weeklyId, "view")}>
@@ -31,9 +34,9 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
           </Button>
         </Link>
         <Button
+          className="truncate"
           onClick={() => console.log(theWeekStatus.weeklyId, "Calculate")}
           disabled={
-            theWeekStatus.status === schema.Status.Open ||
             theWeekStatus.status === schema.Status.InProgress ||
             theWeekStatus.status === schema.Status.Pending
               ? false
@@ -41,7 +44,7 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
           }
         >
           {theWeekStatus.status === schema.Status.Pending
-            ? "Re-Calculate"
+            ? "Re-Calc..."
             : "Calculate"}
         </Button>
         <Button

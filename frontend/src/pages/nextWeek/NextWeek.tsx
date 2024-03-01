@@ -7,6 +7,8 @@ import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import HeadUI from "@/components/HeadUI";
 import bearStore from "@/lib/bearStore";
+import { Suspense } from "react";
+import Loading from "@/assets/loading.gif";
 
 const NextWeek = () => {
   const { dev } = bearStore();

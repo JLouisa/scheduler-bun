@@ -1,4 +1,4 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { DateTime } from "luxon";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import SelectionOptions from "@/components/SelectionOptions";
@@ -20,18 +20,19 @@ const TableSetup = ({
   options,
   nextWeek,
 }: types.TableSetupProps) => {
+  const [availableWeek, setAvailableWeek] = useState(available);
   const weekNum = DateTime.local().weekNumber;
 
   const days = Object.values(Schema.Days);
 
   const getTime = (id: string, day: keyof types.Week): Schema.ScheduleTime => {
-    const dayArray = available?.[day];
+    const dayArray = availableWeek?.[day];
     const spot = dayArray?.find((item) => item.userId === id);
     return spot ? spot.time : Schema.ScheduleTime.None;
   };
 
   const getSpot = (id: string, day: keyof types.Week): string | undefined => {
-    const dayArray = available?.[day];
+    const dayArray = availableWeek?.[day];
     const spot = dayArray?.find((item) => item.userId === id);
     return spot?.id ?? undefined;
   };

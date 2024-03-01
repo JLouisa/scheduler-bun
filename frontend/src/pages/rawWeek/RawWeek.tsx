@@ -33,6 +33,8 @@ const RawWeek = () => {
   } = useQuery({
     queryKey: ["weekPlans"],
     queryFn: () => DAL.getAllWeeks(weeklyId),
+    refetchOnMount: "always",
+    refetchOnReconnect: true,
   });
 
   const adminOptions: schema.ScheduleTime[] = [
