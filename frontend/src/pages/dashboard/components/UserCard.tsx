@@ -8,10 +8,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 import AddOrEditUser from "./AddOrEditUser";
 
 type UserCardProps = {
-  users: types.UserProps[];
+  users: schema.User[];
   refetch: () => void;
 };
 

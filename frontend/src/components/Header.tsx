@@ -23,6 +23,9 @@ const Header = () => {
           <Link to="/dashboard">
             <li className="cursor-pointer">Dashboard</li>
           </Link>
+          <Link to="/pdf">
+            <li className="cursor-pointer">PDF</li>
+          </Link>
         </ul>
       </header>
     </nav>

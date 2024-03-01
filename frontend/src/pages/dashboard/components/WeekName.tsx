@@ -16,7 +16,7 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
   const handleCalculation = async (weeklyId: string) => {
     console.log("Calculating... " + weeklyId);
     // Queries
-    const response = await DAL.calculateWeek(weeklyId);
+    const response = await DAL.reCalculateWeek(weeklyId);
 
     if (response) {
       setTheWeekStatus(response);

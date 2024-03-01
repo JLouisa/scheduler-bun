@@ -13,6 +13,11 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   })
   //Calculate the time for the weekPlan
   .get("/create/:id", ({ set, params: { id } }) =>
+    weekPlan.createWholeWeekPlan(id, set)
+  )
+
+  //Calculate the time for the weekPlan
+  .get("/calculate/:id", ({ set, params: { id } }) =>
     weekPlan.calcWeekPlan(id, set)
   )
 

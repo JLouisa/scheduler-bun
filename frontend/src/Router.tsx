@@ -5,11 +5,13 @@ import NextWeek from "./pages/nextWeek/NextWeek";
 import Dashboard from "./pages/dashboard/Dashboard";
 import ForgotEmail from "./pages/forgot/ForgotEmail";
 import Login from "./pages/login/Login";
+
 import {
   createBrowserRouter,
   RouterProvider,
   Navigate,
 } from "react-router-dom";
+import CreatorPdf from "./components/pdf/CreatorPdf";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -25,6 +27,7 @@ const Router = () => {
         { path: "/rawweek", element: <RawWeek /> },
         { path: "/rawweek/:id", element: <RawWeek /> },
         { path: "/forgot-password", element: <ForgotEmail /> },
+        { path: "/pdf", element: <CreatorPdf /> },
       ],
     },
   ]);

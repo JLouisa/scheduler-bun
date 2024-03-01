@@ -363,6 +363,26 @@ export async function calculateWeek(weeklyId: string) {
   }
 }
 
+// Calculate Weeks
+export async function reCalculateWeek(weeklyId: string) {
+  try {
+    const result = await myFetch.get(
+      `http://localhost:3000/api/v1/weekplan/calculate/${weeklyId}`
+    );
+    const data = await result.json();
+
+    if (result.status === 200 || result.ok) {
+      console.log("Get Request successful");
+      const zodded = schema.WeekStatusSchema.parse(data[0]);
+      return zodded;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 //! WeekStatus
 // Get all week status
 export async function getAllWeekStatus() {

@@ -90,7 +90,11 @@ const RawWeek = () => {
   return (
     <>
       <div className="w-full">
-        <HeadUI weekName="Raw Week Schedule" weeklyId={weeklyId} />
+        <HeadUI
+          weekName="Raw Week Schedule"
+          weeklyId={weeklyId}
+          weekType={types.TheWeekType.Raw}
+        />
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

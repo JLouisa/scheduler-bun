@@ -4,14 +4,15 @@ import { capitalizeFirstLetter } from "@/lib/utils";
 import * as types from "@/lib/types";
 import { useState } from "react";
 import AddOrEditUser from "./AddOrEditUser";
+import * as schema from "@/lib/schema";
 
 type UserProps = {
-  user: types.UserProps;
+  user: schema.User;
   refetch: () => void;
 };
 
 const Users = ({ user, refetch }: UserProps) => {
-  const [theUser, setTheUser] = useState<types.UserProps>(user);
+  const [theUser, setTheUser] = useState<schema.User>(user);
 
   return (
     <div className="w-full flex justify-between items-center gap-4 mt-4">

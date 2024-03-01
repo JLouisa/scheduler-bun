@@ -7,8 +7,6 @@ import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import HeadUI from "@/components/HeadUI";
 import bearStore from "@/lib/bearStore";
-import { Suspense } from "react";
-import Loading from "@/assets/loading.gif";
 
 const NextWeek = () => {
   const { dev } = bearStore();
@@ -61,7 +59,11 @@ const NextWeek = () => {
   return (
     <>
       <div className="w-full">
-        <HeadUI weekName="Next Week Schedule" weeklyId={weeklyId} />
+        <HeadUI
+          weekName="Next Week Schedule"
+          weeklyId={weeklyId}
+          weekType={types.TheWeekType.Next}
+        />
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

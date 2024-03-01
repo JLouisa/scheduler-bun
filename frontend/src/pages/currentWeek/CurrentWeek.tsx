@@ -9,6 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import bearStore from "@/lib/bearStore";
 import { useEffect } from "react";
+import CreatorPdf from "@/components/pdf/CreatorPdf";
 
 const CurrentWeek = () => {
   // const weeklyId = createWeekID();
@@ -90,7 +91,11 @@ const CurrentWeek = () => {
   return (
     <>
       <div className="w-full">
-        <HeadUI weekName="Current Week Schedule" weeklyId={weeklyId} />
+        <HeadUI
+          weekName="Current Week Schedule"
+          weeklyId={weeklyId}
+          weekType={types.TheWeekType.Current}
+        />
         <TableSetup
           users={userData}
           available={availabilitiesData as types.Week}

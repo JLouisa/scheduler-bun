@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { toast } from "@/components/ui/use-toast";
 import { useMutation } from "@tanstack/react-query";
 import * as DAL from "@/lib/dal";
-import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 import { Checkbox } from "@/components/ui/checkbox";
 import RoleSelect from "./RoleSelect";
 import { useState } from "react";
@@ -21,8 +21,8 @@ import {
 import DeleteUser from "./DeleteUser";
 
 interface EditUserProps {
-  theUser?: types.UserProps;
-  setTheUser?: React.Dispatch<React.SetStateAction<types.UserProps>>;
+  theUser?: schema.User;
+  setTheUser?: React.Dispatch<React.SetStateAction<schema.User>>;
   edit: boolean;
   refetch?: () => void;
 }
@@ -39,13 +39,13 @@ EditUserProps) => {
 
   const createNewUser = useMutation({
     mutationKey: [edit ? "updateNewUser" : "postNewUser"],
-    mutationFn: async (data: types.UserProps | types.NewUserT) => {
+    mutationFn: async (data: schema.User) => {
       const result = edit
-        ? await DAL.updateNewUser(data as types.UserProps)
-        : await DAL.postNewUser(data as types.NewUserT);
+        ? await DAL.updateNewUser(data as schema.User)
+        : await DAL.postNewUser(data as schema.User);
       return result;
     },
-    onSuccess: (user: types.UserProps) => {
+    onSuccess: (user: schema.User) => {
       toast({
         title: `${capitalizeFirstLetter(user.firstName)} ${user.lastName}`,
         description: `${capitalizeFirstLetter(user.firstName)}${
