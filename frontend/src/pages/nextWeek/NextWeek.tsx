@@ -67,7 +67,7 @@ const NextWeek = () => {
           available={availabilitiesData as types.Week}
           weeklyId={weeklyId}
           options={userOptions}
-          nextWeek={true}
+          weekType={types.TheWeekType.Next}
         />
       </div>
     </>

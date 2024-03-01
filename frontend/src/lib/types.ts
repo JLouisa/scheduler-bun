@@ -1,5 +1,11 @@
 import * as schema from "./schema";
 
+export enum TheWeekType {
+  Current,
+  Next,
+  Raw,
+}
+
 export interface WeekProps {
   id: string;
   weeklyId: string;
@@ -23,7 +29,7 @@ export interface TableSetupProps {
   available: Week | undefined;
   weeklyId: string;
   options: schema.ScheduleTime[];
-  nextWeek: boolean;
+  weekType: TheWeekType;
 }
 
 export type LoadingSkeletonsType = {
@@ -37,7 +43,7 @@ export interface SelectionOptionsProps {
   availabilityId: string | undefined;
   weeklyId?: string;
   options: schema.ScheduleTime[];
-  nextWeek: boolean;
+  weekType: TheWeekType;
 }
 
 export type RememberMeT = {

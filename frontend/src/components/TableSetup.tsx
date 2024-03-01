@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { DateTime } from "luxon";
 import { capitalizeFirstLetter } from "@/lib/utils";
 import SelectionOptions from "@/components/SelectionOptions";
@@ -18,21 +18,21 @@ const TableSetup = ({
   users,
   available,
   options,
-  nextWeek,
+  weekType,
 }: types.TableSetupProps) => {
-  const [availableWeek, setAvailableWeek] = useState(available);
+  // const [availableWeek, setAvailableWeek] = useState(available);
   const weekNum = DateTime.local().weekNumber;
 
   const days = Object.values(Schema.Days);
 
   const getTime = (id: string, day: keyof types.Week): Schema.ScheduleTime => {
-    const dayArray = availableWeek?.[day];
+    const dayArray = available?.[day];
     const spot = dayArray?.find((item) => item.userId === id);
     return spot ? spot.time : Schema.ScheduleTime.None;
   };
 
   const getSpot = (id: string, day: keyof types.Week): string | undefined => {
-    const dayArray = availableWeek?.[day];
+    const dayArray = available?.[day];
     const spot = dayArray?.find((item) => item.userId === id);
     return spot?.id ?? undefined;
   };
@@ -85,22 +85,36 @@ const TableSetup = ({
                 </TableCell>
                 <TableCell className="w-[100px] border-r-2 text-center text-slate-500">{`${user.minDays}-${user.maxDays}`}</TableCell>
                 {days.map((day) => (
-                  <TableCell
-                    className="w-[100px] border-r-2 text-center"
-                    key={day}
-                  >
-                    <SelectionOptions
-                      day={day}
-                      time={getTime(user.id as string, day as keyof types.Week)}
-                      user={user}
-                      availabilityId={getSpot(
-                        user.id as string,
-                        day as keyof types.Week
-                      )}
-                      options={options}
-                      nextWeek={nextWeek}
-                    />
-                  </TableCell>
+                  <>
+                    {weekType === types.TheWeekType.Current ? (
+                      <TableCell
+                        className="w-[100px] border-r-2 text-center"
+                        key={day}
+                      >
+                        {getTime(user.id as string, day as keyof types.Week)}
+                      </TableCell>
+                    ) : (
+                      <TableCell
+                        className="w-[100px] border-r-2 text-center"
+                        key={day}
+                      >
+                        <SelectionOptions
+                          day={day}
+                          time={getTime(
+                            user.id as string,
+                            day as keyof types.Week
+                          )}
+                          user={user}
+                          availabilityId={getSpot(
+                            user.id as string,
+                            day as keyof types.Week
+                          )}
+                          options={options}
+                          weekType={weekType}
+                        />
+                      </TableCell>
+                    )}
+                  </>
                 ))}
               </TableRow>
             ))}

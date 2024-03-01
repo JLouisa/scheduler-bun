@@ -9,7 +9,7 @@ import * as schema from "@/lib/schema";
 import HeadUI from "@/components/HeadUI";
 import bearStore from "@/lib/bearStore";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Progress } from "@/components/ui/progress";
+// import { Progress } from "@/components/ui/progress";
 
 const RawWeek = () => {
   const queryClient = useQueryClient();
@@ -96,7 +96,7 @@ const RawWeek = () => {
           available={availabilitiesData as types.Week}
           weeklyId={weeklyId}
           options={adminOptions}
-          nextWeek={false}
+          weekType={types.TheWeekType.Raw}
         />
       </div>
     </>

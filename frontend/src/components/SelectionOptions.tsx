@@ -19,7 +19,7 @@ const SelectionOptions = ({
   user,
   availabilityId,
   options,
-  nextWeek,
+  weekType,
 }: types.SelectionOptionsProps) => {
   const [spotsId, setSpotsId] = useState<string | undefined>(availabilityId);
   const [timeValue, setTimeValue] = useState<schema.ScheduleTime>(time);
@@ -27,20 +27,24 @@ const SelectionOptions = ({
   const { toast } = useToast();
 
   const updateAvailability = useMutation({
-    mutationKey: [nextWeek ? "postAvailability" : "postWeekPlan"],
+    mutationKey: [
+      weekType === types.TheWeekType.Next ? "postAvailability" : "postWeekPlan",
+    ],
     mutationFn: async (data: schema.Availability) => {
-      const result = nextWeek
-        ? await DAL.postAvailability(data)
-        : await DAL.postOneWeek(data);
+      const result =
+        weekType === types.TheWeekType.Next
+          ? await DAL.postAvailability(data)
+          : await DAL.postOneWeek(data);
       return result;
     },
     onSuccess: (result: schema.Availability) => {
       setSpotsId(result.id);
       setTimeValue(result.time);
       toast({
-        title: nextWeek
-          ? "Availability Update Successful"
-          : "Week Spot Update Successful",
+        title:
+          weekType === types.TheWeekType.Next
+            ? "Availability Update Successful"
+            : "Week Spot Update Successful",
         description: `${capitalizeFirstLetter(user.firstName)}: ${day}, ${
           result.time
         }`,
@@ -56,9 +60,13 @@ const SelectionOptions = ({
   });
 
   const deleteAvailability = useMutation({
-    mutationKey: [nextWeek ? "deleteAvailability" : "deleteOneWeekPlan"],
+    mutationKey: [
+      weekType === types.TheWeekType.Next
+        ? "deleteAvailability"
+        : "deleteOneWeekPlan",
+    ],
     mutationFn: async (id: string) => {
-      const result = nextWeek
+      const result = types.TheWeekType.Next
         ? await DAL.deleteAvailability(id)
         : await DAL.deleteOneWeekAvailability(id);
       return result;
@@ -69,7 +77,10 @@ const SelectionOptions = ({
 
       toast({
         title: "Deletion successful",
-        description: nextWeek ? "Availability Deleted" : "Week Spot Deleted",
+        description:
+          weekType === types.TheWeekType.Next
+            ? "Availability Deleted"
+            : "Week Spot Deleted",
       });
     },
   });
