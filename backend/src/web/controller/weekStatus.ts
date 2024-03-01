@@ -64,11 +64,12 @@ export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
 
   if (newWeekStatus.status === helper.WeekStatus.Invalid) {
     set.status = 400;
-    return new ErrorClass("Invalid status");
+    return new ErrorClass("Invalid status").clientOut();
   }
 
-  const result: WeekStatusClass | WeekStatusClass[] | ErrorClass =
-    await dao.updateOneWeekStatus(newWeekStatus);
+  const result: WeekStatusClass[] | ErrorClass = await dao.updateOneWeekStatus(
+    newWeekStatus
+  );
 
   if (result instanceof ErrorClass) {
     set.status = 400;

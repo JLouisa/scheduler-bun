@@ -60,6 +60,76 @@ export async function getAllUsers() {
   }
 }
 
+// Create one user
+export async function postNewUser(obj: schema.User) {
+  try {
+    const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Post Request successful");
+      return data;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// UpdateUsers
+export async function updateNewUser(obj: schema.User) {
+  try {
+    const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Post Request successful");
+      return data;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Deactivate Users
+export async function deactivateUser(userId: string) {
+  try {
+    const result = await myFetch.delete(
+      `http://localhost:3000/api/v1/user/${userId}`
+    );
+    const data = await result.json();
+    console.log(data[0]);
+    if (result.status === 200 || result.ok) {
+      console.log("Deactivate Request successful");
+      return data[0];
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Delete one user
+export async function deleteOneUser(userId: string) {
+  try {
+    const result = await myFetch.delete(
+      `http://localhost:3000/api/v1/user/one/${userId}`
+    );
+    const data = await result.json();
+    console.log(data);
+    if (result.status === 200 || result.ok) {
+      console.log("Deactivate Request successful");
+      return data;
+    }
+    throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 //! Availabilities
 // Get all availabilities
 export async function getAllAvailabilities(weeklyId: string) {
@@ -273,69 +343,18 @@ export async function deleteOneWeekAvailability(spotsId: string) {
   }
 }
 
-//! Users
-// Create Users
-export async function postNewUser(obj: schema.User) {
+// Calculate Weeks
+export async function calculateWeek(weeklyId: string) {
   try {
-    const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
-    const data = await result.json();
-    if (result.status === 200 || result.ok) {
-      console.log("Post Request successful");
-      return data;
-    }
-    throw new Error(data.error);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-// UpdateUsers
-export async function updateNewUser(obj: schema.User) {
-  try {
-    const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
-    const data = await result.json();
-    if (result.status === 200 || result.ok) {
-      console.log("Post Request successful");
-      return data;
-    }
-    throw new Error(data.error);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
-
-// Deactivate Users
-export async function deactivateUser(userId: string) {
-  try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/user/${userId}`
+    const result = await myFetch.get(
+      `http://localhost:3000/api/v1/weekplan/create/${weeklyId}`
     );
     const data = await result.json();
-    console.log(data[0]);
-    if (result.status === 200 || result.ok) {
-      console.log("Deactivate Request successful");
-      return data[0];
-    }
-    throw new Error(data.error);
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-}
 
-// Delete one user
-export async function deleteOneUser(userId: string) {
-  try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/user/one/${userId}`
-    );
-    const data = await result.json();
-    console.log(data);
     if (result.status === 200 || result.ok) {
-      console.log("Deactivate Request successful");
-      return data;
+      console.log("Get Request successful");
+      const zodded = schema.WeekStatusSchema.parse(data[0]);
+      return zodded;
     }
     throw new Error(data.error);
   } catch (error) {

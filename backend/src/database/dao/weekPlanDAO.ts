@@ -1,5 +1,6 @@
 // Import the db schemas
 import { WeekPlanSchema } from "../schema/weekPlan";
+import { WeekStatusSchema } from "../schema/weekStatus";
 
 // Import the domain classes
 import { WeekPlanClass } from "../../domain/weekPlan";
@@ -11,6 +12,9 @@ import { eq } from "drizzle-orm";
 
 // Other imports
 import { NIL as NIL_UUID } from "uuid";
+import { WeekStatusCollection, WeekStatus } from "../../domain/types";
+import { SuccessClass } from "../../domain/success";
+import { WeekStatusClass } from "../../domain/weekStatus";
 
 //! WeekPlan
 
@@ -177,4 +181,34 @@ export async function deleteOneWeekPlan(
 // Delete All week plan from DB
 export async function deleteAllWeekPlan() {
   return await db.delete(WeekPlanSchema);
+}
+
+export async function updateDeleteWeekPlan(weeklyId: string) {
+  const result = await db.transaction(async (tx) => {
+    // Update the week status to InProgress
+    const weekStatus = await tx
+      .update(WeekStatusSchema)
+      .set({ status: WeekStatus.InProgress })
+      .where(eq(WeekStatusSchema.weeklyId, weeklyId))
+      .returning();
+
+    // Delete all week plans
+    await tx
+      .delete(WeekPlanSchema)
+      .where(eq(WeekPlanSchema.weeklyId, weeklyId));
+
+    return weekStatus;
+  });
+
+  if (result instanceof ErrorClass) {
+    return ErrorClass.new("Error updating/ deleting week plan");
+  }
+
+  if (!Array.isArray(result) || result.length === 0) {
+    return ErrorClass.new("Error updating/ deleting week plan");
+  }
+
+  return result.map((week) =>
+    new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
+  );
 }

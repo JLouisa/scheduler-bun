@@ -8,6 +8,8 @@ import * as dao from "../../database/dao/weekPlanDAO";
 import * as helper from "../../domain/types";
 import * as availabilityDAO from "../../database/dao/availabilityDAO";
 import { AvailabilityClass } from "../../domain/availability";
+import { SuccessClass } from "../../domain/success";
+import { WeekStatusClass } from "../../domain/weekStatus";
 
 type WeekPlan = {
   id?: string;
@@ -43,26 +45,42 @@ export async function getAllWeekPlan(weeklyId: string, set: any) {
 
 // Calculate the time for the weekPlan
 export async function calcWeekPlan(weeklyId: string, set: any) {
-  const weekPlan = await dao.getAllWeekPlan(weeklyId);
+  const updateDeleteResult: WeekStatusClass[] | ErrorClass =
+    await dao.updateDeleteWeekPlan(weeklyId);
 
-  if (weekPlan instanceof ErrorClass) {
+  if (updateDeleteResult instanceof ErrorClass) {
+    return updateDeleteResult.clientOut();
+  }
+
+  // //Todo: Should delete because all weekPlans are deleted
+  // const weekPlan = await dao.getAllWeekPlan(weeklyId);
+
+  // if (weekPlan instanceof ErrorClass) {
+  //   set.status = 500;
+  //   return weekPlan.clientOut();
+  // }
+  // //Todo: -----------------------------------------------
+
+  // if (weekPlan.length === 0) {
+  const availabilities: AvailabilityClass[] | ErrorClass =
+    await availabilityDAO.getAllAvailabilitiesS(weeklyId);
+
+  if (availabilities instanceof ErrorClass) {
     set.status = 500;
-    return weekPlan.clientOut();
+    return availabilities.clientOut();
   }
 
-  if (weekPlan.length === 0) {
-    const availabilities: AvailabilityClass[] | ErrorClass =
-      await availabilityDAO.getAllAvailabilitiesS(weeklyId);
+  const result = await weekCreator(weeklyId, availabilities);
 
-    if (availabilities instanceof ErrorClass) {
-      set.status = 500;
-      return availabilities.clientOut();
-    }
-
-    return await weekCreator(weeklyId, availabilities);
+  if (result instanceof ErrorClass) {
+    set.status = 500;
+    return ErrorClass.new("Error creating week plan").clientOut();
   }
 
-  return weekPlan.map((week) => week.clientOut());
+  return updateDeleteResult.map((week) => week.clientOut());
+  // }
+
+  // return weekPlan.map((week) => week.clientOut());
 }
 
 // Create a new weekPlan

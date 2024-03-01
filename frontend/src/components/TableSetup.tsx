@@ -85,18 +85,18 @@ const TableSetup = ({
                 </TableCell>
                 <TableCell className="w-[100px] border-r-2 text-center text-slate-500">{`${user.minDays}-${user.maxDays}`}</TableCell>
                 {days.map((day) => (
-                  <>
+                  <Fragment key={day}>
                     {weekType === types.TheWeekType.Current ? (
                       <TableCell
                         className="w-[100px] border-r-2 text-center"
-                        key={day}
+                        // key={day}
                       >
                         {getTime(user.id as string, day as keyof types.Week)}
                       </TableCell>
                     ) : (
                       <TableCell
                         className="w-[100px] border-r-2 text-center"
-                        key={day}
+                        // key={day}
                       >
                         <SelectionOptions
                           day={day}
@@ -114,7 +114,7 @@ const TableSetup = ({
                         />
                       </TableCell>
                     )}
-                  </>
+                  </Fragment>
                 ))}
               </TableRow>
             ))}

@@ -1,15 +1,27 @@
 import { Button } from "@/components/ui/button";
-import { createWeekID } from "@/lib/utils";
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
+import * as DAL from "@/lib/dal";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Badge, badgeVariants } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
+// import { createWeekID } from "@/lib/utils";
+// import { useQuery } from "@tanstack/react-query";
 
 const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
   const [theWeekStatus, setTheWeekStatus] =
     useState<types.WeekStatusT>(weekStatus);
   // const weekID = createWeekID(num);
+
+  const handleCalculation = async (weeklyId: string) => {
+    console.log("Calculating... " + weeklyId);
+    // Queries
+    const response = await DAL.calculateWeek(weeklyId);
+
+    if (response) {
+      setTheWeekStatus(response);
+    }
+  };
 
   return (
     <div className="flex justify-between items-center gap-4 mt-2">
@@ -35,7 +47,7 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
         </Link>
         <Button
           className="truncate"
-          onClick={() => console.log(theWeekStatus.weeklyId, "Calculate")}
+          onClick={() => handleCalculation(theWeekStatus.weeklyId)}
           disabled={
             theWeekStatus.status === schema.Status.InProgress ||
             theWeekStatus.status === schema.Status.Pending
