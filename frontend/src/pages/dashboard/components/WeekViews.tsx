@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import WeekName from "./WeekName";
-import { useQuery } from "@tanstack/react-query";
 import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
+import { useQuery } from "@tanstack/react-query";
 
 const WeekView = () => {
   const {

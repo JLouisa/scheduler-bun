@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import TableSetup from "@/components/TableSetup";
 import { createWeekID } from "@/lib/utils";
@@ -8,8 +8,12 @@ import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import HeadUI from "@/components/HeadUI";
 import bearStore from "@/lib/bearStore";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { Progress } from "@/components/ui/progress";
 
 const RawWeek = () => {
+  const queryClient = useQueryClient();
+
   const { id } = useParams();
   const { dev } = bearStore();
   const weeklyId = id ? id : createWeekID(dev);
@@ -50,14 +54,26 @@ const RawWeek = () => {
     schema.ScheduleTime.Free,
   ];
 
+  useEffect(() => {
+    return () => {
+      queryClient.removeQueries({ queryKey: ["weekPlans"] });
+    };
+  }, []);
+
   if (!isLoadingUsers && !isLoadingAvailabilities) {
     console.log(`react-query is done loading`);
     console.log(userData);
     console.log(availabilitiesData);
   }
 
-  if (isLoadingUsers || isLoadingAvailabilities) {
+  if (isLoadingUsers) {
     return <LoadingSkeletons count={10} />;
+    // return <Progress value={33} />;
+  }
+
+  if (isLoadingAvailabilities) {
+    return <LoadingSkeletons count={10} />;
+    // return <Progress value={66} />;
   }
 
   if (isUserError || isAvailabilityError) {
