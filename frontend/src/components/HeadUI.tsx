@@ -1,46 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
 import { Button } from "./ui/button";
 import * as types from "@/lib/types";
-import { toast } from "./ui/use-toast";
 
 interface HeadUIProps {
   weekName: string;
   weeklyId: string;
   weekType: types.TheWeekType;
-  printPDF: () => void;
+  printPDF?: () => void;
 }
 
 const HeadUI = ({ weekName, weeklyId, weekType, printPDF }: HeadUIProps) => {
-  // const SaveDownload = useMutation({
-  //   mutationKey: [
-  //     weekType === types.TheWeekType.Raw ? "saveWeek" : "downloadWeek",
-  //   ],
-  //   mutationFn: async (weeklyID: string) => {
-  //     const result =
-  //       weekType === types.TheWeekType.Raw
-  //         ? await DAL.updateNewUser(weeklyID)
-  //         : await DAL.postNewUser(weeklyID);
-  //     return result;
-  //   },
-  //   onSuccess: () => {
-  //     toast({
-  //       title: `Successful request`,
-  //       description: `${
-  //         weekType === types.TheWeekType.Raw
-  //           ? "Week has been successfully Saved"
-  //           : "Request to download info has been Successful"
-  //       }!`,
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     toast({
-  //       title: "Oops! Something went wrong!",
-  //       variant: "destructive",
-  //       description: `Error: ${error}`,
-  //     });
-  //   },
-  // });
-
   return (
     <>
       <div className="w-full flex justify-between items-center">
@@ -52,7 +20,8 @@ const HeadUI = ({ weekName, weeklyId, weekType, printPDF }: HeadUIProps) => {
             id="download-pdf"
             onClick={() => {
               console.log(weeklyId, "Download");
-              printPDF();
+              if (weekType === types.TheWeekType.Current && printPDF)
+                printPDF();
             }}
           >
             Download

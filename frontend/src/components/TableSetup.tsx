@@ -19,6 +19,7 @@ const TableSetup = ({
   available,
   options,
   weekType,
+  weekPlan,
 }: types.TableSetupProps) => {
   // const [availableWeek, setAvailableWeek] = useState(available);
   const weekNum = DateTime.local().weekNumber;
@@ -29,6 +30,15 @@ const TableSetup = ({
     const dayArray = available?.[day];
     const spot = dayArray?.find((item) => item.userId === id);
     return spot ? spot.time : Schema.ScheduleTime.None;
+  };
+
+  const getTime2 = (
+    id: string,
+    day: keyof types.Week
+  ): Schema.ScheduleTime | string => {
+    const dayArray = weekPlan?.[day];
+    const spot = dayArray?.find((item) => item.userId === id);
+    return spot ? spot.time : " ";
   };
 
   const getSpot = (id: string, day: keyof types.Week): string | undefined => {
@@ -98,6 +108,14 @@ const TableSetup = ({
                         className="w-[100px] border-r-2 text-center"
                         // key={day}
                       >
+                        {weekType === types.TheWeekType.Raw && (
+                          <span className="text-gray-500">
+                            {getTime2(
+                              user.id as string,
+                              day as keyof types.Week
+                            )}
+                          </span>
+                        )}
                         <SelectionOptions
                           day={day}
                           time={getTime(

@@ -11,7 +11,6 @@ import {
   RouterProvider,
   Navigate,
 } from "react-router-dom";
-import CreatorPdf from "./components/pdf/CreatorPdf";
 
 const Router = () => {
   const router = createBrowserRouter([
@@ -27,7 +26,6 @@ const Router = () => {
         { path: "/rawweek", element: <RawWeek /> },
         { path: "/rawweek/:id", element: <RawWeek /> },
         { path: "/forgot-password", element: <ForgotEmail /> },
-        { path: "/pdf", element: <CreatorPdf /> },
       ],
     },
   ]);

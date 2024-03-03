@@ -1,15 +1,14 @@
 import { useEffect } from "react";
-import LoadingSkeletons from "./components/LoadingSkeletons";
-import TableSetup from "@/components/TableSetup";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createWeekID } from "@/lib/utils";
 import { useParams } from "react-router-dom";
-import * as DAL from "@/lib/dal";
-import * as types from "@/lib/types";
-import * as schema from "@/lib/schema";
+import TableSetup from "@/components/TableSetup";
+import LoadingSkeletons from "./components/LoadingSkeletons";
 import HeadUI from "@/components/HeadUI";
 import bearStore from "@/lib/bearStore";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-// import { Progress } from "@/components/ui/progress";
+import * as schema from "@/lib/schema";
+import * as types from "@/lib/types";
+import * as DAL from "@/lib/dal";
 
 const RawWeek = () => {
   const queryClient = useQueryClient();
@@ -30,15 +29,25 @@ const RawWeek = () => {
   });
 
   const {
-    data: availabilitiesData,
-    isLoading: isLoadingAvailabilities,
-    error: availabilityError,
-    isError: isAvailabilityError,
+    data: weekPlansData,
+    isLoading: isLoadingWeekPlans,
+    error: weekPlansError,
+    isError: isWeekPlansError,
   } = useQuery({
     queryKey: ["weekPlans"],
     queryFn: () => DAL.getAllWeeks(weeklyId),
     refetchOnMount: "always",
     refetchOnReconnect: true,
+  });
+
+  const {
+    data: availabilitiesData,
+    isLoading: isLoadingAvailabilities,
+    error: availabilityError,
+    isError: isAvailabilityError,
+  } = useQuery({
+    queryKey: ["availabilities"],
+    queryFn: () => DAL.getAllAvailabilities(weeklyId),
   });
 
   const adminOptions: schema.ScheduleTime[] = [
@@ -60,7 +69,7 @@ const RawWeek = () => {
     };
   }, []);
 
-  if (!isLoadingUsers && !isLoadingAvailabilities) {
+  if (!isLoadingUsers && !isLoadingAvailabilities && isLoadingWeekPlans) {
     console.log(`react-query is done loading`);
     console.log(userData);
     console.log(availabilitiesData);
@@ -68,20 +77,25 @@ const RawWeek = () => {
 
   if (isLoadingUsers) {
     return <LoadingSkeletons count={10} />;
-    // return <Progress value={33} />;
   }
 
   if (isLoadingAvailabilities) {
     return <LoadingSkeletons count={10} />;
-    // return <Progress value={66} />;
   }
 
-  if (isUserError || isAvailabilityError) {
+  if (isLoadingWeekPlans) {
+    return <LoadingSkeletons count={10} />;
+  }
+
+  if (isUserError || isAvailabilityError || isWeekPlansError) {
     return (
       <>
         {isUserError && <div>Error loading users: {userError.message}</div>}
         {isAvailabilityError && (
           <div>Error loading availabilities: {availabilityError.message}</div>
+        )}
+        {isWeekPlansError && (
+          <div>Error loading week plans: {weekPlansError.message}</div>
         )}
       </>
     );
@@ -97,10 +111,11 @@ const RawWeek = () => {
         />
         <TableSetup
           users={userData}
-          available={availabilitiesData as types.Week}
+          available={weekPlansData as types.Week}
           weeklyId={weeklyId}
           options={adminOptions}
           weekType={types.TheWeekType.Raw}
+          weekPlan={availabilitiesData as types.Week}
         />
       </div>
     </>
