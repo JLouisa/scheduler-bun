@@ -17,6 +17,9 @@ export const weekStatusRoutes = new Elysia({ prefix: "/weekstatus" })
   .put("/", ({ set, body }) => weekStatus.updateWeekStatus(body, set), {
     body: model.WeekStatusFullModel,
   })
+  .put("/:weeklyId", ({ set, params: { weeklyId } }) =>
+    weekStatus.updateCompleteWeekStatus(set, weeklyId)
+  )
   //! Delete all weekStatus
   .delete("/all", () => `Delete all weekStatus`)
   //! Delete one weekStatus

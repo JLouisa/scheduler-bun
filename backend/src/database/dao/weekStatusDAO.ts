@@ -3,8 +3,9 @@ import { WeekStatusSchema } from "../schema/weekStatus";
 
 // Import the domain classes
 import { WeekStatusClass } from "../../domain/weekStatus";
-import { ErrorClass } from "../../domain/error";
 import { WeekStatusCollection, WeekStatus } from "../../domain/types";
+import { ErrorClass } from "../../domain/error";
+import { SuccessClass } from "../../domain/success";
 
 // Setup the DB connection
 import { db } from "../setup";
@@ -254,6 +255,28 @@ export async function updateOneWeekStatus(obj: WeekStatusClass) {
     return result.map((week) =>
       new WeekStatusClass(week.id, week.weeklyId, week.status).dbOut()
     );
+  } catch (error) {
+    console.error("Error updating week status in DB", error);
+    return ErrorClass.new("Error updating week status");
+  }
+}
+
+// Update One week status from DB
+export async function updateCompleteWeekStatus(weeklyId: string) {
+  try {
+    const result = await db
+      .update(WeekStatusSchema)
+      .set({
+        status: WeekStatus.Completed,
+      })
+      .where(eq(WeekStatusSchema.weeklyId, weeklyId))
+      .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error updating week status");
+    }
+
+    return SuccessClass.new("Week status updated to completed successfully");
   } catch (error) {
     console.error("Error updating week status in DB", error);
     return ErrorClass.new("Error updating week status");

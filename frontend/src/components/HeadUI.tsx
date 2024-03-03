@@ -1,5 +1,8 @@
+import { useMutation } from "@tanstack/react-query";
 import { Button } from "./ui/button";
+import { toast } from "./ui/use-toast";
 import * as types from "@/lib/types";
+import * as DAL from "@/lib/dal";
 
 interface HeadUIProps {
   weekName: string;
@@ -9,11 +12,39 @@ interface HeadUIProps {
 }
 
 const HeadUI = ({ weekName, weeklyId, weekType, printPDF }: HeadUIProps) => {
+  const updateWeekStatus = useMutation({
+    mutationKey: [
+      weekType === types.TheWeekType.Next ? "postAvailability" : "postWeekPlan",
+    ],
+    mutationFn: async (data: string) => {
+      const result = await DAL.updateOneWeekStatus(data);
+      return result;
+    },
+    onSuccess: (data) => {
+      toast({
+        title: `${data}`,
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: `Uh oh! Something went wrong.`,
+        description: `There was a problem saving the week, ${error.message}`,
+      });
+    },
+  });
   return (
     <>
       <div className="w-full flex justify-between items-center">
         {weekType === types.TheWeekType.Raw && (
-          <Button onClick={() => console.log(weeklyId, "Save")}>Save</Button>
+          <Button
+            onClick={() => {
+              updateWeekStatus.mutate(weeklyId);
+              console.log(weeklyId, "Save");
+            }}
+          >
+            Save
+          </Button>
         )}
         {weekType === types.TheWeekType.Current && (
           <Button

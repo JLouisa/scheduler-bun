@@ -40,11 +40,12 @@ const WeekName = ({ weekStatus }: { weekStatus: types.WeekStatusT }) => {
         {theWeekStatus.status}
       </Badge>
       <div className="flex justify-evenly items-center gap-4">
-        <Link to={`/rawweek/${theWeekStatus.weeklyId}`}>
-          <Button onClick={() => console.log(theWeekStatus.weeklyId, "view")}>
-            View
-          </Button>
-        </Link>
+        <Button
+          onClick={() => console.log(theWeekStatus.weeklyId, "view")}
+          disabled={theWeekStatus.status === schema.Status.Open ? true : false}
+        >
+          <Link to={`/rawweek/${theWeekStatus.weeklyId}`}>View</Link>
+        </Button>
         <Button
           className="truncate"
           onClick={() => handleCalculation(theWeekStatus.weeklyId)}

@@ -27,7 +27,7 @@ const myFetch = {
       },
     });
   },
-  async put(url: string, body: any) {
+  async put(url: string, body?: any) {
     return await fetch(url, {
       method: "PUT",
       headers: {
@@ -363,7 +363,7 @@ export async function calculateWeek(weeklyId: string) {
   }
 }
 
-// Calculate Weeks
+// Recalculate Weeks
 export async function reCalculateWeek(weeklyId: string) {
   try {
     const result = await myFetch.get(
@@ -397,6 +397,26 @@ export async function getAllWeekStatus() {
       });
     }
     throw new Error(data.error);
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+// Update week status
+export async function updateOneWeekStatus(weeklyId: string) {
+  try {
+    const result = await myFetch.put(
+      `http://localhost:3000/api/v1/weekstatus/${weeklyId}`
+    );
+    const data = await result.json();
+    if (result.status === 200 || result.ok) {
+      console.log("Get Request successful");
+      const zodded = schema.SuccessSchema.parse(data);
+      return zodded.success;
+    }
+    const zodded = schema.ErrorSchema.parse(data);
+    throw new Error(zodded.error);
   } catch (error) {
     console.error(error);
     throw error;

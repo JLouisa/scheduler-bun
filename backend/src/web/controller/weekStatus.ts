@@ -54,7 +54,7 @@ export async function createWeekStatus(body: WeekStatus, set: any) {
   return result.map((weekStatus) => weekStatus.clientOut());
 }
 
-//! Update one week status
+//! Update one weekStatus
 export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
   const newWeekStatus = new WeekStatusClass(
     body.id,
@@ -77,6 +77,18 @@ export async function updateWeekStatus(body: UpdateWeekStatus, set: any) {
   }
 
   return result.map((weekStatus) => weekStatus.clientOut());
+}
+
+//! Update one weekStatus' status
+export async function updateCompleteWeekStatus(set: any, weeklyId: string) {
+  const result = await dao.updateCompleteWeekStatus(weeklyId);
+
+  if (result instanceof ErrorClass) {
+    set.status = 400;
+    return result.clientOut();
+  }
+
+  return result.clientOut();
 }
 
 //! Maintain week status

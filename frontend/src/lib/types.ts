@@ -30,7 +30,7 @@ export interface TableSetupProps {
   weeklyId: string;
   options: schema.ScheduleTime[];
   weekType: TheWeekType;
-  weekPlan: Week | undefined;
+  weekPlan?: Week | undefined;
 }
 
 export type LoadingSkeletonsType = {

@@ -230,6 +230,12 @@ export class WeekStatusClass implements WeekStatus {
   }
 }
 
+// Define the schema for success messages returned from the server
+export const SuccessSchema = z.object({
+  success: z.string(),
+});
+export type Success = z.infer<typeof SuccessSchema>;
+
 // Define the schema for errors returned from the server
 export const ErrorSchema = z.object({
   error: z.string(),
