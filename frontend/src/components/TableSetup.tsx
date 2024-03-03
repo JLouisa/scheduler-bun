@@ -57,7 +57,7 @@ const TableSetup = ({
 
   return (
     <Table className="mt-8 border-t-2 border-l-2 shadow-md">
-      <TableCaption>A list of users.</TableCaption>
+      <TableCaption>Schedule</TableCaption>
       <TableHeader>
         <TableRow>
           <TableHead className="w-[100px] border-r-2">{`Week ${

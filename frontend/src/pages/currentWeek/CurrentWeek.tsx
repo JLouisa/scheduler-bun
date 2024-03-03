@@ -9,7 +9,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import bearStore from "@/lib/bearStore";
 import { useEffect } from "react";
-import CreatorPdf from "@/components/pdf/CreatorPdf";
+import { PdfCreator } from "@/lib/printPdf";
 
 const CurrentWeek = () => {
   // const weeklyId = createWeekID();
@@ -62,6 +62,10 @@ const CurrentWeek = () => {
     };
   }, []);
 
+  const printPDF = () => {
+    PdfCreator(weeklyId);
+  };
+
   if (!isLoadingUsers && !isLoadingAvailabilities) {
     console.log(`react-query is done loading`);
     console.log(userData);
@@ -95,6 +99,7 @@ const CurrentWeek = () => {
           weekName="Current Week Schedule"
           weeklyId={weeklyId}
           weekType={types.TheWeekType.Current}
+          printPDF={printPDF}
         />
         <TableSetup
           users={userData}

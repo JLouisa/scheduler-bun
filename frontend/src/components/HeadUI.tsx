@@ -7,9 +7,10 @@ interface HeadUIProps {
   weekName: string;
   weeklyId: string;
   weekType: types.TheWeekType;
+  printPDF: () => void;
 }
 
-const HeadUI = ({ weekName, weeklyId, weekType }: HeadUIProps) => {
+const HeadUI = ({ weekName, weeklyId, weekType, printPDF }: HeadUIProps) => {
   // const SaveDownload = useMutation({
   //   mutationKey: [
   //     weekType === types.TheWeekType.Raw ? "saveWeek" : "downloadWeek",
@@ -47,7 +48,13 @@ const HeadUI = ({ weekName, weeklyId, weekType }: HeadUIProps) => {
           <Button onClick={() => console.log(weeklyId, "Save")}>Save</Button>
         )}
         {weekType === types.TheWeekType.Current && (
-          <Button onClick={() => console.log(weeklyId, "Download")}>
+          <Button
+            id="download-pdf"
+            onClick={() => {
+              console.log(weeklyId, "Download");
+              printPDF();
+            }}
+          >
             Download
           </Button>
         )}
