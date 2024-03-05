@@ -1,6 +1,18 @@
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 
+const ENV = "development";
+
+const backendUrl = (url: string): string => {
+  const api = "/api/v1";
+  const link =
+    ENV === "development" ? "http://localhost:3000" : "https://test.com";
+
+  console.log(`The URL`);
+  console.log(`${link}${api}${url}`);
+  return `${link}${api}${url}`;
+};
+
 const myFetch = {
   async get(url: string) {
     return await fetch(url, {
@@ -42,7 +54,7 @@ const myFetch = {
 // Get all users
 export async function getAllUsers() {
   try {
-    const result = await myFetch.get("http://localhost:3000/api/v1/user");
+    const result = await myFetch.get(backendUrl("/user"));
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
@@ -63,7 +75,7 @@ export async function getAllUsers() {
 // Create one user
 export async function postNewUser(obj: schema.User) {
   try {
-    const result = await myFetch.post("http://localhost:3000/api/v1/user", obj);
+    const result = await myFetch.post(backendUrl("/user"), obj);
     const data = await result.json();
     if (result.status === 200 || result.ok) {
       console.log("Post Request successful");
@@ -79,7 +91,7 @@ export async function postNewUser(obj: schema.User) {
 // UpdateUsers
 export async function updateNewUser(obj: schema.User) {
   try {
-    const result = await myFetch.put("http://localhost:3000/api/v1/user", obj);
+    const result = await myFetch.put(backendUrl("/user"), obj);
     const data = await result.json();
     if (result.status === 200 || result.ok) {
       console.log("Post Request successful");
@@ -95,9 +107,7 @@ export async function updateNewUser(obj: schema.User) {
 // Deactivate Users
 export async function deactivateUser(userId: string) {
   try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/user/${userId}`
-    );
+    const result = await myFetch.delete(backendUrl(`/user/${userId}`));
     const data = await result.json();
     console.log(data[0]);
     if (result.status === 200 || result.ok) {
@@ -114,9 +124,7 @@ export async function deactivateUser(userId: string) {
 // Delete one user
 export async function deleteOneUser(userId: string) {
   try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/user/one/${userId}`
-    );
+    const result = await myFetch.delete(backendUrl(`/user/one/${userId}`));
     const data = await result.json();
     console.log(data);
     if (result.status === 200 || result.ok) {
@@ -135,7 +143,7 @@ export async function deleteOneUser(userId: string) {
 export async function getAllAvailabilities(weeklyId: string) {
   try {
     const result = await myFetch.get(
-      `http://localhost:3000/api/v1/availability/week/${weeklyId}`
+      backendUrl(`/availability/week/${weeklyId}`)
     );
 
     let finalData = await result.json();
@@ -164,7 +172,7 @@ export async function postAvailability(availableInfo: schema.Availability) {
 
   try {
     const result = await myFetch.post(
-      `http://localhost:3000/api/v1/availability`,
+      backendUrl(`/availability`),
       availableInfo
     );
 
@@ -189,9 +197,7 @@ export async function postAvailability(availableInfo: schema.Availability) {
 // Delete availability
 export async function deleteAvailability(spotsId: string) {
   try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/availability/${spotsId}`
-    );
+    const result = await myFetch.delete(backendUrl(`/availability/${spotsId}`));
 
     if (result.status === 200 || result.ok) {
       console.log("Delete Request successful");
@@ -207,13 +213,10 @@ export async function deleteAvailability(spotsId: string) {
 // Update availability
 export async function updateAvailability(spotsId: string, time: string) {
   try {
-    const result = await myFetch.put(
-      `http://localhost:3000/api/v1/availability`,
-      {
-        spotsId,
-        time,
-      }
-    );
+    const result = await myFetch.put(backendUrl(`/availability`), {
+      spotsId,
+      time,
+    });
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
@@ -232,10 +235,7 @@ export async function updateAvailability(spotsId: string, time: string) {
 //! Login
 export async function loginUser(info: schema.LoginEmail) {
   try {
-    const result = await myFetch.post(
-      "http://localhost:3000/api/v1/login",
-      info
-    );
+    const result = await myFetch.post(backendUrl("/login"), info);
     const data = await result.json();
 
     if (result.status === 200 || data.success) {
@@ -262,7 +262,7 @@ export async function getAllWeeks(weeklyId: string) {
 
   try {
     const result = await myFetch.get(
-      `http://localhost:3000/api/v1/weekplan/create/${weeklyId}`
+      backendUrl(`/weekplan/create/${weeklyId}`)
     );
     finalData = await result.json();
 
@@ -306,10 +306,7 @@ export async function getAllWeeks(weeklyId: string) {
 // Post Weeks
 export async function postOneWeek(availableInfo: schema.Availability) {
   try {
-    const result = await myFetch.post(
-      `http://localhost:3000/api/v1/weekplan`,
-      availableInfo
-    );
+    const result = await myFetch.post(backendUrl(`/weekplan`), availableInfo);
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
@@ -329,9 +326,7 @@ export async function postOneWeek(availableInfo: schema.Availability) {
 // Delete Weeks
 export async function deleteOneWeekAvailability(spotsId: string) {
   try {
-    const result = await myFetch.delete(
-      `http://localhost:3000/api/v1/weekplan/one/${spotsId}`
-    );
+    const result = await myFetch.delete(backendUrl(`/weekplan/one/${spotsId}`));
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {
@@ -349,7 +344,7 @@ export async function deleteOneWeekAvailability(spotsId: string) {
 export async function calculateWeek(weeklyId: string) {
   try {
     const result = await myFetch.get(
-      `http://localhost:3000/api/v1/weekplan/create/${weeklyId}`
+      backendUrl(`/weekplan/create/${weeklyId}`)
     );
     const data = await result.json();
 
@@ -369,7 +364,7 @@ export async function calculateWeek(weeklyId: string) {
 export async function reCalculateWeek(weeklyId: string) {
   try {
     const result = await myFetch.get(
-      `http://localhost:3000/api/v1/weekplan/calculate/${weeklyId}`
+      backendUrl(`/weekplan/calculate/${weeklyId}`)
     );
     const data = await result.json();
 
@@ -389,7 +384,7 @@ export async function reCalculateWeek(weeklyId: string) {
 // Get all week status
 export async function getAllWeekStatus() {
   try {
-    const result = await myFetch.get("http://localhost:3000/api/v1/weekstatus");
+    const result = await myFetch.get(backendUrl("/weekstatus"));
     const data = await result.json();
     if (result.status === 200 || result.ok) {
       console.log("Get Request successful");
@@ -408,9 +403,7 @@ export async function getAllWeekStatus() {
 // Update week status
 export async function updateOneWeekStatus(weeklyId: string) {
   try {
-    const result = await myFetch.put(
-      `http://localhost:3000/api/v1/weekstatus/${weeklyId}`
-    );
+    const result = await myFetch.put(backendUrl(`/weekstatus/${weeklyId}`));
     const data = await result.json();
     if (result.status === 200 || result.ok) {
       console.log("Get Request successful");
