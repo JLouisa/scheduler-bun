@@ -78,38 +78,44 @@ EditUserProps) => {
       label: "First name",
       id: "firstName",
       defaultValue: theUser?.firstName || "Faynalie",
+      required: true,
     },
     {
       label: "Last name",
       id: "lastName",
-      defaultValue: theUser?.lastName || "Osborne",
+      defaultValue: theUser?.lastName || "",
+      required: false,
     },
     {
       label: "Empl. ID",
       id: "employeeId",
       defaultValue: theUser?.employeeId || 123,
+      required: true,
     },
     {
       label: "Min Days",
       id: "minDays",
       defaultValue: theUser?.minDays || 4,
+      required: true,
     },
     {
       label: "Max Days",
       id: "maxDays",
       defaultValue: theUser?.maxDays || 5,
+      required: true,
     },
   ];
 
   const roles = [
-    "All",
-    "Bar",
-    "Dishwasher",
-    "Griller",
-    "Kitchen",
-    "Management",
-    "None",
-    "Service",
+    schema.Roles.Management,
+    schema.Roles.Service,
+    schema.Roles.Griller,
+    schema.Roles.Kitchen,
+    schema.Roles.Bar,
+    schema.Roles.Dishwasher,
+    schema.Roles.Cleaner,
+    schema.Roles.All,
+    schema.Roles.None,
   ];
 
   const handleSubmit = (e: any) => {
@@ -151,7 +157,9 @@ EditUserProps) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           {edit && <DeleteUser user={theUser!} open={open} setOpen={setOpen} />}
-          <DialogTitle className="text-center">Edit Users</DialogTitle>
+          <DialogTitle className="text-center">
+            {edit ? "Edit Users" : "Add Users"}
+          </DialogTitle>
           <DialogDescription>
             Edit users to the system by filling out the form below.
           </DialogDescription>
@@ -166,6 +174,7 @@ EditUserProps) => {
               >
                 <Label htmlFor={field.id} className="text-right">
                   {field.label}
+                  {field.required ? "*" : ""}
                 </Label>
                 <Input
                   type={
@@ -180,7 +189,7 @@ EditUserProps) => {
                   id={field.id}
                   defaultValue={field.defaultValue}
                   className="col-span-3"
-                  required
+                  required={field.required}
                 />
               </div>
             ))}

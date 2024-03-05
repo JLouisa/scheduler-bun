@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import AddOrEditUser from "./AddOrEditUser";
 

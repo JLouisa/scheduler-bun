@@ -1,4 +1,5 @@
 import { Label } from "@/components/ui/label";
+import * as Schema from "@/lib/schema";
 import {
   Select,
   SelectContent,
@@ -14,7 +15,7 @@ const RoleSelect = ({
   theRoleS,
 }: {
   id: string;
-  roles: string[];
+  roles: Schema.Roles[];
   theRoleP: string;
   theRoleS: string;
 }) => {
@@ -29,10 +30,10 @@ const RoleSelect = ({
         </SelectTrigger>
         <SelectContent position="popper">
           {roles.map((role, index) => {
-            if (role == "Management" && id !== "primaryRole") {
+            if (role == Schema.Roles.Management && id !== "primaryRole") {
               // Do nothing
             } else if (
-              (role == "None" || role == "All") &&
+              (role == Schema.Roles.None || role == Schema.Roles.All) &&
               id == "primaryRole"
             ) {
               // Do nothing

@@ -20,7 +20,8 @@ export async function createOneUser(
       .insert(UserSchema)
       .values({
         firstName: theUser.firstName.toLowerCase(),
-        lastName: theUser.lastName.toLowerCase(),
+        lastName:
+          theUser.lastName.length > 0 ? theUser.lastName.toLowerCase() : null,
         employeeId: theUser.employeeId,
         vast: theUser.vast,
         admin: theUser.admin,
@@ -43,7 +44,7 @@ export async function createOneUser(
     return new UserClass(
       newUser[0].id,
       newUser[0].firstName,
-      newUser[0].lastName,
+      newUser[0].lastName ? newUser[0].lastName : "",
       newUser[0].employeeId,
       newUser[0].vast,
       newUser[0].admin,
@@ -73,7 +74,7 @@ export async function getAllUsers() {
       new UserClass(
         user.id,
         user.firstName,
-        user.lastName,
+        user.lastName ? user.lastName : "",
         user.employeeId,
         user.vast,
         user.admin,
@@ -106,7 +107,7 @@ export async function getOneUser(id: string) {
       new UserClass(
         user.id,
         user.firstName,
-        user.lastName,
+        user.lastName ? user.lastName : "",
         user.employeeId,
         user.vast,
         user.admin,
@@ -134,7 +135,7 @@ export async function updateOneUser(
       .update(UserSchema)
       .set({
         firstName: theUser.firstName,
-        lastName: theUser.lastName,
+        lastName: theUser.lastName ? theUser.lastName : null,
         employeeId: theUser.employeeId,
         vast: theUser.vast,
         admin: theUser.admin,
@@ -158,7 +159,7 @@ export async function updateOneUser(
     return new UserClass(
       result[0].id,
       result[0].firstName,
-      result[0].lastName,
+      result[0].lastName ? result[0].lastName : "",
       result[0].employeeId,
       result[0].vast,
       result[0].admin,
@@ -210,7 +211,7 @@ export async function deactivateOneUserToggle(
       new UserClass(
         user.id,
         user.firstName,
-        user.lastName,
+        user.lastName ? user.lastName : "",
         user.employeeId,
         user.vast,
         user.admin,
@@ -245,7 +246,7 @@ export async function deleteOneUser(
       new UserClass(
         user.id,
         user.firstName,
-        user.lastName,
+        user.lastName ? user.lastName : "",
         user.employeeId,
         user.vast,
         user.admin,

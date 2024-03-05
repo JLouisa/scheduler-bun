@@ -64,6 +64,13 @@
       "when": 1709227005930,
       "tag": "0008_complete_roulette",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1709590022690,
+      "tag": "0009_loose_serpent_society",
+      "breakpoints": true
     }
   ]
 }

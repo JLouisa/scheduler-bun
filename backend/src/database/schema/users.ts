@@ -10,7 +10,7 @@ export const UserSchema: any = sqliteTable("users", {
     .notNull()
     .primaryKey(),
   firstName: text("first_name").notNull(),
-  lastName: text("last_name").notNull(),
+  lastName: text("last_name"),
   employeeId: integer("employee_id").unique().notNull(),
   vast: integer("vast", { mode: "boolean" }).default(false).notNull(),
   admin: integer("admin", { mode: "boolean" }).default(false).notNull(),
