@@ -46,10 +46,12 @@ export async function getAllWeekPlan(weeklyId: string, set: any) {
 // Calculate the time for the weekPlan
 export async function createWholeWeekPlan(weeklyId: string, set: any) {
   const weekPlan = await dao.getAllWeekPlan(weeklyId);
+
   if (weekPlan instanceof ErrorClass) {
     set.status = 500;
     return weekPlan.clientOut();
   }
+
   if (weekPlan.length === 0) {
     const availabilities: AvailabilityClass[] | ErrorClass =
       await availabilityDAO.getAllAvailabilitiesS(weeklyId);
@@ -59,6 +61,7 @@ export async function createWholeWeekPlan(weeklyId: string, set: any) {
     }
     return await weekCreator(weeklyId, availabilities);
   }
+
   return weekPlan.map((week) => week.clientOut());
 }
 

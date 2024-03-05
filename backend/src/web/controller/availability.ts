@@ -27,6 +27,9 @@ export async function createAvailability(body: CreateAvailability, set: any) {
     body?.id
   );
 
+  console.log(`availableClass`);
+  console.log(available);
+
   // Check if the day and time are valid
   if (
     available.day === helper.Days.Invalid ||
@@ -37,7 +40,10 @@ export async function createAvailability(body: CreateAvailability, set: any) {
   }
 
   // Check if the availability already exists
-  const result = await dao.createAvailability(available);
+  const result =
+    available.id === undefined
+      ? await dao.createAvailability2(available)
+      : await dao.createAvailability(available);
 
   if (result instanceof ErrorClass) {
     set.status = 400;
@@ -127,5 +133,3 @@ export async function deleteAllAvailability(set: any) {
   }
   return { success: result };
 }
-
-//! ------------------------------------Done------------------------------------------

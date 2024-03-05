@@ -1,9 +1,84 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "6fff2527-cbbc-4132-8858-2300342c0075",
+  "id": "9e7c77f0-5f4a-419d-821a-f9d547cdad2a",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "admin": {
+      "name": "admin",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "first_name": {
+          "name": "first_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "active": {
+          "name": "active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "CURRENT_TIMESTAMP"
+        }
+      },
+      "indexes": {
+        "admin_id_unique": {
+          "name": "admin_id_unique",
+          "columns": [
+            "id"
+          ],
+          "isUnique": true
+        },
+        "admin_email_unique": {
+          "name": "admin_email_unique",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
     "availability": {
       "name": "availability",
       "columns": {
@@ -61,19 +136,6 @@
         }
       },
       "foreignKeys": {
-        "availability_weekly_id_weeks_id_fk": {
-          "name": "availability_weekly_id_weeks_id_fk",
-          "tableFrom": "availability",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weekly_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "availability_user_id_users_id_fk": {
           "name": "availability_user_id_users_id_fk",
           "tableFrom": "availability",
@@ -112,12 +174,12 @@
           "name": "last_name",
           "type": "text",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "employee_id": {
           "name": "employee_id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -203,8 +265,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "friday": {
-      "name": "friday",
+    "week_plan": {
+      "name": "week_plan",
       "columns": {
         "id": {
           "name": "id",
@@ -213,8 +275,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "weeks_id": {
-          "name": "weeks_id",
+        "weekly_id": {
+          "name": "weekly_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -227,17 +289,24 @@
           "notNull": true,
           "autoincrement": false
         },
+        "day": {
+          "name": "day",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
         "time": {
           "name": "time",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },
       "indexes": {
-        "friday_id_unique": {
-          "name": "friday_id_unique",
+        "week_plan_id_unique": {
+          "name": "week_plan_id_unique",
           "columns": [
             "id"
           ],
@@ -245,22 +314,22 @@
         }
       },
       "foreignKeys": {
-        "friday_weeks_id_weeks_id_fk": {
-          "name": "friday_weeks_id_weeks_id_fk",
-          "tableFrom": "friday",
-          "tableTo": "weeks",
+        "week_plan_weekly_id_week_status_weekly_id_fk": {
+          "name": "week_plan_weekly_id_week_status_weekly_id_fk",
+          "tableFrom": "week_plan",
+          "tableTo": "week_status",
           "columnsFrom": [
-            "weeks_id"
+            "weekly_id"
           ],
           "columnsTo": [
-            "id"
+            "weekly_id"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "friday_user_id_users_id_fk": {
-          "name": "friday_user_id_users_id_fk",
-          "tableFrom": "friday",
+        "week_plan_user_id_users_id_fk": {
+          "name": "week_plan_user_id_users_id_fk",
+          "tableFrom": "week_plan",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -275,8 +344,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "monday": {
-      "name": "monday",
+    "week_status": {
+      "name": "week_status",
       "columns": {
         "id": {
           "name": "id",
@@ -285,610 +354,38 @@
           "notNull": true,
           "autoincrement": false
         },
-        "weeks_id": {
-          "name": "weeks_id",
+        "weekly_id": {
+          "name": "weekly_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
         },
-        "user_id": {
-          "name": "user_id",
+        "status": {
+          "name": "status",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
           "autoincrement": false
         }
       },
       "indexes": {
-        "monday_id_unique": {
-          "name": "monday_id_unique",
+        "week_status_id_unique": {
+          "name": "week_status_id_unique",
           "columns": [
             "id"
           ],
           "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "monday_weeks_id_weeks_id_fk": {
-          "name": "monday_weeks_id_weeks_id_fk",
-          "tableFrom": "monday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
         },
-        "monday_user_id_users_id_fk": {
-          "name": "monday_user_id_users_id_fk",
-          "tableFrom": "monday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "saturday": {
-      "name": "saturday",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "weeks_id": {
-          "name": "weeks_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "saturday_id_unique": {
-          "name": "saturday_id_unique",
+        "week_status_weekly_id_unique": {
+          "name": "week_status_weekly_id_unique",
           "columns": [
-            "id"
+            "weekly_id"
           ],
           "isUnique": true
         }
       },
-      "foreignKeys": {
-        "saturday_weeks_id_weeks_id_fk": {
-          "name": "saturday_weeks_id_weeks_id_fk",
-          "tableFrom": "saturday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "saturday_user_id_users_id_fk": {
-          "name": "saturday_user_id_users_id_fk",
-          "tableFrom": "saturday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "sunday": {
-      "name": "sunday",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "weeks_id": {
-          "name": "weeks_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "sunday_id_unique": {
-          "name": "sunday_id_unique",
-          "columns": [
-            "id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "sunday_weeks_id_weeks_id_fk": {
-          "name": "sunday_weeks_id_weeks_id_fk",
-          "tableFrom": "sunday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sunday_user_id_users_id_fk": {
-          "name": "sunday_user_id_users_id_fk",
-          "tableFrom": "sunday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "thursday": {
-      "name": "thursday",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "weeks_id": {
-          "name": "weeks_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "thursday_id_unique": {
-          "name": "thursday_id_unique",
-          "columns": [
-            "id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "thursday_weeks_id_weeks_id_fk": {
-          "name": "thursday_weeks_id_weeks_id_fk",
-          "tableFrom": "thursday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "thursday_user_id_users_id_fk": {
-          "name": "thursday_user_id_users_id_fk",
-          "tableFrom": "thursday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "tuesday": {
-      "name": "tuesday",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "weeks_id": {
-          "name": "weeks_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "tuesday_id_unique": {
-          "name": "tuesday_id_unique",
-          "columns": [
-            "id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "tuesday_weeks_id_weeks_id_fk": {
-          "name": "tuesday_weeks_id_weeks_id_fk",
-          "tableFrom": "tuesday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "tuesday_user_id_users_id_fk": {
-          "name": "tuesday_user_id_users_id_fk",
-          "tableFrom": "tuesday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "wednesday": {
-      "name": "wednesday",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "weeks_id": {
-          "name": "weeks_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "user_id": {
-          "name": "user_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "time": {
-          "name": "time",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "wednesday_id_unique": {
-          "name": "wednesday_id_unique",
-          "columns": [
-            "id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "wednesday_weeks_id_weeks_id_fk": {
-          "name": "wednesday_weeks_id_weeks_id_fk",
-          "tableFrom": "wednesday",
-          "tableTo": "weeks",
-          "columnsFrom": [
-            "weeks_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "wednesday_user_id_users_id_fk": {
-          "name": "wednesday_user_id_users_id_fk",
-          "tableFrom": "wednesday",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "weeks": {
-      "name": "weeks",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "first_name": {
-          "name": "first_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
-        },
-        "monday": {
-          "name": "monday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "tuesday": {
-          "name": "tuesday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "wednesday": {
-          "name": "wednesday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "thursday": {
-          "name": "thursday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "friday": {
-          "name": "friday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "saturday": {
-          "name": "saturday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "sunday": {
-          "name": "sunday",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        }
-      },
-      "indexes": {
-        "weeks_id_unique": {
-          "name": "weeks_id_unique",
-          "columns": [
-            "id"
-          ],
-          "isUnique": true
-        }
-      },
-      "foreignKeys": {
-        "weeks_first_name_users_id_fk": {
-          "name": "weeks_first_name_users_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "users",
-          "columnsFrom": [
-            "first_name"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_monday_monday_id_fk": {
-          "name": "weeks_monday_monday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "monday",
-          "columnsFrom": [
-            "monday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_tuesday_tuesday_id_fk": {
-          "name": "weeks_tuesday_tuesday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "tuesday",
-          "columnsFrom": [
-            "tuesday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_wednesday_wednesday_id_fk": {
-          "name": "weeks_wednesday_wednesday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "wednesday",
-          "columnsFrom": [
-            "wednesday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_thursday_thursday_id_fk": {
-          "name": "weeks_thursday_thursday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "thursday",
-          "columnsFrom": [
-            "thursday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_friday_friday_id_fk": {
-          "name": "weeks_friday_friday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "friday",
-          "columnsFrom": [
-            "friday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_saturday_saturday_id_fk": {
-          "name": "weeks_saturday_saturday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "saturday",
-          "columnsFrom": [
-            "saturday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "weeks_sunday_sunday_id_fk": {
-          "name": "weeks_sunday_sunday_id_fk",
-          "tableFrom": "weeks",
-          "tableTo": "sunday",
-          "columnsFrom": [
-            "sunday"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     }

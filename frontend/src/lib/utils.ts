@@ -16,10 +16,6 @@ export function roleToString(role: Roles): string {
   return Roles[role];
 }
 
-// export function roleToString(role: Roles): string {
-//   return Roles[role];
-// }
-
 export function createWeekID(num = 0) {
   const today = DateTime.local();
   const year = today.year;

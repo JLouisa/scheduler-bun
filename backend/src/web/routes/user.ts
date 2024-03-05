@@ -5,13 +5,13 @@ import * as model from "./model";
 export const userRoutes = new Elysia({ prefix: "/user" })
   // Get all users
   .get("/", ({ set }) => user.getAllUsers(set))
-  // Create a new user
-  .post("/", ({ body, set }) => user.createUser(body, set), {
-    body: model.UserPartialModel,
-  })
   // Get one user
   .get("/:id", ({ params: { id }, set }) => {
     return user.getOneUser(id);
+  })
+  // Create a new user
+  .post("/", ({ body, set }) => user.createUser(body, set), {
+    body: model.UserPartialModel,
   })
   // Update one user
   .put("/", ({ body, set }) => user.updateUser(body, set), {

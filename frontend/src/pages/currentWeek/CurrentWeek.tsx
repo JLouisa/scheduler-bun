@@ -7,18 +7,14 @@ import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import bearStore from "@/lib/bearStore";
 import { useEffect } from "react";
 import { PdfCreator } from "@/lib/printPdf";
 
 const CurrentWeek = () => {
-  // const weeklyId = createWeekID();
-
   const queryClient = useQueryClient();
 
   const { id } = useParams();
-  const { dev } = bearStore();
-  const weeklyId = id ? id : createWeekID(dev);
+  const weeklyId = id ? id : createWeekID();
 
   // Queries
   const {

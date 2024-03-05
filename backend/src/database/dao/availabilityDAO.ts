@@ -15,8 +15,7 @@ import { NIL as NIL_UUID } from "uuid";
 // Create availability in DB
 export async function createAvailability(obj: AvailabilityClass) {
   const theAvailability = obj.dbIn();
-  console.log(`theAvailability`);
-  console.log(theAvailability);
+
   try {
     const result = await db
       .insert(AvailabilitySchema)
@@ -30,6 +29,41 @@ export async function createAvailability(obj: AvailabilityClass) {
       .onConflictDoUpdate({
         target: AvailabilitySchema.id,
         set: { time: theAvailability.time },
+      })
+      .returning();
+
+    if (!Array.isArray(result)) {
+      return ErrorClass.new("Error creating availability");
+    }
+
+    return result.map((availability) =>
+      new AvailabilityClass(
+        availability.id,
+        availability.weeklyId,
+        availability.userId,
+        availability.day,
+        availability.time,
+        availability.createdAt
+      ).dbOut()
+    );
+  } catch (error) {
+    console.error("Error creating availability2", error);
+    return ErrorClass.new("Error creating availability");
+  }
+}
+
+// Create availability in DB
+export async function createAvailability2(obj: AvailabilityClass) {
+  const theAvailability = obj.dbIn();
+
+  try {
+    const result = await db
+      .insert(AvailabilitySchema)
+      .values({
+        weeklyId: theAvailability.weeklyId,
+        userId: theAvailability.userId,
+        day: theAvailability.day,
+        time: theAvailability.time,
       })
       .returning();
 

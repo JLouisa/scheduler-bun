@@ -161,11 +161,13 @@ export async function getAllAvailabilities(weeklyId: string) {
 // Post availability
 export async function postAvailability(availableInfo: schema.Availability) {
   console.log(availableInfo);
+
   try {
     const result = await myFetch.post(
       `http://localhost:3000/api/v1/availability`,
       availableInfo
     );
+
     const data = await result.json();
 
     if (result.status === 200 || result.ok) {

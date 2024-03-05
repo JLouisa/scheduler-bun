@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import TableSetup from "@/components/TableSetup";
 import LoadingSkeletons from "./components/LoadingSkeletons";
 import HeadUI from "@/components/HeadUI";
-import bearStore from "@/lib/bearStore";
 import * as schema from "@/lib/schema";
 import * as types from "@/lib/types";
 import * as DAL from "@/lib/dal";
@@ -14,8 +13,8 @@ const RawWeek = () => {
   const queryClient = useQueryClient();
 
   const { id } = useParams();
-  const { dev } = bearStore();
-  const weeklyId = id ? id : createWeekID(dev);
+
+  const weeklyId = id ? id : createWeekID();
 
   // Queries
   const {

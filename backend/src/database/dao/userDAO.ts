@@ -7,7 +7,7 @@ import { UserClass } from "../../domain/user";
 
 // Setup the DB connection
 import { db } from "../setup";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, asc } from "drizzle-orm";
 
 // Create One user in DB
 export async function createOneUser(
@@ -66,7 +66,7 @@ export async function getAllUsers() {
     const result = await db
       .select()
       .from(UserSchema)
-      .orderBy(desc(UserSchema.createdAt));
+      .orderBy(asc(UserSchema.employeeId));
 
     if (!Array.isArray(result)) ErrorClass.new("Error getting users");
 
@@ -183,8 +183,6 @@ export async function deactivateOneUserToggle(
 
   try {
     const user = await getOneUser(id);
-    console.log(`user`);
-    console.log(user);
 
     if (!Array.isArray(user)) {
       return ErrorClass.new("Error Deactivate user");

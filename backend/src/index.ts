@@ -36,7 +36,6 @@ const app = new Elysia()
       .use(adminRoutes)
       .use(weekStatusRoutes)
   )
-
   .onError(({ code }) => {
     if (code === "NOT_FOUND") return "Route not found :(";
   })
@@ -46,19 +45,20 @@ console.log(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
 );
 
-// for (let i = 1; i < 40; i++) {
-//   const path = `./.mock/plan/plan${i}.json`;
-//   const file = Bun.file(path);
-//   const contents = await file.json();
+// const path = "./.mock/.users/users.json";
+// const file = Bun.file(path);
+// const contents = await file.json();
+// // console.log(contents[4]);
 
+// for (let i = 0; i < contents.length; i++) {
 //   app
 //     .handle(
-//       new Request("http://localhost/availability", {
-//         method: "POST",
+//       new Request("http://localhost:3000/api/v1/user", {
+//         method: "POST", // Change the method if needed
+//         body: JSON.stringify(contents[i]), // Convert JSON data to a string
 //         headers: {
-//           "Content-Type": "application/json",
+//           "Content-Type": "application/json", // Specify content type as JSON
 //         },
-//         body: JSON.stringify(contents),
 //       })
 //     )
 //     .then(console.log);

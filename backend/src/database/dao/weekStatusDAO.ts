@@ -201,8 +201,6 @@ export async function getLastWeekStatus(
         WeekStatus.Open
       );
       theWeeks.push(week1);
-      console.log(`week1`);
-      console.log(week1);
     }
     if (!hasWeeklyId2) {
       const week2 = WeekStatusClass.new(
@@ -210,8 +208,6 @@ export async function getLastWeekStatus(
         WeekStatus.InProgress
       );
       theWeeks.push(week2);
-      console.log(`week2`);
-      console.log(week2);
     }
 
     // Save missing entries to the database

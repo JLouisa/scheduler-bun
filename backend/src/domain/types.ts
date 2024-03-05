@@ -34,8 +34,9 @@ export enum Roles {
   Service = "Service",
   Management = "Management",
   Dishwasher = "Dishwasher",
-  None = "None",
+  Cleaner = "Cleaner",
   All = "All",
+  None = "None",
   Invalid = "Invalid",
 }
 

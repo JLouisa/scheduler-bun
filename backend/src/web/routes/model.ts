@@ -32,20 +32,22 @@ const role = [
   t.Literal(Roles.Dishwasher),
   t.Literal(Roles.Service),
   t.Literal(Roles.Bar),
+  t.Literal(Roles.Cleaner),
   t.Literal(Roles.All),
   t.Literal(Roles.None),
 ];
 
 //! Availability
+export const AvailablePartialModel = t.Object({
+  id: t.String(),
+  time: t.Union(time),
+});
+
 export const AvailableFullModel = t.Object({
   id: t.Optional(t.String()),
   weeklyId: t.String(),
   userId: t.String(),
   day: t.Union(day),
-  time: t.Union(time),
-});
-export const AvailablePartialModel = t.Object({
-  id: t.String(),
   time: t.Union(time),
 });
 
@@ -61,14 +63,15 @@ export const UserPartialModel = t.Object({
   firstName: t.String(),
   lastName: t.String(),
   employeeId: t.Number(),
-  admin: t.Boolean(),
   vast: t.Boolean(),
+  admin: t.Boolean(),
   active: t.Boolean(),
   minDays: t.Number(),
   maxDays: t.Number(),
   primaryRole: t.Union(role),
   secondaryRole: t.Union(role),
 });
+
 export const UserFullModel = t.Intersect([
   t.Object({
     id: t.String(),
@@ -81,6 +84,7 @@ export const WeekStatusPartialModel = t.Object({
   weeklyId: t.String(),
   status: t.String(),
 });
+
 export const WeekStatusFullModel = t.Intersect([
   t.Intersect([
     t.Object({

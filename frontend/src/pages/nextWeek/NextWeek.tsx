@@ -6,11 +6,9 @@ import * as DAL from "@/lib/dal";
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
 import HeadUI from "@/components/HeadUI";
-import bearStore from "@/lib/bearStore";
 
 const NextWeek = () => {
-  const { dev } = bearStore();
-  const weeklyId = createWeekID(dev); // Place in production -> -1
+  const weeklyId = createWeekID(-1);
 
   // Queries
   const {

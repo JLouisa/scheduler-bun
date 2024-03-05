@@ -17,6 +17,7 @@ export const availableRoutes = new Elysia({ prefix: "/availability" })
   .post(
     "/",
     ({ set, body }) => {
+      console.log(`body in routes`);
       console.log(body);
       return available.createAvailability(body, set);
     },
@@ -37,4 +38,5 @@ export const availableRoutes = new Elysia({ prefix: "/availability" })
     available.deleteOneAvailability(id, set)
   )
   //! Delete all availabilities
-  .delete("/all", (set) => available.deleteAllAvailability(set));
+  .delete("/all", (set) => available.deleteAllAvailability(set))
+  .delete("/", () => "Delete all availabilities");
