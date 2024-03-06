@@ -1,14 +1,14 @@
 import HeadUI from "@/components/HeadUI";
 import TableSetup from "@/components/TableSetup";
-import { createWeekID } from "@/lib/utils";
 import LoadingSkeletons from "./components/LoadingSkeletons";
-import * as DAL from "@/lib/dal";
-import * as types from "@/lib/types";
-import * as schema from "@/lib/schema";
+import { createWeekID } from "@/lib/utils";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import { PdfCreator } from "@/lib/printPdf";
+import * as DAL from "@/lib/dal";
+import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 
 const CurrentWeek = () => {
   const queryClient = useQueryClient();

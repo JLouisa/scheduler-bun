@@ -28,7 +28,7 @@ export class AvailabilityClass {
   ): AvailabilityClass {
     return new AvailabilityClass(
       id,
-      helper.createWeekID(),
+      helper.createWeekID(-1),
       userId,
       helper.getDayStrToEnum(day),
       helper.getScheduleTimeStrToEnum(time),

@@ -2,6 +2,8 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Roles } from "@/lib/schema";
 import { DateTime } from "luxon";
+import * as types from "@/lib/types";
+import * as schema from "@/lib/schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -21,4 +23,30 @@ export function createWeekID(num = 0) {
   const year = today.year;
   const weekNumber = today.weekNumber - num;
   return `${year}-${weekNumber < 10 ? "0" + weekNumber : weekNumber}`;
+}
+
+export function sortAllWeekPlans(finalData: types.WeekProps[]) {
+  return {
+    Monday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Monday
+    ),
+    Tuesday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Tuesday
+    ),
+    Wednesday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Wednesday
+    ),
+    Thursday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Thursday
+    ),
+    Friday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Friday
+    ),
+    Saturday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Saturday
+    ),
+    Sunday: finalData.filter(
+      (item: types.WeekProps) => item.day === schema.Days.Sunday
+    ),
+  };
 }

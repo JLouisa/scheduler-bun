@@ -1,5 +1,6 @@
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
+import { sortAllWeekPlans } from "./utils";
 
 const ENV = "development";
 
@@ -234,6 +235,7 @@ export async function updateAvailability(spotsId: string, time: string) {
 
 //! Login
 export async function loginUser(info: schema.LoginEmail) {
+  console.log(info);
   try {
     const result = await myFetch.post(backendUrl("/login"), info);
     const data = await result.json();
@@ -261,46 +263,20 @@ export async function getAllWeeks(weeklyId: string) {
   let finalData;
 
   try {
-    const result = await myFetch.get(
-      backendUrl(`/weekplan/create/${weeklyId}`)
-    );
+    const result = await myFetch.get(backendUrl(`/weekplan/all/${weeklyId}`));
     finalData = await result.json();
 
     if (result.status === 200 || result.ok) {
       console.log(`finalData`);
       console.log(finalData);
-    } else {
-      console.log("Get Request failed");
-      throw new Error(finalData.error);
+      return sortAllWeekPlans(finalData);
     }
+    console.log("Get Request failed");
+    throw new Error(finalData.error);
   } catch (error) {
     console.error(error);
     throw new Error(error as string);
   }
-
-  return (finalData = {
-    Monday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "monday"
-    ),
-    Tuesday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "tuesday"
-    ),
-    Wednesday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "wednesday"
-    ),
-    Thursday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "thursday"
-    ),
-    Friday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "friday"
-    ),
-    Saturday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "saturday"
-    ),
-    Sunday: finalData.filter(
-      (item: types.WeekProps) => item.day.toLowerCase() === "sunday"
-    ),
-  });
 }
 
 // Post Weeks

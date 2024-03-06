@@ -24,18 +24,17 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
           return user.clientOut();
         }
 
-        if (user instanceof AdminClass) {
-          auth.set({
-            value: await jwt.sign({
-              id: user.id,
-              email: user.email,
-              active: `${user.active}`,
-            }),
-            httpOnly: true, // Prevents JavaScript from accessing the cookie
-            maxAge: 86400 * (body.remember ? 30 : 1), //86400 seconds in a day
-          });
-          return user.clientOut();
-        }
+        auth.set({
+          value: await jwt.sign({
+            id: user.id,
+            email: user.email,
+            active: `${user.active}`,
+          }),
+          httpOnly: true, // Prevents JavaScript from accessing the cookie
+          maxAge: 86400 * (body.remember ? 30 : 1), //86400 seconds in a day
+        });
+
+        return user.clientOut();
       } catch (error) {
         console.error("Error during login:", error);
         set.status = 500; // Internal Server Error

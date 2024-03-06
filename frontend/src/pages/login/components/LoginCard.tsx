@@ -2,6 +2,9 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import RememberMe from "./RememberMe";
+import { Link } from "react-router-dom";
+import * as schema from "@/lib/schema";
 import {
   Card,
   CardContent,
@@ -10,9 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import RememberMe from "./RememberMe";
-import { Link } from "react-router-dom";
-import * as types from "@/lib/types";
 
 export function LoginCard({ loginFn }: { loginFn: any }) {
   //Using Ref to hold state
@@ -24,7 +24,7 @@ export function LoginCard({ loginFn }: { loginFn: any }) {
     email: string,
     password: string,
     remember: boolean
-  ): types.LoginEmail => {
+  ): schema.LoginEmail => {
     return {
       email: email,
       password: password,

@@ -6,8 +6,8 @@ export const availableRoutes = new Elysia({ prefix: "/availability" })
   // Get all availabilities
   .get("/", ({ set }) => available.getAllAvailability(set))
   // Get all availabilities of a week
-  .get("week/:week", ({ set, params: { week } }) =>
-    available.getAllWeekAvailability(week, set)
+  .get("week/:weekly", ({ set, params: { weekly } }) =>
+    available.getAllWeekAvailability(weekly, set)
   )
   // Get one availability
   .get("/:id", ({ set, params: { id } }) =>
