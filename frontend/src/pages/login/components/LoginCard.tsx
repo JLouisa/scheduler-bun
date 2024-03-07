@@ -1,4 +1,5 @@
 import * as React from "react";
+import * as DAL from "@/lib/dal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -47,6 +48,7 @@ export function LoginCard({ loginFn }: { loginFn: any }) {
       rememberRef.current
     );
 
+    // DAL.testLogin();
     loginFn.mutate(loginInfo);
   };
 

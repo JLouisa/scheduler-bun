@@ -16,7 +16,8 @@ import { weekStatusRoutes } from "./web/routes/weekStatus";
 // Init server
 const app = new Elysia()
   .use(logger({ logIP: true }))
-  .use(cors({ methods: ["GET", "PUT", "POST", "DELETE"] }))
+  // .use(cors({ origin: true, methods: ["GET", "PUT", "POST", "DELETE"] }))
+  .use(cors())
   .use(
     swagger({
       documentation: {

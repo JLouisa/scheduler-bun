@@ -22,12 +22,12 @@ export const userRoutes = new Elysia({ prefix: "/user" })
   .post(
     "/",
     async ({ body, set, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return user.createUser(body, set);
     },
     {
@@ -38,12 +38,12 @@ export const userRoutes = new Elysia({ prefix: "/user" })
   .put(
     "/",
     async ({ body, set, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return user.updateUser(body, set);
     },
     {
@@ -52,34 +52,34 @@ export const userRoutes = new Elysia({ prefix: "/user" })
   )
   //! Delete all users
   .delete("/all", async ({ set, jwt, cookie: { auth } }) => {
-    const profile = await jwt.verify(auth.value);
+    // const profile = await jwt.verify(auth.value);
 
-    if (!profile) {
-      set.status = 401;
-      return ErrorClass.new("Unauthorized").clientOut();
-    }
+    // if (!profile) {
+    //   set.status = 401;
+    //   return ErrorClass.new("Unauthorized").clientOut();
+    // }
     return SuccessClass.new(`Delete all users`).clientOut();
   })
   //! Delete one users
   .delete(
     "/one/:id",
     async ({ set, params: { id }, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return user.deleteOneUser(id, set);
     }
   )
   // Deactivate one users
   .delete("/:id", async ({ params: { id }, set, jwt, cookie: { auth } }) => {
-    const profile = await jwt.verify(auth.value);
+    // const profile = await jwt.verify(auth.value);
 
-    if (!profile) {
-      set.status = 401;
-      return ErrorClass.new("Unauthorized").clientOut();
-    }
+    // if (!profile) {
+    //   set.status = 401;
+    //   return ErrorClass.new("Unauthorized").clientOut();
+    // }
     return user.deactivateOneUserToggle(id, set);
   });

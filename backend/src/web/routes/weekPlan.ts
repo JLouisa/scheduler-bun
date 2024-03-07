@@ -19,12 +19,12 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   .get(
     "/create/:id",
     async ({ set, params: { id }, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
 
       return weekPlan.createWholeWeekPlan(id, set);
     }
@@ -33,12 +33,12 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   .get(
     "/calculate/:id",
     async ({ set, params: { id }, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return weekPlan.calcWeekPlan(id, set);
     }
   )
@@ -50,13 +50,13 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   .post(
     "/",
     async ({ set, body, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
+      // if (!profile) {
+      //   set.status = 401;
 
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return weekPlan.createWeekPlan(body, set);
     },
     {
@@ -68,12 +68,12 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   .put(
     "/",
     async ({ set, body, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return weekPlan.updateWeekPlan(body, set);
     },
     {
@@ -85,12 +85,12 @@ export const weekPlanRoutes = new Elysia({ prefix: "/weekplan" })
   .delete(
     "/one/:id",
     async ({ params: { id }, set, jwt, cookie: { auth } }) => {
-      const profile = await jwt.verify(auth.value);
+      // const profile = await jwt.verify(auth.value);
 
-      if (!profile) {
-        set.status = 401;
-        return ErrorClass.new("Unauthorized").clientOut();
-      }
+      // if (!profile) {
+      //   set.status = 401;
+      //   return ErrorClass.new("Unauthorized").clientOut();
+      // }
       return weekPlan.deleteWeekPlan(id, set);
     }
   )

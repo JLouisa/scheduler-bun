@@ -76,3 +76,21 @@ export function getLocalStorageItem(name: string = "user") {
 export function removeLocalStorageItem(name: string = "user") {
   localStorage.removeItem(name);
 }
+
+export function setCookie(name: string, value: string, days: number) {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000); // Set expiration time
+
+  // Construct the cookie string
+  const cookieString = `${name}=${encodeURIComponent(
+    value
+  )};expires=${expires.toUTCString()};path=/`;
+
+  // Set the cookie
+  document.cookie = cookieString;
+}
+
+// remove Cookie storage
+export function removeCookie(name: string) {
+  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+}

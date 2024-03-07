@@ -1,6 +1,7 @@
 import * as types from "@/lib/types";
 import * as schema from "@/lib/schema";
-import { sortAllWeekPlans } from "./utils";
+import { setCookie, sortAllWeekPlans } from "./utils";
+import axios from "axios";
 
 const ENV = "development";
 
@@ -13,6 +14,15 @@ const backendUrl = (url: string): string => {
   console.log(`${link}${api}${url}`);
   return `${link}${api}${url}`;
 };
+
+// Axios
+const myAxios = axios.create({
+  baseURL: "http://localhost:3000/api/v1",
+  // withCredentials: true,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
 const myFetch = {
   async get(url: string) {
@@ -234,10 +244,9 @@ export async function updateAvailability(spotsId: string, time: string) {
 }
 
 //! Login
-export async function loginUser(info: schema.LoginEmail) {
-  console.log(info);
+export async function testLogin() {
   try {
-    const result = await myFetch.post(backendUrl("/login"), info);
+    const result = await myFetch.get(backendUrl("/login/test"));
     const data = await result.json();
 
     if (result.status === 200 || data.success) {
@@ -255,6 +264,39 @@ export async function loginUser(info: schema.LoginEmail) {
     console.error(error);
     throw error; // Rethrow the error
   }
+}
+
+export async function loginUser(info: schema.LoginEmail) {
+  try {
+    const result = await myAxios.post("/login", info);
+    console.log(result);
+    return result.data;
+  } catch (error) {
+    throw new Error("An unexpected error occurred during login");
+  }
+
+  // console.log(info);
+  // try {
+  // const result = await myFetch.post(backendUrl("/login"), info);
+  // const data = await result.json();
+
+  //   if (result.status === 200 || data.success) {
+  //     console.log("Login Request successful");
+  //     return data;
+  //     // setCookie(data.myCookie.name, data.myCookie.value, data.myCookie.maxAge);
+  //     // return data.user;
+  //   } else if (result.status === 401 || data.error) {
+  //     const msg = data.error || "Username or password is incorrect.";
+  //     console.log("Login Request failed");
+  //     throw new Error(msg);
+  //   } else {
+  //     // Handle other error cases (e.g., server errors)
+  //     throw new Error("An unexpected error occurred during login");
+  //   }
+  // } catch (error) {
+  //   console.error(error);
+  //   throw error; // Rethrow the error
+  // }
 }
 
 //! Weeks
