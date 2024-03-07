@@ -5,6 +5,7 @@ import LoginCard from "./components/LoginCard";
 import bearStore from "@/lib/bearStore";
 import * as DAL from "@/lib/dal";
 import * as schema from "@/lib/schema";
+import { createLocalStorageItem } from "@/lib/utils";
 
 const Login = () => {
   const { setIsAdmin } = bearStore();
@@ -17,11 +18,12 @@ const Login = () => {
       console.log(result);
       return result;
     },
-    onSuccess: () => {
+    onSuccess: (data: schema.Admin) => {
       toast({
         title: `Login successful`,
       });
       navigate("/dashboard");
+      createLocalStorageItem(data);
       setIsAdmin(true);
     },
     onError: () => {

@@ -230,6 +230,28 @@ export class WeekStatusClass implements WeekStatus {
   }
 }
 
+export const AdminSchema = z.object({
+  id: z.string().uuid(),
+  firstName: z.string(),
+  active: z.boolean(),
+});
+
+export class AdminClass {
+  constructor(
+    public id: string,
+    public firstName: string,
+    public active: boolean
+  ) {
+    this.id = id;
+    this.firstName = firstName;
+    this.active = active;
+  }
+  static serverIn(admin: AdminClass): AdminClass {
+    return new AdminClass(admin.id, admin.firstName, admin.active);
+  }
+}
+export type Admin = z.infer<typeof AdminSchema>;
+
 // Define the schema for success messages returned from the server
 export const SuccessSchema = z.object({
   success: z.string(),

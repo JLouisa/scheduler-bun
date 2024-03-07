@@ -50,3 +50,29 @@ export function sortAllWeekPlans(finalData: types.WeekProps[]) {
     ),
   };
 }
+
+// Set the user in localStorage
+export function createLocalStorageItem(
+  obj: schema.Admin,
+  name: string = "user"
+) {
+  // Stringify the object
+  const jsonString = JSON.stringify(obj);
+
+  // Save the stringified object in localStorage
+  localStorage.setItem(name, jsonString);
+}
+
+// Get the user from localStorage
+export function getLocalStorageItem(name: string = "user") {
+  // Get the stringified object from localStorage
+  const jsonString = localStorage.getItem(name);
+
+  // Parse the stringified object
+  return jsonString ? JSON.parse(jsonString) : null;
+}
+
+// Remove the user from localStorage
+export function removeLocalStorageItem(name: string = "user") {
+  localStorage.removeItem(name);
+}

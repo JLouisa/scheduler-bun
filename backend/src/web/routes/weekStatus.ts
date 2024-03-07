@@ -13,11 +13,12 @@ export const weekStatusRoutes = new Elysia({ prefix: "/weekstatus" })
   )
   // Get all weekStatus
   .get("/", async ({ set, jwt, cookie: { auth } }) => {
-    const profile = await jwt.verify(auth.value);
-    if (!profile) {
-      set.status = 401;
-      return ErrorClass.new("Unauthorized").clientOut();
-    }
+    console.log(auth.value);
+    // const profile = await jwt.verify(auth.value);
+    // if (!profile) {
+    //   set.status = 401;
+    //   return ErrorClass.new("Unauthorized").clientOut();
+    // }
 
     return weekStatus.getLastWeekStatus(set);
   })

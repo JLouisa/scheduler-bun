@@ -30,7 +30,7 @@ export const loginRoutes = new Elysia({ prefix: "/login" })
             email: user.email,
             active: `${user.active}`,
           }),
-          httpOnly: true, // Prevents JavaScript from accessing the cookie
+          httpOnly: false, // Prevents JavaScript from accessing the cookie
           maxAge: 86400 * (body.remember ? 30 : 1), //86400 seconds in a day
         });
 
